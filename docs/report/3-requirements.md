@@ -23,6 +23,34 @@ La modalità classica del gioco prevede che, al termine della partita, il vincit
 
 È però nota anche un’altra modalità di gioco – detta “a perdere” – che, al contrario, prevede che il vincitore sia il giocatore che al termine della partita ha il numero minore di proprie pedine sul terreno di gioco.
 
+```mermaid
+---
+title: Diagramma del dominio
+---
+classDiagram
+  class Disk{
+    +getColor(): Color
+    +flip(): Unit
+  }
+  class Board{
+    +initialize(): Unit
+    +getMatchStatus(): MatchStatus
+    +makeMove(moveStrategy: MoveStrategy): Unit
+  }
+  class GameLogic {
+    +initialize(): Unit
+    +makeMove(): Unit
+    +getPlayerTurn(): Player
+  }
+  class Opponent {
+    +getStrategy(): Strategy
+  }
+
+  GameLogic o-- Board
+  GameLogic o-- Opponent
+  Board o-- Disk
+```
+
 ## Requisiti funzionali
 
 ### Utente
