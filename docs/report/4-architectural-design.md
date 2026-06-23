@@ -21,7 +21,7 @@ classDiagram
     class Controller {
       + initializeMatch()
       + getMatchState(): MatchState
-      + placeDisk(position: Position)
+      + handleSelection(position: Position)
       + isMatchOver(): Boolean
       + saveGame()
       + loadGame()
@@ -39,19 +39,18 @@ classDiagram
     class Logic {
       + initialize()
       + getMatchState(): MatchState
-      + makeMove(moveStrategy: MoveStrategy)
-      + isGameOver(): Boolean
+      + placeDisk(placementStrategy: PlacementStrategy): Boolean
+      + isMatchOver(): Boolean
     }
     class Opponent {
     }
   }
 
-  View o-- Controller : interacts with
-  Controller o-- Logic : interacts with
-  SaveManager --o Controller : used by
+  View o-- Controller
+  Controller o-- Logic
+  SaveManager --o Controller
   
   Logic o-- Board
   Logic o-- Opponent
   Board o-- Disk
-
 ```

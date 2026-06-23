@@ -28,23 +28,24 @@ La modalità classica del gioco prevede che, al termine della partita, il vincit
 title: Diagramma del dominio
 ---
 classDiagram
+  class Logic {
+    + initialize()
+    + getMatchState(): MatchState
+    + placeDisk(strategy: PlacementStrategy)
+    + isMatchOver(): Boolean
+  } 
+  class Board {
+    + initialize()
+    + getBoardState(): BoardState
+    + placeDisk(strategy: PlacementStrategy): Boolean
+    + getAvailablePlacements(color: Color): List~Position~
+  }
   class Disk {
     + getColor(): Color
     + flip()
   }
-  class Board {
-    + initialize()
-    + getBoardState(): BoardState
-    + makeMove(moveStrategy: MoveStrategy)
-  }
-  class Logic {
-    + initialize()
-    + getMatchState(): MatchState
-    + makeMove(moveStrategy: MoveStrategy)
-    + isMatchOver(): Boolean
-  }
   class Opponent {
-    + getMoveStrategy(): MoveStrategy
+    + getPlacementStrategy(): PlacementStrategy
   }
 
   Logic o-- Board
