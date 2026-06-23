@@ -11,45 +11,47 @@
 title: Diagramma architetturale
 ---
 classDiagram
-  namespace ArchitetturaMVC.View {
-    class CLIView {
-      +renderBoard(): Unit
-      +showMenu(): Unit
+  namespace ViewPackage {
+    class View {
+      + renderBoard()
+      + showMenu()
     }
   }
-  namespace ArchitetturaMVC.Controller {
-    class GameController {
-      +newGame(): Unit
-      +isGameOver(): Boolean
-      +placeDisk(Position): Unit
-      +getCurrentGameState(): GameState
-      +getAvailableMoves(): List<Position>
-      +saveGame(): Unit
-      +loadGame(): Unit
+  namespace ControllerPackage {
+    class Controller {
+      + initializeMatch()
+      + getMatchState(): MatchState
+      + placeDisk(position: Position)
+      + isMatchOver(): Boolean
+      + saveGame()
+      + loadGame()
     }
     class SaveManager {
-      +save(gameState: GameState): Unit
-      +load(): GameState
+      + save(matchState: MatchState)
+      + load(): MatchState
     }
   }
-  namespace ArchitetturaMVC.Model {
+  namespace ModelPackage {
     class Board {
     }
     class Disk {
     }
-    class GameLogic {
-      +getGameState(): GameState
+    class Logic {
+      + initialize()
+      + getMatchState(): MatchState
+      + makeMove(moveStrategy: MoveStrategy)
+      + isGameOver(): Boolean
     }
     class Opponent {
     }
   }
 
-  CLIView o-- GameController : interagisce con
-  GameController o-- GameLogic : opera su
-  SaveManager --o GameController : utilizzato da
+  View o-- Controller : interacts with
+  Controller o-- Logic : interacts with
+  SaveManager --o Controller : used by
   
-  GameLogic o-- Board
-  GameLogic o-- Opponent
+  Logic o-- Board
+  Logic o-- Opponent
   Board o-- Disk
 
 ```
