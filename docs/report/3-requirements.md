@@ -82,6 +82,7 @@ PlayerTurn --> CheckMoves
 
 CheckMoves --> HasMove
 HasMove --> ExecuteMove
+HasMove --> NextPlayer
 ExecuteMove --> FlipDiscs
 FlipDiscs --> NextPlayer
 
