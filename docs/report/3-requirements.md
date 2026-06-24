@@ -25,32 +25,49 @@ La modalità classica del gioco prevede che, al termine della partita, il vincit
 
 ```mermaid
 ---
-title: Diagramma del dominio
+title: Diagramma UML di dominio
 ---
 classDiagram
   class Logic {
+    <<interface>>
     + initialize()
     + getMatchState(): MatchState
-    + placeDisk(strategy: PlacementStrategy)
-    + isMatchOver(): Boolean
+    + placeUserDisk(position: Position): bool
+    + placeOpponentDisk(): bool
   } 
   class Board {
+    <<interface>>
     + initialize()
     + getBoardState(): BoardState
-    + placeDisk(strategy: PlacementStrategy): Boolean
+    + placeDisk(color: Color, strategy: PlacementStrategy): bool
     + getAvailablePlacements(color: Color): List~Position~
   }
   class Disk {
+    <<interface>>
     + getColor(): Color
     + flip()
+  }
+  class Player {
+    + getColor(): Color
   }
   class Opponent {
     + getPlacementStrategy(): PlacementStrategy
   }
+  class PlacementStrategy {
+    <<interface>>
+    + apply(board: Board): Position
+  }
 
-  Logic o-- Board
-  Logic o-- Opponent
-  Board o-- Disk
+  Logic --> Board
+  Logic --> Player
+
+  Player <|-- User
+  Player <|-- Opponent
+
+  Opponent --> PlacementStrategy : provides
+
+  Board --> Disk
+  Board --> PlacementStrategy: uses
 ```
 
 ## Requisiti funzionali

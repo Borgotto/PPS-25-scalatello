@@ -1,26 +1,28 @@
 # Design di dettaglio
 
-BoardManager:
-```mermaid
-classDiagram
-    class Board
-    class BoardManager {
-        + isPlacementLegal(position: Position): Boolean
-        + captureFromPosition(position: Position)
-        + computeAvailablePlacements(): List~Position~
-        + computeBestPlacement(strategy: PlacementStrategy): Position
-    }
-
-    Board *-- BoardManager
-```
-
 Struttura MatchState:
 ```mermaid
 classDiagram 
     class MatchState {
+        + getStatus(): Status
+        + getActivePlayer(): PlayerState
         + getBoard(): BoardState
     }
+    class Status {
+        <<enumeration>>
+        InProgress
+        UserWon
+        OpponentWon
+        Tie
+    }
+    class PlayerState {
+        <<enumeration>>
+        User
+        Opponent
+        + getColor(): Color
+    }
     class BoardState {
+        + getSize(): int
         + getDisks(): List~DiskState~
     }
     class DiskState {
@@ -36,35 +38,63 @@ classDiagram
         <<opaque: (int, int)>>
     }
 
-    MatchState o-- BoardState
-    BoardState o-- DiskState
+    MatchState --> BoardState
+    MatchState --> Status
+    MatchState --> PlayerState
+    PlayerState ..> Color
+    BoardState --> DiskState
     DiskState ..> Color
     DiskState ..> Position
 ```
 
-Scenario: scelta di una mossa legale da parte dell'utente. 
+Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer:
 ```mermaid
-sequenceDiagram
-    View->>Controller: handleSelection()
-    Controller->>Logic: placeDisk()
-    Logic->>Board: placeDisk()
-    Board->>BoardManager: isPlacementLegal()
-    BoardManager->>Board: true
-    Board->>BoardManager: captureFromPosition()
-    Board->>Logic: true
-    Logic->>Board: getAvailablePlacements()
-    Board->>BoardManager: computeAvailablePlacements()
-    BoardManager->>Board: List<Position>
-    Board->>Logic: List<Position>
+classDiagram
+    class Model {
+        <<interface>>
+        + getMatchState(): MatchState
+    }
+    class Publisher {
+        <<interface>>
+        + subscribe(subscriber: Subscriber)
+        + unsubscribe(subscriber: Subscriber)
+        # notifySubscribers(state: MatchState)
+    }
+    class Controller {
+        <<interface>>
+    }
+    class Subscriber {
+        <<interface>>
+        + update(state: MatchState)
+    }
+    class View {
+        <<interface>>
+    }
+
+    Controller --> Model
+    Publisher --> Subscriber: notifies
+    Publisher <|.. Controller
+    Subscriber <|.. View
+    View --> Controller
 ```
 
-Scenario: scelta della mossa da parte dell'avversario virtuale.
+BoardManager:
 ```mermaid
-sequenceDiagram
-    Controller->>Logic: placeDisk()
-    Logic->>Opponent: getPlacementStrategy()
-    Opponent->>Logic: PlacementStrategy
-    Logic->>Board: placeDisk()
-    Board->>BoardManager: computeBestPlacement()
-    BoardManager->>Board: Position
+classDiagram
+    class Board {
+        <<interface>>
+        + initialize()
+        + getBoardState(): BoardState
+        + placeDisk(color: Color, strategy: PlacementStrategy): bool
+        + getAvailablePlacements(color: Color): List~Position~
+    }
+    class BoardManager {
+        <<interface>>
+        + isPlacementLegal(color: Color,position: Position): bool
+        + captureFromPosition(color: Color, position: Position)
+        + computeAvailablePlacements(color Color): List~Position~
+        + computeBestPlacement(color: Color, strategy: PlacementStrategy): Position
+    }
+
+    Board --> BoardManager
 ```
