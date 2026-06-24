@@ -2,7 +2,13 @@
 
 ## Spiegazione dell'architettura
 
+L'architettura del gioco è stata progettata seguendo il pattern architetturale Model-View-Controller (MVC).
 
+Dato un gioco da tavolo come Othello, l'architettura MVC è particolarmente adatta perché permette di separare le responsabilità tra la logica del gioco (Model), l'interfaccia utente (View) e il controllo del flusso dell'applicazione (Controller).
+
+Permette di avere la possibilità in futuro di sostituire facilmente l'interfaccia utente da terminale con un'interfaccia grafica, senza dover modificare la logica del gioco o il controller, e viceversa.
+
+Facilita anche la testabilità dei singoli componenti, sfruttando `Mockito` per creare *placeholder* dei componenti non ancora sviluppati, o per isolarli durante i test.
 
 ## Diagramma dei componenti
 
@@ -51,7 +57,10 @@ classDiagram
   View <|.. CLIView
 ```
 
-Scenario: iterazione del loop di gioco tra View, Controller e Model, nell'eventualità di una mossa legale da parte dell'utente a cui segue una mossa dell'avversario.
+## Interazione tra View, Controller e Model
+
+Iterazione del loop di gioco tra View, Controller e Model, nell'eventualità di una mossa legale da parte dell'utente a cui segue una mossa dell'avversario.
+
 ```mermaid
 sequenceDiagram
     View->>Controller: handleSelection(position)
@@ -66,3 +75,15 @@ sequenceDiagram
     Logic->>Controller: MatchState
     Controller->>View: update(matchState)
 ```
+
+## Interazione tra Giocatori e Board
+
+I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `MoveStrategy`.
+
+La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
+È una funzione che data una situazione di gioco (ovvero lo stato della board) restituisce la posizione in cui il giocatore vuole piazzare il disco.
+
+Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
+Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dati lo stato della board, calcolare la posizione ottimale secondo predeterminati criteri.
+
+Quando un giocatore decide di fare una mossa, invoca il metodo `makeMove` della logica, passando la strategia di mossa appropriata.
