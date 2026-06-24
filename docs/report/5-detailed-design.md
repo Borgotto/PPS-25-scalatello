@@ -1,8 +1,11 @@
 # Design di dettaglio
 
-Struttura MatchState:
+## Descrizione dei componenti
+
+### Struttura MatchState
+
 ```mermaid
-classDiagram 
+classDiagram
     class MatchState {
         + getStatus(): Status
         + getActivePlayer(): PlayerState
@@ -47,7 +50,10 @@ classDiagram
     DiskState ..> Position
 ```
 
-Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer:
+---
+
+### Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
+
 ```mermaid
 classDiagram
     class Model {
@@ -78,7 +84,10 @@ classDiagram
     View --> Controller
 ```
 
-BoardManager:
+---
+
+### BoardManager
+
 ```mermaid
 classDiagram
     class Board {
@@ -98,3 +107,99 @@ classDiagram
 
     Board --> BoardManager
 ```
+
+---
+
+### Player
+
+La struttura del componente Player è stata progettata come un'interfaccia, che rappresenta un giocatore generico, che può fare scelte di posizionamento dei dischi sulla scacchiera.
+
+```mermaid
+classDiagram
+    class Player {
+        <<interface>>
+        + name: String
+        + color: Color
+        + getPlacementStrategy(): PlacementStrategy
+    }
+    class User {
+        + getPlacementStrategy(): HumanPlacementStrategy
+    }
+    class Opponent {
+        + getPlacementStrategy(): OpponentPlacementStrategy
+    }
+
+    Player <|-- User
+    Player <|-- Opponent
+```
+
+### PlacementStrategy
+
+La placement strategy è una interfaccia che permette di definire il comportamento del giocatore, sia esso umano o virtuale.
+
+In particolare, la placement strategy definisce un metodo `computePlacement(board: Board): Position`, che prende in input lo stato attuale della board e restituisce la posizione in cui il giocatore vuole posizionare il disco.
+
+Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.
+
+Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
+
+```mermaid
+classDiagram
+    class PlacementStrategy {
+        + computePlacement(board: Board): Position
+    }
+    class HumanPlacementStrategy {
+        + computePlacement(board: Board): Position
+    }
+    class OpponentPlacementStrategy {
+        + computePlacement(board: Board): Position
+    }
+
+    PlacementStrategy <|.. HumanPlacementStrategy
+    PlacementStrategy <|.. OpponentPlacementStrategy
+```
+
+---
+
+### SaveManager
+
+Il save manager è un componente del controller che si occupa di gestire il salvataggio e il caricamento dello stato della partita.
+
+Il save manager fornisce due metodi principali:
+    - `save(matchState: MatchState)`: salva lo stato della partita corrente su un file.
+    - `load()`: carica lo stato della partita da un file.
+
+Solo una istanza del save manager è presente all'interno del controller.\
+Questa istanza può salvare un unico stato della partita alla volta, e il salvataggio sovrascrive eventuali salvataggio precedente.
+
+Il caricamento tenta di leggere lo stato della partita da un file, e se il file non esiste o è corrotto, il save manager riporta un errore al controller.
+
+```mermaid
+classDiagram
+    class SaveManager {
+        + save(matchState: MatchState)
+        + load(): MatchState
+    }
+```
+
+#### Scenario: salvataggio di una partita
+
+```mermaid
+sequenceDiagram
+    View->>Controller: saveGame()
+    Controller->>Logic: getMatchState()
+    Logic->>Controller: MatchState
+    Controller->>SaveManager: save(MatchState)
+```
+
+#### Scenario: caricamento di una partita
+
+```mermaid
+sequenceDiagram
+    View->>Controller: loadGame()
+    Controller->>SaveManager: load()
+    SaveManager->>Controller: MatchState
+    Controller->>Logic: setMatchState(MatchState)
+```
+
+---
