@@ -70,6 +70,29 @@ classDiagram
   Board --> PlacementStrategy: uses
 ```
 
+```mermaid
+---
+title: Flusso della partita
+---
+flowchart TD
+
+Start --> InitBoard
+InitBoard --> PlayerTurn
+PlayerTurn --> CheckMoves
+
+CheckMoves --> HasMove
+HasMove --> ExecuteMove
+ExecuteMove --> FlipDiscs
+FlipDiscs --> NextPlayer
+
+NextPlayer --> CheckGameOver
+
+CheckGameOver --> Continue
+Continue --> PlayerTurn
+
+CheckGameOver --> EndGame
+```
+
 ## Requisiti funzionali
 
 ### Utente
