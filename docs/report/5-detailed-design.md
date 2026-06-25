@@ -195,8 +195,8 @@ Il caricamento tenta di leggere lo stato della partita da un file, e se il file 
 ```mermaid
 classDiagram
     class SaveManager {
-        + save(matchState: MatchState)
-        + load(): MatchState
+        + save(matchState: MatchState, filePath: String): Boolean
+        + load(filePath: String): MatchState
     }
 ```
 
@@ -207,7 +207,7 @@ sequenceDiagram
     View->>Controller: saveGame()
     Controller->>Logic: getMatchState()
     Logic->>Controller: MatchState
-    Controller->>SaveManager: save(MatchState)
+    Controller->>SaveManager: save(MatchState, filePath)
 ```
 
 #### Scenario: caricamento di una partita
@@ -215,7 +215,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     View->>Controller: loadGame()
-    Controller->>SaveManager: load()
+    Controller->>SaveManager: load(filePath)
     SaveManager->>Controller: MatchState
     Controller->>Logic: setMatchState(MatchState)
 ```
