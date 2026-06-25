@@ -228,11 +228,11 @@ sequenceDiagram
 
 ```mermaid
 classDiagram
-    class Disk {
-        <<trait>>
-        +getColor(): Color
-        +flip(): Disk
-    }
+  class Disk {
+    <<trait>>
+    +getColor(): Color
+    +flip(): Disk
+  }
 ```
 
 Nello specifico:
@@ -246,25 +246,28 @@ Nello specifico:
 
 ```mermaid
 classDiagram
-    class Board {
-        <<trait>>
-        +getBoardStatus(): BoardStatus
-        +placeDisk(strategy: PlacementStrategy, color: Color): Board
-        +flipDisks(position: Position, color: Color): Board
-        +isMoveValid(position: Position): Boolean
-        +getAvailableMoves(color: Color): List~Position~
-        +getDisksToFlip(position: Position, color: Color): List~Position~
-    }
+  class Board {
+    <<trait>>
+    +getBoardState(): BoardState
+    +placeDisk(position: Position, color: Color): Board
+    +flipDisks(position: Position, color: Color): Board
+  }
+  class BoardObj["Board"] {
+    <<object>>
+    +isMoveValid(position: Position): Boolean
+    +getAvailableMoves(color: Color): List~Position~
+  }
+
+  Board --  BoardObj
 ```
 
 In particolare:
 
-- `getBoardStatus()` permette di ottenere lo stato attuale della scacchiera;
+- `getBoardState()` permette di ottenere lo stato attuale della scacchiera;
 - `placeDisk()` inserisce un nuovo disco sulla scacchiera, restituendo una nuova scacchiera con le informazioni aggiornate;
 - `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
 - `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
 - `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
-- `getDisksToFlip()` funzione che resistuisce una lista che contiene le posizioni dei dischi da capovolgere in base al nuovo disco piazzato.
 
 ### MatchController
 
@@ -272,13 +275,13 @@ In particolare:
 
 ```mermaid
 classDiagram
-    class MatchController {
-        <<trait>>
-        +initializeMatch()
-        +handleSelection(position: Position)
-        +saveMatch(state: MatchState)
-        +loadMatch()
-    }
+  class MatchController {
+    <<trait>>
+    +initializeMatch()
+    +handleSelection(position: Position)
+    +saveMatch(state: MatchState)
+    +loadMatch()
+  }
 ```
 
 In dettaglio:
@@ -288,24 +291,24 @@ In dettaglio:
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
 
-### Interazione tra Giocatori e Board
+### Interazione tra MatchController, MatchLogic e Board
 
-- Pattern Strategy
+Per eseguire una mossa valida dell'utente o dell'avversario:
 
-  I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `PlacementStrategy`.
+```mermaid
+sequenceDiagram
+  MatchController ->> MatchLogic: placeUserDisk(position) or placeOpponentDisk()
+  MatchLogic ->> Board: isMoveValid(position)
+  Board ->> MatchLogic: true
+  MatchLogic ->> Board: placeDisk(position, color)
+  Board ->> MatchLogic: Board
+  MatchLogic ->> Board: flipDisks(position, color)
+  Board ->> MatchLogic: Board
+  MatchLogic ->> MatchController: true
+  MatchController ->> MatchLogic: getMatchState()
+  MatchLogic ->> Board: getBoardState()
+  Board ->> MatchLogic: boardState
+  MatchLogic ->> MatchController: matchState
+```
 
-  La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
-  È una funzione che data una situazione di gioco restituisce la posizione in cui il giocatore vuole piazzare il disco.
-
-  Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
-  Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dato lo stato corrente della partita, calcolare la posizione ottimale secondo predeterminati criteri.
-
-  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.\
-  Inoltre, rende più semplice l'implementazione della logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
-
-### SaveManager
-
-- Pattern Adapter
-
-  Nel modulo `SaveManager` viene usato il pattern ***adapter***.\
-Il modulo esporrà un'interfaccia unica per le operazioni di salvataggio e caricamento, delegando la conversione e la gestione dei formati specifici ad *adapter* concreti (es. JSON, XML, binario).
+In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `MatchController`.
