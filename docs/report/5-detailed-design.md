@@ -240,6 +240,12 @@ Nello specifico:
 - `getColor()` restituisce il suo colore;
 - `flip()` capovolge il disco (cambiandone il colore).
 
+#### Factory pattern
+
+Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**. 
+
+Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
+
 ### Board
 
 `Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
@@ -268,6 +274,12 @@ In particolare:
 - `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
 - `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
 - `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
+
+#### Factory pattern
+
+Eseguendo `placeDisk()` e `flipDisks()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
+
+Per semplificare questa operazione viene utilizzato il **factory pattern**.
 
 ### MatchController
 
