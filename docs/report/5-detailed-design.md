@@ -122,7 +122,7 @@ classDiagram
         + getPlacementStrategy(): PlacementStrategy
     }
     class User {
-        + getPlacementStrategy(): HumanPlacementStrategy
+        + getPlacementStrategy(): UserPlacementStrategy
     }
     class Opponent {
         + getPlacementStrategy(): OpponentPlacementStrategy
@@ -144,17 +144,17 @@ Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare l
 
 ```mermaid
 classDiagram
-    class PlacementStrategy {
-        + computePlacement(match: MatchState): Position
+    class PlacementStrategy~A~ {
+        + computePlacement(info: A): Position
     }
-    class HumanPlacementStrategy {
-        + computePlacement(match: MatchState): Position
+    class UserPlacementStrategy {
+        + computePlacement(userChoice: Position): Position
     }
     class OpponentPlacementStrategy {
         + computePlacement(match: MatchState): Position
     }
 
-    PlacementStrategy <|.. HumanPlacementStrategy
+    PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
 ```
 
