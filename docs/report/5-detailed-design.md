@@ -203,3 +203,69 @@ sequenceDiagram
 ```
 
 ---
+
+### Disk
+
+`Disk` è un componente del Model che modella le pedine (o dischi) del gioco. 
+
+```mermaid
+classDiagram
+    class Disk {
+        <<trait>>
+        +getColor(): Color
+        +flip(): Disk
+    }
+```
+
+Nello specifico:
+
+- `getColor()` restituisce il suo colore;
+- `flip()` capovolge il disco (cambiandone il colore).
+
+### Board
+
+`Board` è un componente del Model che modella la scacchiera su cui si svolge la partita. 
+
+```mermaid
+classDiagram
+    class Board {
+        <<trait>>
+        +getBoardStatus(): BoardStatus
+        +placeDisk(strategy: PlacementStrategy, disk: Disk): Board
+        +flipDisks(state: DiskState): Board
+        +isMoveValid(position: Position): Boolean
+        +getAvailableMoves(color: Color): List~Position~
+        +getDisksToFlip(state: DiskState): List~Position~
+    } 
+```
+
+In particolare:
+
+- `getBoardStatus()` permette di ottenere lo stato attuale della scacchiera;
+- `placeDisk()` inserisce un nuovo disco sulla scacchiera, restituendo una nuova scacchiera con le informazioni aggiornate;
+- `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
+- `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
+- `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
+- `getDisksToFlip()` funzione che resistuisce una lista che contiene le posizioni dei dischi da capovolgere in base al nuovo disco piazzato.
+
+### MatchController
+
+`MatchController` è un componente del controller che si occupa del coordinamento della partita.
+
+```mermaid
+classDiagram
+    class MatchController {
+        <<trait>>
+        +initializeMatch()
+        +handleSelection(position: Position)
+        +saveMatch(state: MatchState)
+        +loadMatch()
+    }
+```
+
+In dettaglio:
+
+- `initializeMatch()` inizializza la partita con la configurazione iniziale della scacchiera stabilita dalle regole del gioco;
+- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco;
+- `saveMatch()` salva lo stato della partita attuale;
+- `loadMatch()` carica il salvataggio di una partita.
