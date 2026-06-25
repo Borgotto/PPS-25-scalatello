@@ -28,7 +28,7 @@ La modalità classica del gioco prevede che, al termine della partita, il vincit
 title: Diagramma UML di dominio
 ---
 classDiagram
-  class Logic {
+  class MatchLogic {
     <<interface>>
     + initialize()
     + getMatchState(): MatchState
@@ -58,8 +58,8 @@ classDiagram
     + apply(board: Board): Position
   }
 
-  Logic --> Board
-  Logic --> Player
+  MatchLogic --> Board
+  MatchLogic --> Player
 
   Player <|-- User
   Player <|-- Opponent
