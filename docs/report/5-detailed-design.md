@@ -242,19 +242,19 @@ Nello specifico:
 
 ### Board
 
-`Board` è un componente del Model che modella la scacchiera su cui si svolge la partita. 
+`Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
 
 ```mermaid
 classDiagram
     class Board {
         <<trait>>
         +getBoardStatus(): BoardStatus
-        +placeDisk(strategy: PlacementStrategy, disk: Disk): Board
-        +flipDisks(state: DiskState): Board
+        +placeDisk(strategy: PlacementStrategy, color: Color): Board
+        +flipDisks(position: Position, color: Color): Board
         +isMoveValid(position: Position): Boolean
         +getAvailableMoves(color: Color): List~Position~
-        +getDisksToFlip(state: DiskState): List~Position~
-    } 
+        +getDisksToFlip(position: Position, color: Color): List~Position~
+    }
 ```
 
 In particolare:
