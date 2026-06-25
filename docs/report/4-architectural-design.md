@@ -78,12 +78,13 @@ sequenceDiagram
 
 ## Interazione tra Giocatori e Board
 
-I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `MoveStrategy`.
+I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `PlacementStrategy`.
 
 La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
-È una funzione che data una situazione di gioco (ovvero lo stato della board) restituisce la posizione in cui il giocatore vuole piazzare il disco.
+È una funzione che data una situazione di gioco restituisce la posizione in cui il giocatore vuole piazzare il disco.
 
 Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
-Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dati lo stato della board, calcolare la posizione ottimale secondo predeterminati criteri.
+Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dato lo stato corrente della partita, calcolare la posizione ottimale secondo predeterminati criteri.
 
-Quando un giocatore decide di fare una mossa, invoca il metodo `makeMove` della logica, passando la strategia di mossa appropriata.
+Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.\
+Inoltre, rende più semplice l'implementazione della logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.

@@ -118,7 +118,6 @@ La struttura del componente Player è stata progettata come un'interfaccia, che 
 classDiagram
     class Player {
         <<interface>>
-        + name: String
         + color: Color
         + getPlacementStrategy(): PlacementStrategy
     }
@@ -137,7 +136,7 @@ classDiagram
 
 La placement strategy è una interfaccia che permette di definire il comportamento del giocatore, sia esso umano o virtuale.
 
-In particolare, la placement strategy definisce un metodo `computePlacement(board: Board): Position`, che prende in input lo stato attuale della board e restituisce la posizione in cui il giocatore vuole posizionare il disco.
+In particolare, la placement strategy definisce un metodo `computePlacement(match: MatchState): Position`, che prende in input lo stato attuale della partita e restituisce la posizione in cui il giocatore vuole posizionare il disco.
 
 Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.
 
@@ -146,13 +145,13 @@ Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare l
 ```mermaid
 classDiagram
     class PlacementStrategy {
-        + computePlacement(board: Board): Position
+        + computePlacement(match: MatchState): Position
     }
     class HumanPlacementStrategy {
-        + computePlacement(board: Board): Position
+        + computePlacement(match: MatchState): Position
     }
     class OpponentPlacementStrategy {
-        + computePlacement(board: Board): Position
+        + computePlacement(match: MatchState): Position
     }
 
     PlacementStrategy <|.. HumanPlacementStrategy
