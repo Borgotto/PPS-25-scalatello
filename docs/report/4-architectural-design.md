@@ -26,7 +26,7 @@ classDiagram
     class CLIView
   }
   namespace ControllerPackage {
-    class Controller {
+    class MatchController {
       <<interface>>
       + initializeMatch()
       + handleSelection(position: Position)
@@ -40,7 +40,7 @@ classDiagram
     }
   }
   namespace ModelPackage {
-    class Logic {
+    class MatchLogic {
       <<interface>>
       + initialize()
       + getMatchState(): MatchState
@@ -49,10 +49,10 @@ classDiagram
     }
   }
 
-  View --> Controller
-  Controller ..> View : notifies
-  Controller --> Logic
-  SaveManager <-- Controller
+  View --> MatchController
+  MatchController ..> View : notifies
+  MatchController --> MatchLogic
+  SaveManager <-- MatchController
 
   View <|.. CLIView
 ```
