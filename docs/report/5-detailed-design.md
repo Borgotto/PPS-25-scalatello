@@ -165,8 +165,9 @@ classDiagram
 Il save manager è un componente del controller che si occupa di gestire il salvataggio e il caricamento dello stato della partita.
 
 Il save manager fornisce due metodi principali:
-    - `save(matchState: MatchState)`: salva lo stato della partita corrente su un file.
-    - `load()`: carica lo stato della partita da un file.
+
+- `save(matchState: MatchState)`: salva lo stato della partita corrente su un file.
+- `load()`: carica lo stato della partita da un file.
 
 Solo una istanza del save manager è presente all'interno del controller.\
 Questa istanza può salvare un unico stato della partita alla volta, e il salvataggio sovrascrive eventuali salvataggio precedente.
