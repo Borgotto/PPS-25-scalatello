@@ -1,55 +1,66 @@
 # Processo di sviluppo
 
-Il gruppo ha adottato un processo di sviluppo agile, basato sul framework Scrum
+Per la realizzazione del progetto, il gruppo ha adottato un processo di sviluppo Agile ispirato al framework [Scrum](https://it.wikipedia.org/wiki/Scrum_(informatica)). Di seguito, sono descritti i dettagli del processo adottato.
 
-## Ruoli e responsabilità
+## Ruoli
 
-Tutti i membri del gruppo hanno ricoperto il ruolo di sviluppatori, mentre i ruoli di Product Owner, Committente e Scrum Master sono stati ricoperti da membri del gruppo specifici.
+Ciascun membro del gruppo, oltre al ruolo di sviluppatore, ha svolto uno specifico ruolo nell'ottica della simulazione di un'interazione semplificata ma realistica tra stakeholder e team di progetto. Nello specifico, sono stati definiti i seguenti ruoli.
 
-### Ruolo di Committente
+### Committente
 
-Cristina Zoccola, si occuperà di fornire le specifiche del progetto, di definire i requisiti e di approvare le soluzioni proposte dal gruppo.
+Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti.
 
-### Ruolo di Product Owner
+- Comunicazione dei requisiti di progetto, poi formalizzati nella sezione ["Requisiti"](./3-requirements.md).
+- Verifica del risultato prodotto al termine di ogni iterazione, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per gli sviluppi futuri. fornendo feedback utili a garantire la conformità alle specifiche e la qualità del risultato.
+- Valutazione e accettazione del risultato finale del progetto.
 
-Elena Boschetti, si occuperà di gestire il backlog del progetto, di definire le priorità delle attività e di garantire che il team di sviluppo stia lavorando sulle funzionalità più importanti per il progetto.
+Tale ruolo è stato assegnato a Cristina Zoccola, poiché è stata la componente del gruppo che ha avanzato l'idea fondante del progetto e che ha più esperienza con il dominio in oggetto.
 
-### Ruolo di Scrum Master
+### Product Owner
 
-Emanuele Borghini, si occuperà garantire che il team stia seguendo le pratiche Scrum.
+Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupatodei seguenti compiti.
+
+- Redazione del Product Backlog, ossia dell'elenco di attività da svolgere nell'ambito del progetto, inclusa la stima di priorità e tempi per ciascun task individuato e l'assegnazione di ciascun task ai componenti del team di sviluppo.
+- Comunicazione con il committente, per la raccolta dei requisiti e, al termine di ogni iterazione, dei feedback sul risultato presentato.
+- Coordinamento del team di sviluppo in occasione dei meeting pianificati (riportati nella sezione ["Organizzazione del lavoro"](#organizzazione-del-lavoro)).
+
+Tale ruolo è stato assegnato a Elena Boschetti.
+
+### Scrum Master
+
+Lo Scrum Master ha avuto il ruolo di supervisionare il processo di sviluppo, al fine di garantirne l'efficienza e la conformità ai principi base del framework Scrum e alle modalità definite all'inizio del progetto.
+
+Tale ruolo è stato assegnato a Emanuele Borghini.
 
 ## Organizzazione del lavoro
 
-Il lavoro è stato suddiviso in sprint della durata di una settimana, sette sprint totali, durante i quali sono state svolte le seguenti attività:
+Le attività di progetto sono state suddivise in iterazioni (_dette sprint_) della durata di una settimana. In totale, sono stati pianificati 8 sprint.
 
-### Meeting
+Il primo sprint è stato dedicato alle seguenti attività.
 
-Il gruppo ha deciso di stabilire due incontri settimanali, gli incontri di inizio e fine sprint sono stati organizzati in presenza per facilitare la comunicazione e le scelte decisionali.
+- Definizione in dettaglio del processo di sviluppo, inclusa l'assegnazione dei ruoli indicati nella [relativa sezione](#ruoli).
+- Formalizzazione dei requisiti (il cui risultato è riportato nella sezione ["Requisiti"](./3-requirements.md)).
+- Scelta degli strumenti da adottare per la pianificazione del lavoro e per le attività di sviluppo quali testing, build e CI (Continuous Integration).
+- Redazione del Product Backlog.
 
-#### Sprint Planning
+Gli sprint successivi sono stati invece dedicati alle attività di progettazione, sviluppo e redazione della documentazione.
 
-Nel primo incontro della settimana, il gruppo programma le attività da svolgere durante lo sprint corrente.
+All'interno di ogni sprint (ad esclusione del primo sprint organizzativo), sono stati svolti i seguenti incontri.
 
-#### Sprint Review
+- **Sprint Planning**: incontro svolto all'inizio di ciascuno sprint finalizzato a definire le attività da portare a termine nello sprint stesso.
+- **Daily Scrum**: incontri giornalieri, per lo più di breve durata, finalizzati ad aggiornare cisascun membro del team sullo stato attuale del proprio lavoro e a risolvere eventuali dubbi o questioni.
+- **Sprint Review**: incontro svolto al termine di ciascuno sprint, finalizzato a valutare il lavoro svolto durante lo sprint stesso e a definire eventuali cambiamenti e miglioramenti per lo sprint successivo.
 
-Nel secondo incontro della settimana, il gruppo presenta i risultati dello sprint corrente e discute eventuali task da riprendere, modificare, o rinviare allo sprint successivo.
+## Strumenti
 
-#### Daily Scrum
-
-Gli incontri giornalieri invece sono tenuti in modalità remota, risultando più comodi.
-
-In questi incontri, ogni membro del gruppo condivide lo stato di avanzamento del proprio lavoro, eventuali problemi riscontrati e le attività da svolgere per il giorno successivo.
-
-## Strumenti per lo sviluppo
-
-- **Github Projects** è stato utilizzato per la gestione delle task del progetto, lo *sprint planning*, e la gestione del *backlog*.
-- **GitHub Actions** è stato utilizzato per l'integrazione continua, la creazione di *release*, l'esecuzione dei test automatici, e la generazione della documentazione.\In particolare:
-  - L'esecuzione automatica dei test è stata configurata per essere eseguita ad ogni push sul repository, o alternativamente come *pre-commit hook* locale.
-  - La creazione di *release* è stata automatizzata in base ai nomi dei commit.
+- **Github Projects** è stato utilizzato per la gestione delle task del progetto, lo _sprint planning_, e la gestione del _backlog_.
+- **GitHub Actions** è stato utilizzato per l'integrazione continua, la creazione di _release_, l'esecuzione dei test automatici, e la generazione della documentazione. In particolare:
+  - L'esecuzione automatica dei test è stata configurata per essere eseguita ad ogni push sul repository, o alternativamente come _pre-commit hook_ locale.
+  - La creazione di _release_ è stata automatizzata in base ai nomi dei commit.
 
 ---
 
-- Il framework **Scalatest** è stato utilizzato per la realizzazione e verifica degli *unit test*.
+- Il framework **Scalatest** è stato utilizzato per la realizzazione e verifica degli _unit test_.
 
 ---
 

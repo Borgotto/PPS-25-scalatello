@@ -269,3 +269,25 @@ In dettaglio:
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
+
+### Interazione tra Giocatori e Board
+
+- Pattern Strategy
+
+  I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `PlacementStrategy`.
+
+  La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
+  È una funzione che data una situazione di gioco restituisce la posizione in cui il giocatore vuole piazzare il disco.
+
+  Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
+  Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dato lo stato corrente della partita, calcolare la posizione ottimale secondo predeterminati criteri.
+
+  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.\
+  Inoltre, rende più semplice l'implementazione della logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
+
+### SaveManager
+
+- Pattern Adapter
+
+  Nel modulo `SaveManager` viene usato il pattern ***adapter***.\
+Il modulo esporrà un'interfaccia unica per le operazioni di salvataggio e caricamento, delegando la conversione e la gestione dei formati specifici ad *adapter* concreti (es. JSON, XML, binario).
