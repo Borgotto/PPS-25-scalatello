@@ -1,8 +1,46 @@
+# macOS
+.DS_Store
+
+# sbt specific
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+project/local-plugins.sbt
+.history
+.ensime
+.ensime_cache/
+.sbt-scripted/
+local.sbt
+.cache
+.lib/
+
+# Bloop
+.bsp/
+
+# Scala
 *.class
-*.tasty
 *.log
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Metals
+.metals/
+.metals.bsp
+.metals.sbt
+.bloop
+project/target
+
+# Virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# IDEA
 .idea
+.idea_modules
+/.worksheet/
+
+# IntelliJ
+out/
+
+# VS Code
+.vscode/
