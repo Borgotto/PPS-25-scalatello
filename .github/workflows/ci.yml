@@ -1,0 +1,28 @@
+name: CI
+on:
+  pull_request:
+  push:
+jobs:
+  run:
+    name: Build and Run
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: sbt
+      - name: Setup SBT
+        uses: sbt/setup-sbt@v1
+      - name: Run the project
+        run: sbt run
+      - name: Run the unit tests
+        run: sbt test
