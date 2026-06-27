@@ -53,15 +53,11 @@ All'interno di ogni sprint (ad esclusione del primo sprint organizzativo), sono 
 
 ## Strumenti
 
-- **Github Projects** è stato utilizzato per la gestione delle task del progetto, lo _sprint planning_, e la gestione del _backlog_.
-- **GitHub Actions** è stato utilizzato per l'integrazione continua, la creazione di _release_, l'esecuzione dei test automatici, e la generazione della documentazione. In particolare:
-  - L'esecuzione automatica dei test è stata configurata per essere eseguita ad ogni push sul repository, o alternativamente come _pre-commit hook_ locale.
-  - La creazione di _release_ è stata automatizzata in base ai nomi dei commit.
+A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
 
----
-
-- Il framework **Scalatest** è stato utilizzato per la realizzazione e verifica degli _unit test_.
-
----
-
-- **Mermaid** è stato utilizzato per la realizzazione dei diagrammi UML
+- Come sistema di controllo di versione, è stato utilizzato **Git**.
+- Per l'hosting remoto del repository, è stata utilizzata la piattaforma **GitHub**.
+- Per la gestione dei task del progetto, la redazione del backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, strumento integrato in GitHub.
+- Come build system, è stato utilizzato **SBT**.
+- Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di [test doubles](https://en.wikipedia.org/wiki/Test_double) da utilizzare all'interno dei test nelle fasi iniziali dello sviluppo.
+- Per la CI (Continuous Integration), sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub.
