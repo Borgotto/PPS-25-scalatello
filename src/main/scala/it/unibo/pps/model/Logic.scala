@@ -2,7 +2,7 @@ package it.unibo.pps.model
 
 import it.unibo.pps.state.PlayerState.{Opponent, User}
 import it.unibo.pps.state.MatchState
-import it.unibo.pps.utils.{Color, Shape}
+import it.unibo.pps.utils.{Color, Shape, Status}
 
 trait Logic:
   val matchState: MatchState
@@ -18,5 +18,7 @@ class LogicImpl(
   private var activePlayer = userColor match
     case Color.Black => userState
     case _ => opponentState
+  
+  private var status = Status.InProgress
 
-  override val matchState: MatchState = MatchState(boardShape, activePlayer)
+  override val matchState: MatchState = MatchState(boardShape, status, activePlayer)

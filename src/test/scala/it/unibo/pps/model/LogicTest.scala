@@ -4,6 +4,7 @@ import it.unibo.pps.state.PlayerState.*
 import it.unibo.pps.utils.Color
 import it.unibo.pps.utils.Color.*
 import it.unibo.pps.utils.Shape.*
+import it.unibo.pps.utils.Status.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.be
 import org.scalatest.matchers.should.Matchers.should
@@ -16,7 +17,7 @@ class LogicTest extends AnyFlatSpec:
   val RECTANGLE_HEIGHT = 7
   val RECTANGLE_WIDTH = 9
   val RECTANGULAR_SHAPE = Rectangle(RECTANGLE_HEIGHT, RECTANGLE_WIDTH)
-  
+
   val USER_COLOR: Color = Black
 
   "Square board" should "have correct shape and size" in:
@@ -48,4 +49,7 @@ class LogicTest extends AnyFlatSpec:
     activePlayer match
       case Opponent(color) => color should be(Black)
       case _ => fail("User is set to move first")
-      
+
+  "Match" should "initially be in progress" in:
+    val logic = new LogicImpl(RECTANGULAR_SHAPE, USER_COLOR)
+    logic.matchState.status should be(InProgress)
