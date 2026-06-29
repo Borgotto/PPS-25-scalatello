@@ -19,7 +19,11 @@ object Board:
       Position(rightCenter, rightCenter) -> Disk(Color.White)
     )
     new StandardBoard(shape, size, initialDisks)
-
+    
+    
+  def apply(shape: Shape, size: Int, disks: HashMap[Position, Disk]): Board = 
+    new StandardBoard(shape, size, disks)
+  
   private class StandardBoard(override val shape: Shape, 
                               override val size: Int, 
                               override val disks: HashMap[Position, Disk]) extends Board

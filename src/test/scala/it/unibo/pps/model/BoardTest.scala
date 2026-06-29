@@ -21,4 +21,12 @@ class BoardTest extends AnyFlatSpec:
       Position(rightCenter, rightCenter) -> Disk(Color.White)
     )
     assert(board.disks.equals(initialConfiguration))
-    
+
+  "A Board with disks" should "be created with those disks" in:
+    val expectedDisks = HashMap(
+      Position(0, 0) -> Disk(Color.Black)
+    )
+    val board = Board(BOARD_SHAPE, BOARD_SIZE, HashMap(
+      Position(0, 0) -> Disk(Color.Black)
+    ))
+    assert(board.disks.equals(expectedDisks))
