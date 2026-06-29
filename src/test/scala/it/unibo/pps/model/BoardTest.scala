@@ -20,4 +20,5 @@ class BoardTest extends AnyFlatSpec:
       Position(rightCenter, leftCenter) -> Disk(Color.Black),
       Position(rightCenter, rightCenter) -> Disk(Color.White)
     )
-    assert(board.disks == initialConfiguration)
+    assert(board.disks.equals(initialConfiguration))
+
