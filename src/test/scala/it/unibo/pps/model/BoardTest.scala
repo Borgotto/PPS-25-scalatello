@@ -10,8 +10,8 @@ class BoardTest extends AnyFlatSpec:
   val BOARD_SIZE = 8
   val BOARD_SHAPE = Shape.Square(BOARD_SIZE)
   
-  "A Board when provided an empty configuration" should "initialize itself with the disks in the correct positions" in: 
-    val board = Board(BOARD_SHAPE, BOARD_SIZE, HashMap[Position, Disk]())
+  "A Board without disks" should "initialize itself with the disks in the correct positions" in:
+    val board = Board(BOARD_SHAPE, BOARD_SIZE)
     val leftCenter = BOARD_SIZE / 2
     val rightCenter = leftCenter + 1
     val initialConfiguration = HashMap(
@@ -21,4 +21,4 @@ class BoardTest extends AnyFlatSpec:
       Position(rightCenter, rightCenter) -> Disk(Color.White)
     )
     assert(board.disks.equals(initialConfiguration))
-
+    
