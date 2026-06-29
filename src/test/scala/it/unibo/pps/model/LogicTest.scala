@@ -23,7 +23,7 @@ class LogicTest extends AnyFlatSpec:
 
   val USER_COLOR: Color = Black
 
-  val EXPECTED_INITIAL_BOARD_CONFIG: Seq[Disk] = List(
+  val EXPECTED_INITIAL_BOARD: Seq[Disk] = List(
     Disk(Color.White, Position(SQUARE_SIZE / 2 - 1, SQUARE_SIZE / 2 - 1)),
     Disk(Color.Black, Position(SQUARE_SIZE / 2 - 1, SQUARE_SIZE / 2)),
     Disk(Color.Black, Position(SQUARE_SIZE / 2, SQUARE_SIZE / 2 - 1)),
@@ -69,15 +69,31 @@ class LogicTest extends AnyFlatSpec:
 
   "Initial board configuration" should "be correct" in:
     // TODO(eboschetti): remove mock usage
-    when(MOCK_BOARD.disks) thenReturn EXPECTED_INITIAL_BOARD_CONFIG
+    when(MOCK_BOARD.disks) thenReturn EXPECTED_INITIAL_BOARD
     val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
-    logic.board.disks should be(EXPECTED_INITIAL_BOARD_CONFIG)
+    logic.board.disks should be(EXPECTED_INITIAL_BOARD)
 
   "User move that does not capture any opponent disk" should "not be allowed" in:
     // TODO(eboschetti): remove mock usage
     when(MOCK_BOARD.placeDisk(*, *)) thenReturn MOCK_BOARD
-    when(MOCK_BOARD.disks) thenReturn EXPECTED_INITIAL_BOARD_CONFIG
+    when(MOCK_BOARD.disks) thenReturn EXPECTED_INITIAL_BOARD
     val targetPosition = Position(0, 0)
     val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
       .placeUserDisk(targetPosition)
-    logic.board.disks should be(EXPECTED_INITIAL_BOARD_CONFIG)
+    logic.board.disks should be(EXPECTED_INITIAL_BOARD)
+
+  "User move that captures one opponent disk" should "be allowed and capture target disk" in:
+    val targetPosition = Position(3, 2)
+    val expectedBoard: Seq[Disk] = List(
+      Disk(USER_COLOR, targetPosition),
+      Disk(USER_COLOR, Position(SQUARE_SIZE / 2 - 1, SQUARE_SIZE / 2 - 1)),
+      Disk(USER_COLOR, Position(SQUARE_SIZE / 2 - 1, SQUARE_SIZE / 2)),
+      Disk(USER_COLOR, Position(SQUARE_SIZE / 2, SQUARE_SIZE / 2 - 1)),
+      Disk(USER_COLOR.opposite, Position(SQUARE_SIZE / 2, SQUARE_SIZE / 2))
+    )
+    // TODO(eboschetti): remove mock usage
+    when(MOCK_BOARD.placeDisk(*, *)) thenReturn MOCK_BOARD
+    when(MOCK_BOARD.disks) thenReturn expectedBoard
+    val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
+      .placeUserDisk(targetPosition)
+    logic.board.disks should be(expectedBoard)
