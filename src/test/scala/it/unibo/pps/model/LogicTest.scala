@@ -7,7 +7,7 @@ import it.unibo.pps.utils.{Color, Position}
 import it.unibo.pps.utils.Color.*
 import it.unibo.pps.utils.Shape.*
 import it.unibo.pps.utils.Status.*
-import org.mockito.Mockito.{mock, when}
+import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.be
 import org.scalatest.matchers.should.Matchers.should
@@ -31,7 +31,7 @@ class LogicTest extends AnyFlatSpec:
   )
 
   // TODO(eboschetti): remove mocks
-  val MOCK_BOARD: Board = mock[Board]()
+  val MOCK_BOARD: Board = mock[Board]
 
   "Square board" should "have correct shape and size" in:
     val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR)
@@ -70,6 +70,6 @@ class LogicTest extends AnyFlatSpec:
   "Initial board configuration" should "be correct" in:
     val expectedBoardState = BoardState(SQUARE_SHAPE, EXPECTED_INITIAL_BOARD_CONFIG)
     // TODO(eboschetti): replace mock usage
-    when(MOCK_BOARD.state).thenReturn(expectedBoardState)
+    when(MOCK_BOARD.state) thenReturn expectedBoardState
     val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
     logic.matchState.board.disks should be(EXPECTED_INITIAL_BOARD_CONFIG)

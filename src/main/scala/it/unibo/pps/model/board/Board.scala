@@ -4,7 +4,7 @@ import it.unibo.pps.state.BoardState
 import it.unibo.pps.utils.Shape
 
 trait Board:
-  def state: BoardState
+  val state: BoardState
 
 class BoardImpl(private val shape: Shape) extends Board:
-  override def state: BoardState = BoardState(shape, Seq())
+  override val state: BoardState = BoardState(shape, Seq())
