@@ -9,7 +9,7 @@ trait Board:
   def disks: HashMap[Position, Disk]
   
 object Board:
-  def apply(shape: Shape, size: Int, disks: HashMap[Position, Disk]): Board = {
+  def apply(shape: Shape, size: Int, disks: HashMap[Position, Disk]): Board =
     disks match
       case d if d.isEmpty =>
         val leftCenter = size / 2
@@ -22,7 +22,6 @@ object Board:
         )
         new StandardBoard(shape, size, initialDisks)
       case _ => new StandardBoard(shape, size, disks)
-  }
 
   private class StandardBoard(override val shape: Shape, 
                               override val size: Int, 
