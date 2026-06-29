@@ -1,30 +1,35 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, BoardImpl}
-import it.unibo.pps.state.PlayerState.{Opponent, User}
-import it.unibo.pps.state.MatchState
-import it.unibo.pps.utils.{Color, Shape, Status}
+import it.unibo.pps.utils.Player.{Opponent, User}
+import it.unibo.pps.utils.{Color, MatchStatus, PlacementStrategy, Player, Position, Shape}
 
 trait Logic:
-  val matchState: MatchState
+  val activePlayer: Player
+  val status: MatchStatus
+  val board: Board
+
+  def placeUserDisk(position: Position): Logic
 
 class LogicImpl(
   private val boardShape: Shape,
   private val userColor: Color,
-  // TODO(eboschetti): added only to enable usage of mocks for testing purposes. Remove later.
-  private[model] val board: Board
+  override val board: Board
 ) extends Logic:
-
-  private val userState = User(userColor)
-  private val opponentState = Opponent(userColor.opposite)
-
-  private var activePlayer = userColor match
-    case Color.Black => userState
-    case _ => opponentState
-
-  private var status = Status.InProgress
 
   def this(boardShape: Shape, userColor: Color) =
     this(boardShape, userColor, BoardImpl(boardShape))
 
-  override val matchState: MatchState = MatchState(status, activePlayer, board.state)
+  private val user = User(userColor)
+  private val opponent = Opponent(userColor.opposite)
+
+  val activePlayer: Player = userColor match
+    case Color.Black => user
+    case _ => opponent
+
+  val status: MatchStatus = MatchStatus.InProgress
+
+  override def placeUserDisk(position: Position): Logic =
+    val strategy: PlacementStrategy = _ => position
+    val newBoard = board.placeDisk(user.color, strategy)
+    LogicImpl(boardShape, userColor, newBoard)

@@ -1,6 +1,6 @@
 package it.unibo.pps.utils
 
-enum Status:
+enum MatchStatus:
   case InProgress
   case UserWon
   case OpponentWon
