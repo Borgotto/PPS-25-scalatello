@@ -8,6 +8,7 @@ lazy val root = project
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.20" % Test,
-      "org.mockito" % "mockito-core" % "5.23.0" % Test
+      "org.mockito" % "mockito-scala_3" % "2.2.1" % Test,
+      "org.mockito" % "mockito-scala-scalatest_3" % "2.2.1" % Test
     ),
   )
