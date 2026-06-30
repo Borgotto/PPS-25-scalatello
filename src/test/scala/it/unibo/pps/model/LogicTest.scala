@@ -10,7 +10,7 @@ import org.mockito.MockitoSugar.{mock, when}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.be
 import org.scalatest.matchers.should.Matchers.should
-import it.unibo.pps.testutils.TestExtensions._
+import it.unibo.pps.testutils.TestExtensions.*
 
 class LogicTest extends AnyFlatSpec:
 
@@ -73,33 +73,44 @@ class LogicTest extends AnyFlatSpec:
     logic.status should be(InProgress)
 
   "Initial board configuration" should "be correct" in:
-    // TODO(eboschetti): remove mock usage
-    when(MOCK_BOARD.disks) thenReturn INITIAL_SQUARE_BOARD.disks
-    val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
+    when(MOCK_BOARD.disks) thenReturn INITIAL_SQUARE_BOARD.disks // TODO(eboschetti): remove mock usage
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
     logic.board.disks should be(INITIAL_SQUARE_BOARD.disks)
 
   "User move that does not capture any opponent disk" should "not be allowed" in:
-    when(MOCK_BOARD.disks) thenReturn INITIAL_SQUARE_BOARD.disks  // TODO(eboschetti): remove mock usage
+    when(MOCK_BOARD.disks) thenReturn INITIAL_SQUARE_BOARD.disks // TODO(eboschetti): remove mock usage
     val targetPosition = Position(0, 0)
-    val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
       .placeUserDisk(targetPosition)
     logic.board.disks should be(INITIAL_SQUARE_BOARD.disks)
 
   "User move that captures one opponent disk horizontally" should "be allowed and capture target disk" in:
-    val targetPosition = Position(3, 2)
+    val initialBoard = """
+      ....
+      .WB.
+      .BW.
+      ....
+    """.toBoard
+    val targetPosition = Position(1, 0)
     val expectedBoard: Board = """
       ....
       BBB.
       .BW.
       ....
     """.toBoard
-    when(MOCK_BOARD.disks) thenReturn expectedBoard.disks   // TODO(eboschetti): remove mock usage
-    val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
+    when(MOCK_BOARD.disks) thenReturn expectedBoard.disks // TODO(eboschetti): remove mock usage
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
       .placeUserDisk(targetPosition)
     logic.board.disks should be(expectedBoard.disks)
 
-  "User move that captures one opponent disk vertically" should "be allowed and capture target disk" in :
-    val targetPosition = Position(2, 3)
+  "User move that captures one opponent disk vertically" should "be allowed and capture target disk" in:
+    val initialBoard = """
+      ....
+      .WB.
+      .BW.
+      ....
+    """.toBoard
+    val targetPosition = Position(0, 1)
     val expectedBoard: Board = """
       .B..
       .BB.
@@ -107,6 +118,62 @@ class LogicTest extends AnyFlatSpec:
       ....
     """.toBoard
     when(MOCK_BOARD.disks) thenReturn expectedBoard.disks // TODO(eboschetti): remove mock usage
-    val logic = LogicImpl(SQUARE_SHAPE, USER_COLOR, MOCK_BOARD)
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
       .placeUserDisk(targetPosition)
     logic.board.disks should be(expectedBoard.disks)
+
+  "User move that captures one opponent disk along forward diagonal" should "be allowed and capture target disk" in:
+    val initialBoard = """
+      ....
+      .WB.
+      BBW.
+      ....
+    """.toBoard
+    val targetPosition = Position(0, 2)
+    val expectedBoard: Board = """
+      ..B.
+      .BB.
+      BBW.
+      ....
+    """.toBoard
+    when(MOCK_BOARD.disks) thenReturn expectedBoard.disks // TODO(eboschetti): remove mock usage
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
+      .placeUserDisk(targetPosition)
+    logic.board.disks should be(expectedBoard.disks)
+
+  "User move that captures one opponent disk along backward diagonal" should "be allowed and capture target disk" in:
+    val initialBoard = """
+       ....
+       .WB.
+       .BB.
+       ....
+     """.toBoard
+    val targetPosition = Position(0, 0)
+    val expectedBoard: Board = """
+       B...
+       .BB.
+       .BB.
+       ....
+     """.toBoard
+    when(MOCK_BOARD.disks) thenReturn expectedBoard.disks // TODO(eboschetti): remove mock usage
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
+      .placeUserDisk(targetPosition)
+    logic.board.disks should be(expectedBoard.disks)
+
+  "Opponent" should "move after the user when having available moves" in:
+    val initialBoard = """
+       ....
+       .WB.
+       .BW.
+       ....
+     """.toBoard
+    val targetPosition = Position(1, 0)
+    // TODO(eboschetti): remove mock usage
+    val mockAvailablePlacements = Seq(Position(0, 0))
+    when(MOCK_BOARD.isPlacementValid(USER_COLOR, targetPosition)) thenReturn true
+    when(MOCK_BOARD.placeDisk(USER_COLOR, targetPosition)) thenReturn MOCK_BOARD
+    when(MOCK_BOARD.captureDisks(targetPosition)) thenReturn MOCK_BOARD
+    when(MOCK_BOARD.getAvailablePlacements(USER_COLOR.opposite)) thenReturn mockAvailablePlacements
+    val logic = LogicImpl(USER_COLOR, MOCK_BOARD)
+      .placeUserDisk(targetPosition)
+    logic.activePlayer should be(Opponent(USER_COLOR.opposite))

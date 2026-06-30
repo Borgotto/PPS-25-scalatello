@@ -1,6 +1,7 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, BoardImpl}
+import it.unibo.pps.utils.Color.{Black, White}
 import it.unibo.pps.utils.Player.{Opponent, User}
 import it.unibo.pps.utils.{Color, MatchStatus, PlacementStrategy, Player, Position, Shape}
 
@@ -12,25 +13,35 @@ trait Logic:
   def placeUserDisk(position: Position): Logic
 
 class LogicImpl(
-  private val boardShape: Shape,
-  private val userColor: Color,
+  override val activePlayer: Player,
   override val board: Board
 ) extends Logic:
-
-  def this(boardShape: Shape, userColor: Color) =
-    this(boardShape, userColor, BoardImpl(boardShape))
-
-  private val user = User(userColor)
-  private val opponent = Opponent(userColor.opposite)
-
-  val activePlayer: Player = userColor match
-    case Color.Black => user
-    case _ => opponent
 
   val status: MatchStatus = MatchStatus.InProgress
 
   override def placeUserDisk(position: Position): Logic =
-    if board.isPlacementValid(user.color, position) then
-      val newBoard = board.placeDisk(user.color, position).captureDisks(position)
-      LogicImpl(boardShape, userColor, newBoard)
-    else this
+    activePlayer match
+      case Opponent(_) => throw IllegalStateException("It is opponent's turn now")
+      case _ => ()
+    val userColor = activePlayer.color
+    val opponentColor = activePlayer.color.opposite
+    if !board.isPlacementValid(userColor, position) then this
+    else
+      val newBoard = board.placeDisk(userColor, position).captureDisks(position)
+      val newActivePlayer = if board.getAvailablePlacements(opponentColor).isEmpty
+        then User(userColor)
+        else Opponent(opponentColor)
+      new LogicImpl(newActivePlayer, newBoard)
+
+object LogicImpl:
+  
+  private def getInitialActivePlayer(userColor: Color): Player = userColor match
+    case Color.Black => User(Color.Black)
+    case Color.White => Opponent(Color.Black)
+    
+  def apply(boardShape: Shape, userColor: Color): LogicImpl =
+    new LogicImpl(getInitialActivePlayer(userColor), BoardImpl(boardShape))
+    
+  def apply(userColor: Color, board: Board) =
+    new LogicImpl(getInitialActivePlayer(userColor), board)
+    
