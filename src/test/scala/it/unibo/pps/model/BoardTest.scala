@@ -30,3 +30,19 @@ class BoardTest extends AnyFlatSpec:
       Position(0, 0) -> Disk(Color.Black)
     ))
     assert(board.disks.equals(expectedDisks))
+    
+  "A Board" should "know which moves are available for a given player" in:
+    val board = Board(BOARD_SHAPE, BOARD_SIZE)
+    val leftCenter = BOARD_SIZE / 2
+    val rightCenter = leftCenter + 1
+    val overLeftCenter = leftCenter - 1
+    val underRightCenter = rightCenter + 1
+    val expectedMovesForBlack = List(
+      Position(overLeftCenter, leftCenter),
+      Position(leftCenter, overLeftCenter),
+      Position(rightCenter, underRightCenter),
+      Position(underRightCenter, rightCenter)
+    )
+    val availableMoves = board.getAvailableMoves(Color.Black)
+    val diffBetweenExpectedAndAvailable = expectedMovesForBlack diff availableMoves
+    assert(diffBetweenExpectedAndAvailable.isEmpty)
