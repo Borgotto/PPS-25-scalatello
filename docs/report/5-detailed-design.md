@@ -136,39 +136,92 @@ classDiagram
 
 La placement strategy è una interfaccia che permette di definire il comportamento del giocatore, sia esso umano o virtuale.
 
-In particolare, la placement strategy definisce un metodo `computePlacement(match: MatchState): Position`, che prende in input lo stato attuale della partita e restituisce la posizione in cui il giocatore vuole posizionare il disco.
-
-Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.
-
+Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.\
 Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
 
 - Pattern Strategy
 
-  I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `PlacementStrategy`.
-
   La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
-  È una funzione che data una situazione di gioco restituisce la posizione in cui il giocatore vuole piazzare il disco.
+  È una funzione che data una informazione restituisce la posizione in cui il giocatore vuole piazzare il disco.
 
-  Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
-  Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dato lo stato corrente della partita, calcolare la posizione ottimale secondo predeterminati criteri.
+  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.
 
-  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.\
-  Inoltre, rende più semplice l'implementazione della logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
+  Inoltre, rende più semplice l'integrazione nella logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
 
 ```mermaid
 classDiagram
-    class PlacementStrategy~A~ {
-        + computePlacement(info: A): Position
+    class PlacementStrategy~A, B~ {
+        + computePlacement(info: A): B
     }
-    class UserPlacementStrategy {
+    class UserPlacementStrategy~Position, Position~ {
         + computePlacement(userChoice: Position): Position
     }
-    class OpponentPlacementStrategy {
+    class OpponentPlacementStrategy~MatchState, Position~ {
         + computePlacement(match: MatchState): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
+```
+
+#### Scenario: calcolo delle mosse
+
+L'interazione tra i componenti può essere rappresentata in due modi.
+
+- Nel primo diagramma, il controller si occupa di raccogliere le informazioni necessarie dalla logica del gioco e di calcolare la mossa da eseguire con i dati raccolti.
+
+```mermaid
+sequenceDiagram
+    actor User
+    box View
+    participant View
+    end
+    box Controller
+    participant Controller
+    end
+    box Model
+    participant Player
+    participant Logic
+    participant Board
+    end
+    User->>()View: chooses a position
+    View->>()Controller: handleSelection(position)
+    Controller->>()Logic: getMatchState()
+    Logic-->>Controller: MatchState
+    Controller->>()Logic: getActivePlayer()
+    Logic-->>Controller: Player
+    Controller->>()Player: getPlacementStrategy()
+    Player-->>Controller: PlacementStrategy
+    Controller->>()Logic: placeDisk(computePlacement())
+    Note over Logic, Board: placement then follows<br> the board diagram below
+```
+
+o alternativamente, in questo secondo diagramma:
+
+- il controller delega alla logica di gioco il compito di calcolare la mossa da eseguire, fornendo alla logica del gioco la scelta dell'utente, mentre le informazioni necessarie per calcolare la mossa dell'avversario sono già presenti all'interno della logica del gioco.
+
+```mermaid
+sequenceDiagram
+    actor User
+    box View
+    participant View
+    end
+    box Controller
+    participant Controller
+    end
+    box Model
+    participant Logic
+    participant Player
+    participant Board
+    end
+    User->>View: chooses a position
+    View->>Controller: handleSelection(userChoice)
+    Controller->>Logic: placeDisk(userChoice)
+    Logic-->>Logic: getActivePlayer()
+    Logic->>Player: getPlacementStrategy()
+    Player-->>Logic: PlacementStrategy
+    Logic-->>Logic: computePlacement()
+    Note over Logic, Board: placement then follows<br> the board diagram below
 ```
 
 ---
