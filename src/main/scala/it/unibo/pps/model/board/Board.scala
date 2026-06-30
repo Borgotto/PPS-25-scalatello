@@ -1,12 +1,15 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.utils.{Color, PlacementStrategy, Shape}
+import it.unibo.pps.utils.{Color, Position, Shape}
 
 trait Board:
   val shape: Shape
   val disks: Seq[Disk]
+  val availablePlacements: Seq[Position]
 
-  def placeDisk(color: Color, strategy: PlacementStrategy): Board
+  def isPlacementValid(color: Color, position: Position): Boolean
+  def placeDisk(color: Color, position: Position): Board
+  def captureDisks(newDiskPosition: Position): Board
 
 class BoardImpl(
   override val shape: Shape,
@@ -15,4 +18,10 @@ class BoardImpl(
   
   def this(shape: Shape) = this(shape, Seq())
 
-  def placeDisk(color: Color, strategy: PlacementStrategy): Board = this
+  def placeDisk(color: Color, position: Position): Board = this
+
+  override val availablePlacements: Seq[Position] = Seq()
+
+  override def isPlacementValid(color: Color, position: Position): Boolean = true
+
+  override def captureDisks(newDiskPosition: Position): Board = this

@@ -30,6 +30,7 @@ class LogicImpl(
   val status: MatchStatus = MatchStatus.InProgress
 
   override def placeUserDisk(position: Position): Logic =
-    val strategy: PlacementStrategy = _ => position
-    val newBoard = board.placeDisk(user.color, strategy)
-    LogicImpl(boardShape, userColor, newBoard)
+    if board.isPlacementValid(user.color, position) then
+      val newBoard = board.placeDisk(user.color, position).captureDisks(position)
+      LogicImpl(boardShape, userColor, newBoard)
+    else this
