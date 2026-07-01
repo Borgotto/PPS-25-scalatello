@@ -62,4 +62,12 @@ class BoardTest extends AnyFlatSpec:
   "A Board" should "know if a move is not valid" in:
     val notValidMovePosition: Position = Position(left - DISTANCE, left- DISTANCE)
     initialBoard.isMoveValid(notValidMovePosition, Color.Black) should be(false)
-    
+
+  "A Board" should "be able to place a new disk in a valid position" in:
+    val diskPosition: Position = Position(left - DISTANCE, left)
+    val newBoard = initialBoard.placeDisk(diskPosition, Color.Black)
+    val expectedDisks: HashMap[Position, Disk] = initialBoard.disks + (diskPosition -> Disk(Color.Black))
+    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    newBoard.disks should equal (expectedBoard.disks)
+    newBoard.size should equal(expectedBoard.size)
+    newBoard.shape should equal(expectedBoard.shape)

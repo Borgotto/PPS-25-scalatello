@@ -9,6 +9,7 @@ trait Board:
   def disks: HashMap[Position, Disk]
   def getAvailableMoves(color: Color): Set[Position]
   def isMoveValid(diskPosition: Position, color: Color): Boolean
+  def placeDisk(diskPosition: Position, color: Color): Board
   
 object Board:
   def apply(shape: Shape, size: Int): Board =
@@ -38,3 +39,9 @@ object Board:
 
     override def isMoveValid(diskPosition: Position, color: Color): Boolean =
       getAvailableMoves(color).contains(diskPosition)
+
+    override def placeDisk(diskPosition: Position, color: Color): Board =
+      val disk: Disk = Disk(color)
+      diskPosition match
+        case p if isMoveValid(diskPosition, color) => Board(shape, size, disks + (diskPosition -> disk))
+        case _ => this
