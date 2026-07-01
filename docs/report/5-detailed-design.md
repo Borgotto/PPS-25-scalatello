@@ -227,7 +227,7 @@ classDiagram
     + size: Int
     + shape: Shape
     + state: BoardState
-    + isMoveValid(position: Position): Boolean
+    + isMoveValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
     + flipDisks(position: Position, color: Color): Board
     + getAvailableMoves(color: Color): Set~Position~
