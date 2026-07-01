@@ -4,7 +4,7 @@ import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.utils.{Color, Position, Shape}
 import scala.collection.immutable.HashMap
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{should, shouldBe, empty, be, equal}
+import org.scalatest.matchers.should.Matchers.{should, shouldBe, empty, be, equal, not}
 
 class BoardTest extends AnyFlatSpec:
   val BOARD_SIZE: Int = 8
@@ -65,9 +65,18 @@ class BoardTest extends AnyFlatSpec:
 
   "A Board" should "be able to place a new disk in a valid position" in:
     val diskPosition: Position = Position(left - DISTANCE, left)
-    val newBoard = initialBoard.placeDisk(diskPosition, Color.Black)
+    val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks + (diskPosition -> Disk(Color.Black))
     val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
     newBoard.disks should equal (expectedBoard.disks)
+    newBoard.size should equal(expectedBoard.size)
+    newBoard.shape should equal(expectedBoard.shape)
+
+  "A Board, if the move is not valid" should "not place the new disk" in:
+    val diskPosition: Position = Position(left - DISTANCE, left - DISTANCE)
+    val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
+    val expectedDisks: HashMap[Position, Disk] = initialBoard.disks
+    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    newBoard.disks should equal(expectedBoard.disks)
     newBoard.size should equal(expectedBoard.size)
     newBoard.shape should equal(expectedBoard.shape)
