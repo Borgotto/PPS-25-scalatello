@@ -1,57 +1,56 @@
 package it.unibo.pps.model
 
-import org.scalatest.flatspec.AnyFlatSpec
-
-import scala.collection.immutable.HashMap
 import it.unibo.pps.model.board.{Board, Disk}
-import it.unibo.pps.utils.{Position, Color, Shape}
+import it.unibo.pps.utils.{Color, Position, Shape}
+import scala.collection.immutable.HashMap
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers.{should, shouldBe, empty, be, equal}
 
 class BoardTest extends AnyFlatSpec:
   val BOARD_SIZE = 8
   val BOARD_SHAPE = Shape.Square(BOARD_SIZE)
+  val STEP = 1
+
+  val left: Int = BOARD_SIZE / 2 - STEP
+  val right: Int = left + STEP
   
   "A Board without disks" should "initialize itself with the disks in the correct positions" in:
     val board = Board(BOARD_SHAPE, BOARD_SIZE)
-    val leftCenter = BOARD_SIZE / 2 - 1
-    val rightCenter = leftCenter + 1
     val initialConfiguration = HashMap(
-      Position(leftCenter, leftCenter) -> Disk(Color.White),
-      Position(leftCenter, rightCenter) -> Disk(Color.Black),
-      Position(rightCenter, leftCenter) -> Disk(Color.Black),
-      Position(rightCenter, rightCenter) -> Disk(Color.White)
+      Position(left, left) -> Disk(Color.White),
+      Position(left, right) -> Disk(Color.Black),
+      Position(right, left) -> Disk(Color.Black),
+      Position(right, right) -> Disk(Color.White)
     )
-    assert(board.disks.equals(initialConfiguration))
+    board.disks should be(initialConfiguration)
 
   "A Board with disks" should "be created with those disks" in:
     val expectedDisks = HashMap(
-      Position(0, 0) -> Disk(Color.Black)
+      Position(left, right) -> Disk(Color.Black)
     )
     val board = Board(BOARD_SHAPE, BOARD_SIZE, HashMap(
-      Position(0, 0) -> Disk(Color.Black)
+      Position(left, right) -> Disk(Color.Black)
     ))
-    assert(board.disks.equals(expectedDisks))
+    board.disks should be(expectedDisks)
     
   "A Board" should "know which moves are available for a given player" in:
-    val leftCenter = BOARD_SIZE / 2 - 1
-    val rightCenter = leftCenter + 1
-    val overLeftCenter = leftCenter - 1
-    val underRightCenter = rightCenter + 1
     val configuration = HashMap(
-      Position(leftCenter, leftCenter) -> Disk(Color.White),
-      Position(leftCenter, rightCenter) -> Disk(Color.Black),
-      Position(rightCenter, leftCenter) -> Disk(Color.Black),
-      Position(rightCenter, rightCenter) -> Disk(Color.White),
-      Position(rightCenter, underRightCenter) -> Disk(Color.White),
-      Position(4, 6) -> Disk(Color.White),
-      Position(4, 7) -> Disk(Color.White)
+      Position(left, left) -> Disk(Color.White),
+      Position(left, right) -> Disk(Color.Black),
+      Position(right, left) -> Disk(Color.Black),
+      Position(right, right) -> Disk(Color.White),
+      Position(right, right + STEP) -> Disk(Color.White),
+      Position(right, right + STEP + STEP) -> Disk(Color.White),
+      Position(right, right + STEP + STEP + STEP) -> Disk(Color.White)
     )
     val board = Board(BOARD_SHAPE, BOARD_SIZE, configuration)
     val expectedMovesForBlack = Set(
-      Position(overLeftCenter, leftCenter),
-      Position(leftCenter, overLeftCenter),
-      Position(underRightCenter, underRightCenter + 1),
-      Position(underRightCenter, rightCenter)
+      Position(left - STEP, left),
+      Position(left, left - STEP),
+      Position(right + STEP, right + STEP + STEP),
+      Position(right + STEP, right)
     )
     val availableMoves = board.getAvailableMoves(Color.Black)
     val diffBetweenAvailableAndExpected = availableMoves diff expectedMovesForBlack
-    assert((availableMoves.size equals expectedMovesForBlack.size) && diffBetweenAvailableAndExpected.isEmpty)
+    diffBetweenAvailableAndExpected shouldBe empty
+    availableMoves.size should equal (expectedMovesForBlack.size)
