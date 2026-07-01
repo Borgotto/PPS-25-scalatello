@@ -58,3 +58,8 @@ class BoardTest extends AnyFlatSpec:
   "A Board" should "know if a move is valid" in:
     val validMovePosition: Position = Position(left - DISTANCE, left)
     initialBoard.isMoveValid(validMovePosition, Color.Black) should be(true)
+
+  "A Board" should "know if a move is not valid" in:
+    val notValidMovePosition: Position = Position(left - DISTANCE, left- DISTANCE)
+    initialBoard.isMoveValid(notValidMovePosition, Color.Black) should be(false)
+    
