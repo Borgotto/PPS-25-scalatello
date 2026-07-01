@@ -12,7 +12,7 @@ trait Board:
   
 object Board:
   def apply(shape: Shape, size: Int): Board =
-    val leftCenter = size / 2
+    val leftCenter = size / 2 - 1
     val rightCenter = leftCenter + 1
     val initialDisks = HashMap(
       Position(leftCenter, leftCenter) -> Disk(Color.White),
@@ -44,12 +44,12 @@ object Board:
                                   rowStep: Int, columnStep: Int, size: Int): Option[Position] =
     position match
       case p if disks.contains(Position(p.row - rowStep, p.column - columnStep))
-        && p.row - rowStep > 0 && p.row - rowStep < size
-        && p.column - columnStep > 0 && p.column - columnStep < size
+        && p.row - rowStep >= 0 && p.row - rowStep < size
+        && p.column - columnStep >= 0 && p.column - columnStep < size
       => findEmptyNeighbour(disks, Position(p.row - rowStep, p.column - columnStep), rowStep, columnStep, size)
       case p if !disks.contains(Position(p.row - rowStep, p.column - columnStep))
-        && p.row - rowStep > 0 && p.row - rowStep < size
-        && p.column - columnStep > 0 && p.column - columnStep < size
+        && p.row - rowStep >= 0 && p.row - rowStep < size
+        && p.column - columnStep >= 0 && p.column - columnStep < size
       => Some(Position(p.row - rowStep, p.column - columnStep))
       case _ => Option.empty
   

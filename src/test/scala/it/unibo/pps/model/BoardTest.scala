@@ -1,6 +1,7 @@
 package it.unibo.pps.model
 
 import org.scalatest.flatspec.AnyFlatSpec
+
 import scala.collection.immutable.HashMap
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.utils.{Position, Color, Shape}
@@ -11,7 +12,7 @@ class BoardTest extends AnyFlatSpec:
   
   "A Board without disks" should "initialize itself with the disks in the correct positions" in:
     val board = Board(BOARD_SHAPE, BOARD_SIZE)
-    val leftCenter = BOARD_SIZE / 2
+    val leftCenter = BOARD_SIZE / 2 - 1
     val rightCenter = leftCenter + 1
     val initialConfiguration = HashMap(
       Position(leftCenter, leftCenter) -> Disk(Color.White),
@@ -31,7 +32,7 @@ class BoardTest extends AnyFlatSpec:
     assert(board.disks.equals(expectedDisks))
     
   "A Board" should "know which moves are available for a given player" in:
-    val leftCenter = BOARD_SIZE / 2
+    val leftCenter = BOARD_SIZE / 2 - 1
     val rightCenter = leftCenter + 1
     val overLeftCenter = leftCenter - 1
     val underRightCenter = rightCenter + 1
@@ -41,8 +42,8 @@ class BoardTest extends AnyFlatSpec:
       Position(rightCenter, leftCenter) -> Disk(Color.Black),
       Position(rightCenter, rightCenter) -> Disk(Color.White),
       Position(rightCenter, underRightCenter) -> Disk(Color.White),
-      Position(5, 7) -> Disk(Color.White),
-      Position(5, 8) -> Disk(Color.White)
+      Position(4, 6) -> Disk(Color.White),
+      Position(4, 7) -> Disk(Color.White)
     )
     val board = Board(BOARD_SHAPE, BOARD_SIZE, configuration)
     val expectedMovesForBlack = Set(
