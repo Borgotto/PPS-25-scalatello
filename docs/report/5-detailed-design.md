@@ -223,11 +223,14 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
+    + disks: HashMap~Position, Disk~
+    + size: Int
+    + shape: Shape
     + state: BoardState
     + isMoveValid(position: Position): Boolean
     + placeDisk(position: Position, color: Color): Board
     + flipDisks(position: Position, color: Color): Board
-    + getAvailableMoves(color: Color): List~Position~
+    + getAvailableMoves(color: Color): Set~Position~
   }
 ```
 
