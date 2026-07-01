@@ -28,46 +28,27 @@ La modalità classica del gioco prevede che, al termine della partita, il vincit
 title: Diagramma UML di dominio
 ---
 classDiagram
-  class MatchLogic {
-    <<interface>>
-    + initialize()
-    + getMatchState(): MatchState
-    + placeUserDisk(position: Position): bool
-    + placeOpponentDisk(): bool
-  } 
-  class Board {
-    <<interface>>
-    + initialize()
-    + getBoardState(): BoardState
-    + placeDisk(color: Color, strategy: PlacementStrategy): bool
-    + getAvailablePlacements(color: Color): List~Position~
-  }
-  class Disk {
-    <<interface>>
-    + getColor(): Color
-    + flip()
-  }
-  class Player {
-    + getColor(): Color
-  }
-  class Opponent {
-    + getPlacementStrategy(): PlacementStrategy
-  }
-  class PlacementStrategy {
-    <<interface>>
-    + apply(board: Board): Position
-  }
+  class Logic
+  class Player
+  class User
+  class Opponent
+  class PlacementStrategy
+  class Board
+  class Disk
+  class Color
 
-  MatchLogic --> Board
-  MatchLogic --> Player
+  Logic --> Board
+  Logic --> Player
+  Logic --> PlacementStrategy: applies
 
   Player <|-- User
   Player <|-- Opponent
 
-  Opponent --> PlacementStrategy : provides
+  Player --> PlacementStrategy : provides
+  Player --> Color: is assigned
 
   Board --> Disk
-  Board --> PlacementStrategy: uses
+  Disk --> Color: has
 ```
 
 ```mermaid
