@@ -1,64 +1,14 @@
 # Design di dettaglio
 
-## Descrizione dei componenti
+## Aggiornamento View
 
-### Struttura MatchState
-
-```mermaid
-classDiagram
-    class MatchState {
-        + getStatus(): Status
-        + getActivePlayer(): PlayerState
-        + getBoard(): BoardState
-    }
-    class Status {
-        <<enumeration>>
-        InProgress
-        UserWon
-        OpponentWon
-        Tie
-    }
-    class PlayerState {
-        <<enumeration>>
-        User
-        Opponent
-        + getColor(): Color
-    }
-    class BoardState {
-        + getSize(): int
-        + getDisks(): List~DiskState~
-    }
-    class DiskState {
-        + getColor(): Color
-        + getPosition(): Position
-    }
-    class Color {
-        <<enumeration>>
-        BLACK
-        WHITE
-    }
-    class Position {
-        <<opaque: (int, int)>>
-    }
-
-    MatchState --> BoardState
-    MatchState --> Status
-    MatchState --> PlayerState
-    PlayerState ..> Color
-    BoardState --> DiskState
-    DiskState ..> Color
-    DiskState ..> Position
-```
-
----
-
-### Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
+Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
 
 ```mermaid
 classDiagram
     class Model {
         <<interface>>
-        + getMatchState(): MatchState
+        + state: MatchState
     }
     class Publisher {
         <<interface>>
@@ -84,9 +34,9 @@ classDiagram
     View --> Controller
 ```
 
----
+## BoardManager
 
-### BoardManager
+TODO: aggiornare
 
 ```mermaid
 classDiagram
@@ -110,7 +60,7 @@ classDiagram
 
 ---
 
-### Player
+## Player
 
 La struttura del componente Player è stata progettata come un'interfaccia, che rappresenta un giocatore generico, che può fare scelte di posizionamento dei dischi sulla scacchiera.
 
@@ -119,56 +69,77 @@ classDiagram
     class Player {
         <<interface>>
         + color: Color
-        + getPlacementStrategy(): PlacementStrategy
+        + strategy: PlacementStrategy
     }
     class User {
-        + getPlacementStrategy(): UserPlacementStrategy
+        + strategy: UserPlacementStrategy
     }
     class Opponent {
-        + getPlacementStrategy(): OpponentPlacementStrategy
+        + strategy: OpponentPlacementStrategy
     }
 
     Player <|-- User
     Player <|-- Opponent
 ```
 
-### PlacementStrategy
+## PlacementStrategy
 
 La placement strategy è una interfaccia che permette di definire il comportamento del giocatore, sia esso umano o virtuale.
 
-In particolare, la placement strategy definisce un metodo `computePlacement(match: MatchState): Position`, che prende in input lo stato attuale della partita e restituisce la posizione in cui il giocatore vuole posizionare il disco.
-
-Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.
-
+Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.\
 Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
 
 - Pattern Strategy
 
-  I giocatori, ovvero l'utente che l'avversario, interagiscono con la logica del gioco attraverso le `PlacementStrategy`.
-
   La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
-  È una funzione che data una situazione di gioco restituisce la posizione in cui il giocatore vuole piazzare il disco.
+  È una funzione che data una informazione restituisce la posizione in cui il giocatore vuole piazzare il disco.
 
-  Nel caso dell'utente, la strategia di mossa è passata come input, la scelta della posizione è quindi determinata dall'utente stesso invece che da un algoritmo decisionale.\
-  Nel caso dell'avversario, la strategia di mossa è implementata da uno o più algoritmi che possono, dato lo stato corrente della partita, calcolare la posizione ottimale secondo predeterminati criteri.
+  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.
 
-  Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.\
-  Inoltre, rende più semplice l'implementazione della logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
+  Inoltre, rende più semplice l'integrazione nella logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
 
 ```mermaid
 classDiagram
-    class PlacementStrategy~A~ {
-        + computePlacement(info: A): Position
+    class PlacementStrategy~A, B~ {
+        + computePlacement(info: A): B
     }
-    class UserPlacementStrategy {
+    class UserPlacementStrategy~Position, Position~ {
         + computePlacement(userChoice: Position): Position
     }
-    class OpponentPlacementStrategy {
+    class OpponentPlacementStrategy~MatchState, Position~ {
         + computePlacement(match: MatchState): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
+```
+
+### Scenario: calcolo delle mosse
+
+Il controller delega alla logica di gioco il compito di calcolare la mossa da eseguire, fornendo alla logica del gioco la scelta dell'utente, mentre le informazioni necessarie per calcolare la mossa dell'avversario sono già presenti all'interno della logica del gioco.
+
+```mermaid
+sequenceDiagram
+    actor User
+    box View
+    participant View
+    end
+    box Controller
+    participant Controller
+    end
+    box Model
+    participant Logic
+    participant Player
+    participant Board
+    end
+    User->>View: chooses a position
+    View->>Controller: handleSelection(userChoice)
+    Controller->>Logic: placeDisk(userChoice)
+    Logic-->>Logic: get active player
+    Logic->>Player: get placement strategy
+    Player-->>Logic: PlacementStrategy
+    Logic-->>Logic: computePlacement()
+    Note over Logic, Board: placement then follows<br> the board diagram below
 ```
 
 ---
@@ -230,19 +201,17 @@ sequenceDiagram
 classDiagram
   class Disk {
     <<trait>>
-    +getColor(): Color
-    +flip(): Disk
+    + color: Color
+    + flip(): Disk
   }
 ```
 
 Nello specifico:
 
-- `getColor()` restituisce il suo colore;
+- `color` restituisce il suo colore;
 - `flip()` capovolge il disco (cambiandone il colore).
 
-#### Factory pattern
-
-Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**. 
+Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**.
 
 Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
 
@@ -254,28 +223,24 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
-    +getBoardState(): BoardState
-    +placeDisk(position: Position, color: Color): Board
-    +flipDisks(position: Position, color: Color): Board
+    + disks: HashMap~Position, Disk~
+    + size: Int
+    + shape: Shape
+    + state: BoardState
+    + isMoveValid(position: Position): Boolean
+    + placeDisk(position: Position, color: Color): Board
+    + flipDisks(position: Position, color: Color): Board
+    + getAvailableMoves(color: Color): Set~Position~
   }
-  class BoardObj["Board"] {
-    <<object>>
-    +isMoveValid(position: Position): Boolean
-    +getAvailableMoves(color: Color): List~Position~
-  }
-
-  Board --  BoardObj
 ```
 
 In particolare:
 
-- `getBoardState()` permette di ottenere lo stato attuale della scacchiera;
+- `state` permette di ottenere lo stato attuale della scacchiera;
 - `placeDisk()` inserisce un nuovo disco sulla scacchiera, restituendo una nuova scacchiera con le informazioni aggiornate;
 - `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
 - `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
 - `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
-
-#### Factory pattern
 
 Eseguendo `placeDisk()` e `flipDisks()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
 
