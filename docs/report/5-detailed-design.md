@@ -224,16 +224,11 @@ classDiagram
   class Board {
     <<trait>>
     + state: BoardState
+    + isMoveValid(position: Position): Boolean
     + placeDisk(position: Position, color: Color): Board
     + flipDisks(position: Position, color: Color): Board
-  }
-  class BoardObj["Board"] {
-    <<object>>
-    + isMoveValid(position: Position): Boolean
     + getAvailableMoves(color: Color): List~Position~
   }
-
-  Board -- BoardObj
 ```
 
 In particolare:
