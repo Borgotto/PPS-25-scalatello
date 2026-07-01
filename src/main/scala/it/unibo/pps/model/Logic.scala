@@ -1,23 +1,21 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, BoardImpl}
-import it.unibo.pps.utils.Color.{Black, White}
+import it.unibo.pps.state.MatchState
 import it.unibo.pps.utils.Player.{Opponent, User}
-import it.unibo.pps.utils.{Color, MatchStatus, PlacementStrategy, Player, Position, Shape}
+import it.unibo.pps.utils.{Color, MatchStatus, Player, Position, Shape}
 
 trait Logic:
-  val activePlayer: Player
-  val status: MatchStatus
-  val board: Board
-
+  val state: MatchState
   def placeUserDisk(position: Position): Logic
 
 class LogicImpl(
-  override val activePlayer: Player,
-  override val board: Board
+  private val status: MatchStatus,
+  private val activePlayer: Player,
+  private val board: Board
 ) extends Logic:
 
-  val status: MatchStatus = MatchStatus.InProgress
+  override val state = MatchState(status, activePlayer.state, board.state)
 
   override def placeUserDisk(position: Position): Logic =
     activePlayer match
@@ -31,7 +29,8 @@ class LogicImpl(
       val newActivePlayer = if board.getAvailablePlacements(opponentColor).isEmpty
         then User(userColor)
         else Opponent(opponentColor)
-      new LogicImpl(newActivePlayer, newBoard)
+      val newStatus = MatchStatus.InProgress
+      new LogicImpl(newStatus, newActivePlayer, newBoard)
 
 object LogicImpl:
   
@@ -40,8 +39,8 @@ object LogicImpl:
     case Color.White => Opponent(Color.Black)
     
   def apply(boardShape: Shape, userColor: Color): LogicImpl =
-    new LogicImpl(getInitialActivePlayer(userColor), BoardImpl(boardShape))
+    new LogicImpl(MatchStatus.InProgress, getInitialActivePlayer(userColor), BoardImpl(boardShape))
     
   def apply(userColor: Color, board: Board) =
-    new LogicImpl(getInitialActivePlayer(userColor), board)
+    new LogicImpl(MatchStatus.InProgress, getInitialActivePlayer(userColor), board)
     
