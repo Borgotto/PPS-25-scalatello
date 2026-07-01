@@ -13,16 +13,16 @@ class BoardTest extends AnyFlatSpec:
 
   val left: Int = BOARD_SIZE / 2 - DISTANCE
   val right: Int = left + DISTANCE
-  
+  val initialBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE)
+
   "A Board without disks" should "initialize itself with the disks in the correct positions" in:
-    val board: Board = Board(BOARD_SHAPE, BOARD_SIZE)
     val initialConfiguration: HashMap[Position, Disk] = HashMap(
       Position(left, left) -> Disk(Color.White),
       Position(left, right) -> Disk(Color.Black),
       Position(right, left) -> Disk(Color.Black),
       Position(right, right) -> Disk(Color.White)
     )
-    board.disks should be(initialConfiguration)
+    initialBoard.disks should be(initialConfiguration)
 
   "A Board with disks" should "be created with those disks" in:
     val expectedDisks: HashMap[Position, Disk] = HashMap(
@@ -54,3 +54,7 @@ class BoardTest extends AnyFlatSpec:
     val diffBetweenAvailableAndExpected: Set[Position] = availableMoves diff expectedMovesForBlack
     diffBetweenAvailableAndExpected shouldBe empty
     availableMoves.size should equal (expectedMovesForBlack.size)
+
+  "A Board" should "know if a move is valid" in:
+    val validMovePosition: Position = Position(left - DISTANCE, left)
+    initialBoard.isMoveValid(validMovePosition, Color.Black) should be(true)

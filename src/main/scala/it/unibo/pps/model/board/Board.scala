@@ -8,6 +8,7 @@ trait Board:
   def size: Int
   def disks: HashMap[Position, Disk]
   def getAvailableMoves(color: Color): Set[Position]
+  def isMoveValid(diskPosition: Position, color: Color): Boolean
   
 object Board:
   def apply(shape: Shape, size: Int): Board =
@@ -34,3 +35,6 @@ object Board:
       val oppositeNeighbours: Set[(Position, Position)] = compute.findOppositeNeighbour(color, disks)
       val availableMoves: Set[Option[Position]] = compute.findAvailableMoves(oppositeNeighbours, disks, size)
       availableMoves.filter(e => e.isDefined).map(e => e.get)
+
+    override def isMoveValid(diskPosition: Position, color: Color): Boolean =
+      getAvailableMoves(color).contains(diskPosition)
