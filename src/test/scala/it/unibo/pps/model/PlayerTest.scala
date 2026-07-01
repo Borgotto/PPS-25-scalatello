@@ -15,6 +15,6 @@ class PlayerTest extends AnyFlatSpec:
     assert(strategy.isInstanceOf[UserPlacementStrategy])
 
   "An Opponent" should "return the correct placement strategy" in:
-    val opponent: Player = Opponent()
+    val opponent: Player = Opponent.RandomOpponent
     val strategy = opponent.getPlacementStrategy
     assert(strategy.isInstanceOf[OpponentPlacementStrategy])
