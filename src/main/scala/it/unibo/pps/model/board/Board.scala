@@ -1,7 +1,7 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.state.BoardState
-import it.unibo.pps.utils.{Color, Player, Position, Shape}
+import it.unibo.pps.utils.{Color, Position, Shape}
 
 trait Board:
   val state: BoardState
@@ -17,7 +17,7 @@ class BoardImpl(
   
   def this(shape: Shape) = this(shape, Seq())
 
-  override val state = BoardState(shape, disks.map(disk => disk.state))
+  override val state = BoardState(shape, disks.map(disk => disk.state), Seq())
 
   override def isPlacementValid(color: Color, position: Position): Boolean = true
 

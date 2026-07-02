@@ -2,12 +2,13 @@ package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, BoardImpl}
 import it.unibo.pps.state.MatchState
-import it.unibo.pps.utils.Player.{Opponent, User}
-import it.unibo.pps.utils.{Color, MatchStatus, Player, Position, Shape}
+import it.unibo.pps.model.Player
+import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
 
 trait Logic:
   val state: MatchState
   def placeUserDisk(position: Position): Logic
+  def placeOpponentDisk(): Logic
 
 class LogicImpl(
   private val status: MatchStatus,
@@ -20,17 +21,29 @@ class LogicImpl(
   override def placeUserDisk(position: Position): Logic =
     activePlayer match
       case Opponent(_) => throw IllegalStateException("It is opponent's turn now")
-      case _ => ()
-    val userColor = activePlayer.color
-    val opponentColor = activePlayer.color.opposite
-    if !board.isPlacementValid(userColor, position) then this
-    else
-      val newBoard = board.placeDisk(userColor, position).captureDisks(position)
-      val newActivePlayer = if board.getAvailablePlacements(opponentColor).isEmpty
-        then User(userColor)
-        else Opponent(opponentColor)
-      val newStatus = MatchStatus.InProgress
-      new LogicImpl(newStatus, newActivePlayer, newBoard)
+      case user: User =>
+        val opponentColor = activePlayer.color.opposite
+        if !board.isPlacementValid(user.color, position) then this
+        else
+          val newBoard = board.placeDisk(user.color, position).captureDisks(position)
+          val newActivePlayer = if board.getAvailablePlacements(opponentColor).isEmpty
+            then User(user.color)
+            else Opponent(opponentColor)
+          val newStatus = MatchStatus.InProgress  // TODO
+          new LogicImpl(newStatus, newActivePlayer, newBoard)
+
+  override def placeOpponentDisk(): Logic =
+    activePlayer match
+      case User(_) => throw IllegalStateException("It is user's turn now")
+      case opponent: Opponent =>
+        val position = opponent.strategy.computePlacement(using board.state)
+        val newBoard = board.captureDisks(position)
+        val userColor = opponent.color.opposite
+        val newActivePlayer = if board.getAvailablePlacements(userColor).isEmpty
+          then Opponent(opponent.color) 
+          else User(userColor)
+        val newStatus = MatchStatus.InProgress  // TODO
+        new LogicImpl(newStatus, newActivePlayer, newBoard)
 
 object LogicImpl:
   
