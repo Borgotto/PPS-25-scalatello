@@ -6,16 +6,19 @@ import scala.annotation.tailrec
 import scala.collection.immutable.HashMap
 
 class BoardComputations:
-  def findOppositeNeighbour(color: Color, disks: HashMap[Position, Disk]): Set[(Position, Position)] =
+  private def calculateDirection(distance: Position): Position =
+    distance / Position(distance.row.abs, distance.column.abs)
+
+  private def findOppositeNeighbours(color: Color, board: Board): Set[(Position, Position)] =
     val neighbourhood = Set(-1, 0, 1)
-    for disk <- disks.filter(e => e._2.color.equals(color)).keySet
-        possibleNeighbour <- disks.filter(e => e._2.color.equals(color.opposite)).keySet
+    for disk <- board.disks.filter(e => e._2.color.equals(color)).keySet
+        possibleNeighbour <- board.disks.filter(e => e._2.color.equals(color.opposite)).keySet
         rowDistance: Int = disk.row - possibleNeighbour.row
         columnDistance: Int = disk.column - possibleNeighbour.column
         if neighbourhood.contains(rowDistance)
         if neighbourhood.contains(columnDistance)
     yield (disk, possibleNeighbour)
-  
+
   @tailrec
   private def findEmptyNeighbour(disks: HashMap[Position, Disk], diskPosition: Position,
                                  rowDistance: Int, columnDistance: Int, size: Int): Option[Position] =
@@ -29,13 +32,13 @@ class BoardComputations:
         => Some(positionOfNeighbour)
       case _ => Option.empty
     
-  def findAvailableMoves(oppositeNeighbours: Set[(Position, Position)],
-                         disks: HashMap[Position, Disk], size: Int): Set[Option[Position]] =
+  private def findAvailableMoves(oppositeNeighbours: Set[(Position, Position)],
+                                 board: Board): Set[Option[Position]] =
     for pair: (Position, Position) <- oppositeNeighbours
         diskPosition: Position = Position(pair._2.row, pair._2.column)
         rowDistance: Int = pair._1.row - pair._2.row
         columnDistance: Int = pair._1.column - pair._2.column
-        availableMove: Option[Position] = findEmptyNeighbour(disks, diskPosition, rowDistance, columnDistance, size)
+        availableMove: Option[Position] = findEmptyNeighbour(board.disks, diskPosition, rowDistance, columnDistance, board.size)
     yield availableMove
 
   @tailrec
@@ -55,14 +58,14 @@ class BoardComputations:
       => Some(positionOfNeighbour)
       case _ => Option.empty
 
-  def findConnectingDisks(oppositeNeighbours: Set[(Position, Position)],
-                      disks: HashMap[Position, Disk], size: Int, color: Color, placedDiskPosition: Position): Set[Option[Position]] =
+  private def findConnectingDisks(oppositeNeighbours: Set[(Position, Position)], color: Color,
+                                  placedDiskPosition: Position, board: Board): Set[Option[Position]] =
     for pair: (Position, Position) <- oppositeNeighbours
         diskPosition: Position = Position(pair._2.row, pair._2.column)
         rowDistance: Int = pair._1.row - pair._2.row
         columnDistance: Int = pair._1.column - pair._2.column
-        connectingDiskPosition: Option[Position] = findConnectingNeighbour(disks, diskPosition,
-          rowDistance, columnDistance, size, color, placedDiskPosition)
+        connectingDiskPosition: Option[Position] = findConnectingNeighbour(board.disks, diskPosition,
+          rowDistance, columnDistance, board.size, color, placedDiskPosition)
     yield connectingDiskPosition
 
   private def findPosOnSameDiagonal(firstPos: Position, secondPos: Position, distance: Position, direction: Position): Seq[Position] =
@@ -71,24 +74,52 @@ class BoardComputations:
         diskPosition = Position(firstPos.row - (direction.row * i), firstPos.column - (direction.column * i))
         if !diskPosition.equals(secondPos)
     yield diskPosition
-  
-  def getDisksToFlip(diskPosition: Position, connectingDisks: Set[Position], disks: HashMap[Position, Disk]): Set[Position] =
+
+  private def getDisksToFlip(diskPosition: Position, connectingDisks: Set[Position], board: Board): Set[Position] =
     for connectingDisk: Position <- connectingDisks
-        distance: Position = Position(diskPosition.row - connectingDisk.row, diskPosition.column - connectingDisk.column)
-        direction: Position = distance / Position(distance.row.abs, distance.column.abs)
-        diskToFlip: Position <- disks.filter(e => e._1.onSameDiagonal(diskPosition, connectingDisk, distance, direction)
+        distance: Position = diskPosition.distance(connectingDisk)
+        direction: Position = calculateDirection(distance)
+        diskToFlip: Position <- board.disks.filter(e => e._1.onSameDiagonal(diskPosition, connectingDisk, distance, direction)
           || e._1.inBetween(diskPosition, connectingDisk)).keySet
     yield diskToFlip
 
-  def getUpdatedDisks(disksToFlip: Set[Position], disks: HashMap[Position, Disk]): HashMap[Position, Disk] =
-    for disk <- disks
+  private def getUpdatedDisks(disksToFlip: Set[Position], board: Board): HashMap[Position, Disk] =
+    for disk <- board.disks
     yield
       disk match
         case d if disksToFlip.contains(d._1) => d._1 -> d._2.flip()
         case _ => disk
 
+  def getAvailableMoves(color: Color, board: Board): Set[Position] =
+    val oppositeNeighboursPos: Set[(Position, Position)] = findOppositeNeighbours(color, board)
+    val availableMoves: Set[Option[Position]] = findAvailableMoves(oppositeNeighboursPos, board)
+    availableMoves.filter(e => e.isDefined).map(e => e.get)
+
+  def isMoveValid(diskPosition: Position, color: Color, board: Board): Boolean =
+    getAvailableMoves(color, board).contains(diskPosition)
+
+  def placeDisk(diskPosition: Position, color: Color, board: Board): Board =
+    val disk: Disk = Disk(color)
+    diskPosition match
+      case p if board.isMoveValid(diskPosition, color)
+      => Board(board.shape, board.size, board.disks + (diskPosition -> disk))
+      case _ => board
+        
+  def flipDisks(diskPosition: Position, color: Color, board: Board): Board =
+    val oppositeNeighbours: Set[(Position, Position)] = findOppositeNeighbours(color, board)
+      .filter(e => e._1.row.equals(diskPosition.row) && e._1.column.equals(diskPosition.column))
+    val connectingDisks: Set[Option[Position]] = findConnectingDisks(oppositeNeighbours, color, diskPosition, board)
+    val disksToFlip: Set[Position] = getDisksToFlip(diskPosition,
+      connectingDisks.filter(e => e.isDefined).map(e => e.get), board)
+    val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
+    Board(board.shape, board.size, flippedDisks)
+
   extension (x: Int)
-    private def inRange(y: Int, z: Int): Boolean = x >= y && x <= z
+    private def inRange(y: Int, z: Int): Boolean =
+      (y, z) match
+        case (y, z) if y < z => x >= y && x <= z
+        case (y, z) if y > z => x >= z && x <= y
+        case (_, _) => false
 
   extension (x: Int)
     private def inBetween(y: Int, z: Int): Boolean =
@@ -126,3 +157,7 @@ class BoardComputations:
         case (r, c) if r.equals(0) => Position(r, p.column / c)
         case (r, c) if c.equals(0) => Position(p.row / r, c)
         case (_, _) => Position(p.row / pos.row, p.column / pos.column)
+        
+  extension (p: Position)
+    private def distance(pos: Position): Position =
+      Position(p.row - pos.row, p.column - pos.column)

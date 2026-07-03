@@ -34,27 +34,16 @@ object Board:
     private val compute: BoardComputations = BoardComputations()
     
     override def getAvailableMoves(color: Color): Set[Position] =
-      val oppositeNeighbours: Set[(Position, Position)] = compute.findOppositeNeighbour(color, disks)
-      val availableMoves: Set[Option[Position]] = compute.findAvailableMoves(oppositeNeighbours, disks, size)
-      availableMoves.filter(e => e.isDefined).map(e => e.get)
+      compute.getAvailableMoves(color, this)
 
     override def isMoveValid(diskPosition: Position, color: Color): Boolean =
-      getAvailableMoves(color).contains(diskPosition)
+      compute.isMoveValid(diskPosition, color, this)
 
     override def placeDisk(diskPosition: Position, color: Color): Board =
-      val disk: Disk = Disk(color)
-      diskPosition match
-        case p if isMoveValid(diskPosition, color) => Board(shape, size, disks + (diskPosition -> disk))
-        case _ => this
+      compute.placeDisk(diskPosition, color, this)
 
     override def flipDisks(diskPosition: Position, color: Color): Board =
-      val oppositeNeighbours: Set[(Position, Position)] = compute.findOppositeNeighbour(color, disks)
-        .filter(e => e._1.row.equals(diskPosition.row) && e._1.column.equals(diskPosition.column))
-      val connectingDisks: Set[Option[Position]] = compute.findConnectingDisks(oppositeNeighbours, disks, size, color, diskPosition)
-      val disksToFlip: Set[Position] = compute.getDisksToFlip(diskPosition, 
-        connectingDisks.filter(e => e.isDefined).map(e => e.get), disks)
-      val flippedDisks: HashMap[Position, Disk] = compute.getUpdatedDisks(disksToFlip, disks)
-      Board(shape, size, flippedDisks)
+      compute.flipDisks(diskPosition, color, this)
 
     override def equals(obj: Any): Boolean =
       obj match
