@@ -1,10 +1,8 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.utils.Color.Black
 import it.unibo.pps.utils.{Color, Position}
 
 import scala.annotation.tailrec
-import scala.collection.immutable
 import scala.collection.immutable.HashMap
 
 class BoardComputations:
@@ -17,17 +15,7 @@ class BoardComputations:
         if neighbourhood.contains(rowDistance)
         if neighbourhood.contains(columnDistance)
     yield (disk, possibleNeighbour)
-
-  extension (x: Int)
-    private def inRange(y: Int, z: Int): Boolean = x >= y && x <= z
-
-  extension (p: Position)
-    private def neighbourInBoundary(rowDistance: Int, columnDistance: Int, size: Int): Boolean =
-      val minCoordinate = 0
-      val maxCoordinate = size - 1
-      (p.row - rowDistance).inRange(minCoordinate, maxCoordinate)
-      && (p.column - columnDistance).inRange(minCoordinate, maxCoordinate)
-
+  
   @tailrec
   private def findEmptyNeighbour(disks: HashMap[Position, Disk], diskPosition: Position,
                                  rowDistance: Int, columnDistance: Int, size: Int): Option[Position] =
@@ -77,6 +65,31 @@ class BoardComputations:
           rowDistance, columnDistance, size, color, placedDiskPosition)
     yield connectingDiskPosition
 
+  private def findPosOnSameDiagonal(firstPos: Position, secondPos: Position, distance: Position, direction: Position): Seq[Position] =
+    val minDistance = 1
+    for i <- minDistance to distance.row.abs
+        diskPosition = Position(firstPos.row - (direction.row * i), firstPos.column - (direction.column * i))
+        if !diskPosition.equals(secondPos)
+    yield diskPosition
+  
+  def getDisksToFlip(diskPosition: Position, connectingDisks: Set[Position], disks: HashMap[Position, Disk]): Set[Position] =
+    for connectingDisk: Position <- connectingDisks
+        distance: Position = Position(diskPosition.row - connectingDisk.row, diskPosition.column - connectingDisk.column)
+        direction: Position = distance / Position(distance.row.abs, distance.column.abs)
+        diskToFlip: Position <- disks.filter(e => e._1.onSameDiagonal(diskPosition, connectingDisk, distance, direction)
+          || e._1.inBetween(diskPosition, connectingDisk)).keySet
+    yield diskToFlip
+
+  def getUpdatedDisks(disksToFlip: Set[Position], disks: HashMap[Position, Disk]): HashMap[Position, Disk] =
+    for disk <- disks
+    yield
+      disk match
+        case d if disksToFlip.contains(d._1) => d._1 -> d._2.flip()
+        case _ => disk
+
+  extension (x: Int)
+    private def inRange(y: Int, z: Int): Boolean = x >= y && x <= z
+
   extension (x: Int)
     private def inBetween(y: Int, z: Int): Boolean =
       (y, z) match
@@ -85,18 +98,18 @@ class BoardComputations:
         case (_, _) => false
 
   extension (p: Position)
+    private def neighbourInBoundary(rowDistance: Int, columnDistance: Int, size: Int): Boolean =
+      val minCoordinate = 0
+      val maxCoordinate = size - 1
+      (p.row - rowDistance).inRange(minCoordinate, maxCoordinate)
+        && (p.column - columnDistance).inRange(minCoordinate, maxCoordinate)
+
+  extension (p: Position)
     private def inBetween(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
         case (f, s) if f.row.equals(s.row) => p.column.inBetween(f.column, s.column) && p.row.equals(f.row)
         case (f, s) if f.column.equals(s.column) => p.row.inBetween(f.row, s.row) && p.column.equals(f.column)
         case (_, _) => false
-
-  private def findPosOnSameDiagonal(firstPos: Position, secondPos: Position, distance: Position, direction: Position): Seq[Position] =
-    val minDistance = 1
-    for i <- minDistance to distance.row.abs
-        diskPosition = Position(firstPos.row - (direction.row * i), firstPos.column - (direction.column * i))
-        if !diskPosition.equals(secondPos)
-    yield diskPosition
 
   extension (p: Position)
     private def onSameDiagonal(firstPos: Position, secondPos: Position, distance: Position, direction: Position): Boolean =
@@ -113,18 +126,3 @@ class BoardComputations:
         case (r, c) if r.equals(0) => Position(r, p.column / c)
         case (r, c) if c.equals(0) => Position(p.row / r, c)
         case (_, _) => Position(p.row / pos.row, p.column / pos.column)
-
-  def getDisksToFlip(diskPosition: Position, connectingDisks: Set[Position], disks: HashMap[Position, Disk]): Set[Position] =
-    for connectingDisk: Position <- connectingDisks
-        distance: Position = Position(diskPosition.row - connectingDisk.row, diskPosition.column - connectingDisk.column)
-        direction: Position = distance / Position(distance.row.abs, distance.column.abs)
-        diskToFlip: Position <- disks.filter(e => e._1.onSameDiagonal(diskPosition, connectingDisk, distance, direction)
-          || e._1.inBetween(diskPosition, connectingDisk)).keySet
-    yield diskToFlip
-
-  def getUpdatedDisks(disksToFlip: Set[Position], disks: HashMap[Position, Disk]): HashMap[Position, Disk] =
-    for disk <- disks
-    yield
-      disk match
-        case d if disksToFlip.contains(d._1) => d._1 -> d._2.flip()
-        case _ => disk
