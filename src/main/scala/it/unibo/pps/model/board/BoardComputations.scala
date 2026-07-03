@@ -21,7 +21,7 @@ class BoardComputations:
   private def getNextEmptyNeighbour(diskPos: Position, distance: Position, board: Board): Option[Position] =
     val neighbourPos = Position(diskPos.row - distance.row, diskPos.column - distance.column)
     diskPos match
-      case p if !p.neighbourInBoundary(distance, board.size) => Option.empty
+      case p if !p.neighbourInBoundary(distance, board.shape.width) => Option.empty
       case p if board.disks.contains(neighbourPos) => getNextEmptyNeighbour(neighbourPos, distance, board)
       case _ => Some(neighbourPos)
 
@@ -38,7 +38,7 @@ class BoardComputations:
     val neighbourPos = Position(diskPos.row - distance.row, diskPos.column - distance.column)
     val disksWithoutPlacedDisk: HashMap[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
     diskPos match
-      case p if !p.neighbourInBoundary(distance, board.size)
+      case p if !p.neighbourInBoundary(distance, board.shape.width)
         && !board.disks.contains(neighbourPos)
         => Option.empty
       case p if disksWithoutPlacedDisk(neighbourPos).color.equals(placedDisk._2.opposite)
@@ -89,7 +89,7 @@ class BoardComputations:
     val disk: Disk = Disk(diskColor)
     diskPos match
       case p if isMoveValid(diskPos, diskColor, board)
-        => Board(board.shape, board.size, board.disks + (diskPos -> disk))
+        => Board(board.shape, board.disks + (diskPos -> disk))
       case _ => board
 
   def flipDisks(diskPos: Position, diskColor: Color, board: Board): Board =
@@ -100,7 +100,7 @@ class BoardComputations:
     val disksToFlip: Set[Position]
       = getDisksToFlip(diskPos, connectingDisksPos.filter(e => e.isDefined).map(e => e.get), board)
     val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
-    Board(board.shape, board.size, flippedDisks)
+    Board(board.shape, flippedDisks)
     
   def fromMapToSeq(board: Board): Seq[DiskState] =
     val diskStates = 

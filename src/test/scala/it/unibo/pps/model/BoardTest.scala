@@ -23,7 +23,7 @@ class BoardTest extends AnyFlatSpec:
     Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column) -> blackDisk,
     Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column + DIST) -> whiteDisk
   )
-  private val initialBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE)
+  private val initialBoard: Board = Board(BOARD_SHAPE)
   private val validMovePosition: Position = Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column)
 
   "A Board without disks" should "initialize itself with the disks in the correct positions" in:
@@ -33,7 +33,7 @@ class BoardTest extends AnyFlatSpec:
     val expectedDisks: HashMap[Position, Disk] = HashMap(
       Position(upLeftCenterPos.row, upLeftCenterPos.column + DIST) -> blackDisk
     )
-    val board: Board = Board(BOARD_SHAPE, BOARD_SIZE, HashMap(
+    val board: Board = Board(BOARD_SHAPE, HashMap(
       Position(upLeftCenterPos.row, upLeftCenterPos.column + DIST) -> blackDisk
     ))
     board.disks should be(expectedDisks)
@@ -44,7 +44,7 @@ class BoardTest extends AnyFlatSpec:
       Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column + DIST + DIST + DIST) -> whiteDisk,
       Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column + DIST + DIST + DIST + DIST) -> whiteDisk
     )
-    val board: Board = Board(BOARD_SHAPE, BOARD_SIZE, disksOnBoard)
+    val board: Board = Board(BOARD_SHAPE, disksOnBoard)
     val expectedAvailableMoves: Set[Position] = Set(
       Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column),
       Position(upLeftCenterPos.row, upLeftCenterPos.column - DIST),
@@ -64,14 +64,14 @@ class BoardTest extends AnyFlatSpec:
   "A Board" should "be able to place a new disk in a valid position" in:
     val newBoard: Board = initialBoard.placeDisk(validMovePosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks + (validMovePosition -> blackDisk)
-    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    val expectedBoard: Board = Board(BOARD_SHAPE, expectedDisks)
     newBoard.equals(expectedBoard) should be(true)
 
   "A Board, if the move is not valid" should "not place the new disk" in:
     val diskPosition: Position = Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column - DIST)
     val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks
-    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    val expectedBoard: Board = Board(BOARD_SHAPE, expectedDisks)
     newBoard.equals(expectedBoard) should be(true)
 
   "A Board, after placing a disk" should "flip the correct disks" in:
@@ -84,7 +84,7 @@ class BoardTest extends AnyFlatSpec:
       Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column + DIST + DIST) -> blackDisk,
       Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column + DIST) -> whiteDisk
     )
-    val board: Board = Board(BOARD_SHAPE, BOARD_SIZE, disksOnBoard)
+    val board: Board = Board(BOARD_SHAPE, disksOnBoard)
     val boardBeforeFlip: Board = board.placeDisk(validMovePosition, Color.Black)
     val boardAfterFlip: Board = boardBeforeFlip.flipDisks(validMovePosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = disksOnBoard ++ HashMap(
@@ -95,7 +95,7 @@ class BoardTest extends AnyFlatSpec:
       Position(upLeftCenterPos.row - DIST, upLeftCenterPos.column + DIST) -> blackDisk,
       validMovePosition -> blackDisk
     )
-    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    val expectedBoard: Board = Board(BOARD_SHAPE, expectedDisks)
     boardAfterFlip.equals(expectedBoard) should be(true)
 
   "A Board" should "know if is equal to another board" in:
