@@ -69,18 +69,14 @@ class BoardTest extends AnyFlatSpec:
     val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks + (diskPosition -> Disk(Color.Black))
     val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
-    newBoard.disks should equal(expectedBoard.disks)
-    newBoard.size should equal(expectedBoard.size)
-    newBoard.shape should equal(expectedBoard.shape)
+    newBoard.equals(expectedBoard) shouldBe true
 
   "A Board, if the move is not valid" should "not place the new disk" in:
     val diskPosition: Position = Position(left - DISTANCE, left - DISTANCE)
     val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks
     val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
-    newBoard.disks should equal(expectedBoard.disks)
-    newBoard.size should equal(expectedBoard.size)
-    newBoard.shape should equal(expectedBoard.shape)
+    newBoard.equals(expectedBoard) shouldBe true
 
   "A Board, after placing a disk" should "flip the correct disks" in:
     val diskPosition: Position = Position(left - DISTANCE, left)
@@ -114,9 +110,7 @@ class BoardTest extends AnyFlatSpec:
       diskPosition -> Disk(diskColor)
     )
     val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
-    boardAfterFlip.disks should equal(expectedBoard.disks)
-    boardAfterFlip.size should equal(expectedBoard.size)
-    boardAfterFlip.shape should equal(expectedBoard.shape)
+    boardAfterFlip.equals(expectedBoard) shouldBe true
 
   "A Board" should "know if is equal to another board" in:
     initialBoard.equals(initialBoard) shouldBe true
