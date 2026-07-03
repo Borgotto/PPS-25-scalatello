@@ -28,7 +28,7 @@ object Board:
   def apply(shape: Shape, size: Int, disks: HashMap[Position, Disk]): Board = 
     StandardBoard(shape, size, disks)
   
-  private class StandardBoard(override val shape: Shape, 
+  private class StandardBoard(override val shape: Shape,
                               override val size: Int, 
                               override val disks: HashMap[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
@@ -55,3 +55,7 @@ object Board:
         connectingDisks.filter(e => e.isDefined).map(e => e.get), disks)
       val flippedDisks: HashMap[Position, Disk] = compute.getUpdatedDisks(disksToFlip, disks)
       Board(shape, size, flippedDisks)
+
+    override def equals(obj: Any): Boolean =
+      obj match
+        case o: Board => disks.equals(o.disks) && size.equals(o.size) && shape.equals(o.shape)

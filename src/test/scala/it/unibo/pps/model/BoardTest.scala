@@ -1,7 +1,6 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, Disk}
-import it.unibo.pps.utils.Color.Black
 import it.unibo.pps.utils.{Color, Position, Shape}
 
 import scala.collection.immutable.HashMap
@@ -15,15 +14,15 @@ class BoardTest extends AnyFlatSpec:
 
   val left: Int = BOARD_SIZE / 2 - DISTANCE
   val right: Int = left + DISTANCE
+  val initialConfiguration: HashMap[Position, Disk] = HashMap(
+    Position(left, left) -> Disk(Color.White),
+    Position(left, right) -> Disk(Color.Black),
+    Position(right, left) -> Disk(Color.Black),
+    Position(right, right) -> Disk(Color.White)
+  )
   val initialBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE)
 
   "A Board without disks" should "initialize itself with the disks in the correct positions" in:
-    val initialConfiguration: HashMap[Position, Disk] = HashMap(
-      Position(left, left) -> Disk(Color.White),
-      Position(left, right) -> Disk(Color.Black),
-      Position(right, left) -> Disk(Color.Black),
-      Position(right, right) -> Disk(Color.White)
-    )
     initialBoard.disks should be(initialConfiguration)
 
   "A Board with disks" should "be created with those disks" in:
@@ -118,3 +117,6 @@ class BoardTest extends AnyFlatSpec:
     boardAfterFlip.disks should equal(expectedBoard.disks)
     boardAfterFlip.size should equal(expectedBoard.size)
     boardAfterFlip.shape should equal(expectedBoard.shape)
+
+  "A Board" should "know if is equal to another board" in:
+    initialBoard.equals(initialBoard) shouldBe true
