@@ -7,10 +7,10 @@ trait Board:
   def shape: Shape
   def size: Int
   def disks: HashMap[Position, Disk]
-  def getAvailableMoves(color: Color): Set[Position]
-  def isMoveValid(diskPosition: Position, color: Color): Boolean
-  def placeDisk(diskPosition: Position, color: Color): Board
-  def flipDisks(diskPosition: Position, color: Color): Board
+  def getAvailableMoves(diskColor: Color): Set[Position]
+  def isMoveValid(diskPos: Position, diskColor: Color): Boolean
+  def placeDisk(diskPos: Position, diskColor: Color): Board
+  def flipDisks(diskPos: Position, diskColor: Color): Board
   
 object Board:
   def apply(shape: Shape, size: Int): Board =
@@ -33,17 +33,17 @@ object Board:
                               override val disks: HashMap[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
     
-    override def getAvailableMoves(color: Color): Set[Position] =
-      compute.getAvailableMoves(color, this)
+    override def getAvailableMoves(diskColor: Color): Set[Position] =
+      compute.getAvailableMoves(diskColor, this)
 
-    override def isMoveValid(diskPosition: Position, color: Color): Boolean =
-      compute.isMoveValid(diskPosition, color, this)
+    override def isMoveValid(diskPos: Position, diskColor: Color): Boolean =
+      compute.isMoveValid(diskPos, diskColor, this)
 
-    override def placeDisk(diskPosition: Position, color: Color): Board =
-      compute.placeDisk(diskPosition, color, this)
+    override def placeDisk(diskPos: Position, diskColor: Color): Board =
+      compute.placeDisk(diskPos, diskColor, this)
 
-    override def flipDisks(diskPosition: Position, color: Color): Board =
-      compute.flipDisks(diskPosition, color, this)
+    override def flipDisks(diskPos: Position, diskColor: Color): Board =
+      compute.flipDisks(diskPos, diskColor, this)
 
     override def equals(obj: Any): Boolean =
       obj match
