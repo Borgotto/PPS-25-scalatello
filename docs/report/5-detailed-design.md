@@ -215,7 +215,7 @@ Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore oppo
 
 Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
 
-### Board
+### Board e BoardComputations
 
 `Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
 
@@ -224,14 +224,20 @@ classDiagram
   class Board {
     <<trait>>
     + disks: HashMap~Position, Disk~
-    + size: Int
     + shape: Shape
     + state: BoardState
+    + getAvailableMoves(color: Color): Set~Position~
     + isMoveValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
     + flipDisks(position: Position, color: Color): Board
-    + getAvailableMoves(color: Color): Set~Position~
   }
+  class BoardComputations {
+    + getAvailableMoves(color: Color, board: Board): Set~Position~
+    + isMoveValid(position: Position, color: Color, board: Board): Boolean
+    + placeDisk(position: Position, color: Color, board: Board): Board
+    + flipDisks(position: Position, color: Color, board: Board): Board
+  }
+  Board --> BoardComputations: delegates
 ```
 
 In particolare:
@@ -245,6 +251,11 @@ In particolare:
 Eseguendo `placeDisk()` e `flipDisks()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
 
 Per semplificare questa operazione viene utilizzato il **factory pattern**.
+
+Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
+
+- la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
+- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passandole un riferimento alla `Board` tramite un parametro dei diversi metodi, per permetterle di operare sull'istanza corrente della stessa;
 
 ### MatchController
 
