@@ -10,6 +10,7 @@ trait Board:
   def getAvailableMoves(color: Color): Set[Position]
   def isMoveValid(diskPosition: Position, color: Color): Boolean
   def placeDisk(diskPosition: Position, color: Color): Board
+  def flipDisks(diskPosition: Position, color: Color): Board
   
 object Board:
   def apply(shape: Shape, size: Int): Board =
@@ -45,3 +46,12 @@ object Board:
       diskPosition match
         case p if isMoveValid(diskPosition, color) => Board(shape, size, disks + (diskPosition -> disk))
         case _ => this
+
+    override def flipDisks(diskPosition: Position, color: Color): Board =
+      val oppositeNeighbours: Set[(Position, Position)] = compute.findOppositeNeighbour(color, disks)
+        .filter(e => e._1.row.equals(diskPosition.row) && e._1.column.equals(diskPosition.column))
+      val connectingDisks: Set[Option[Position]] = compute.findConnectingDisks(oppositeNeighbours, disks, size, color, diskPosition)
+      val disksToFlip: Set[Position] = compute.getDisksToFlip(diskPosition, 
+        connectingDisks.filter(e => e.isDefined).map(e => e.get), disks)
+      val flippedDisks: HashMap[Position, Disk] = compute.getUpdatedDisks(disksToFlip, disks)
+      Board(shape, size, flippedDisks)

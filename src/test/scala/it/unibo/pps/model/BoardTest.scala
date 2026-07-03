@@ -1,10 +1,12 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, Disk}
+import it.unibo.pps.utils.Color.Black
 import it.unibo.pps.utils.{Color, Position, Shape}
+
 import scala.collection.immutable.HashMap
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{should, shouldBe, empty, be, equal, not}
+import org.scalatest.matchers.should.Matchers.{be, empty, equal, should, shouldBe}
 
 class BoardTest extends AnyFlatSpec:
   val BOARD_SIZE: Int = 8
@@ -68,7 +70,7 @@ class BoardTest extends AnyFlatSpec:
     val newBoard: Board = initialBoard.placeDisk(diskPosition, Color.Black)
     val expectedDisks: HashMap[Position, Disk] = initialBoard.disks + (diskPosition -> Disk(Color.Black))
     val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
-    newBoard.disks should equal (expectedBoard.disks)
+    newBoard.disks should equal(expectedBoard.disks)
     newBoard.size should equal(expectedBoard.size)
     newBoard.shape should equal(expectedBoard.shape)
 
@@ -80,3 +82,39 @@ class BoardTest extends AnyFlatSpec:
     newBoard.disks should equal(expectedBoard.disks)
     newBoard.size should equal(expectedBoard.size)
     newBoard.shape should equal(expectedBoard.shape)
+
+  "A Board, after placing a disk" should "flip the correct disks" in:
+    val diskPosition: Position = Position(left - DISTANCE, left)
+    val diskColor: Color = Color.Black
+    val configuration: HashMap[Position, Disk] = HashMap(
+      Position(left, left) -> Disk(Color.White),
+      Position(left, right) -> Disk(Color.White),
+      Position(right, left) -> Disk(Color.Black),
+      Position(right, right) -> Disk(Color.White),
+      Position(left, left - DISTANCE) -> Disk(Color.White),
+      Position(left + DISTANCE, left - DISTANCE - DISTANCE) -> Disk(Color.White),
+      Position(left + DISTANCE + DISTANCE, left - DISTANCE - DISTANCE - DISTANCE) -> Disk(Color.Black),
+      Position(left + DISTANCE, right + DISTANCE) -> Disk(Color.Black),
+      Position(left - DISTANCE, right + DISTANCE) -> Disk(Color.Black),
+      Position(left - DISTANCE, right) -> Disk(Color.White)
+    )
+    val board: Board = Board(BOARD_SHAPE, BOARD_SIZE, configuration)
+    val boardBeforeFlip: Board = board.placeDisk(diskPosition, diskColor)
+    val boardAfterFlip: Board = boardBeforeFlip.flipDisks(diskPosition, diskColor)
+    val expectedDisks: HashMap[Position, Disk] = HashMap(
+      Position(left, left) -> Disk(Color.Black),
+      Position(left, right) -> Disk(Color.Black),
+      Position(right, left) -> Disk(Color.Black),
+      Position(right, right) -> Disk(Color.White),
+      Position(left, left - DISTANCE) -> Disk(Color.Black),
+      Position(left + DISTANCE, left - DISTANCE - DISTANCE) -> Disk(Color.Black),
+      Position(left + DISTANCE + DISTANCE, left - DISTANCE - DISTANCE - DISTANCE) -> Disk(Color.Black),
+      Position(left + DISTANCE, right + DISTANCE) -> Disk(Color.Black),
+      Position(left - DISTANCE, right + DISTANCE) -> Disk(Color.Black),
+      Position(left - DISTANCE, right) -> Disk(Color.Black),
+      diskPosition -> Disk(diskColor)
+    )
+    val expectedBoard: Board = Board(BOARD_SHAPE, BOARD_SIZE, expectedDisks)
+    boardAfterFlip.disks should equal(expectedBoard.disks)
+    boardAfterFlip.size should equal(expectedBoard.size)
+    boardAfterFlip.shape should equal(expectedBoard.shape)
