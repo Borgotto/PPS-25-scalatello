@@ -1,8 +1,10 @@
 package it.unibo.pps.model.board
 
+import it.unibo.pps.state.DiskState
 import it.unibo.pps.utils.{Color, Position}
 
 import scala.annotation.tailrec
+import scala.collection.immutable
 import scala.collection.immutable.HashMap
 
 class BoardComputations:
@@ -99,6 +101,13 @@ class BoardComputations:
       = getDisksToFlip(diskPos, connectingDisksPos.filter(e => e.isDefined).map(e => e.get), board)
     val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
     Board(board.shape, board.size, flippedDisks)
+    
+  def fromMapToSeq(board: Board): Seq[DiskState] =
+    val diskStates = 
+      for disk <- board.disks
+        diskState: DiskState = DiskState(disk._2.color, disk._1)
+      yield diskState
+    diskStates.toSeq
 
   extension (x: Int)
     private def inRange(y: Int, z: Int): Boolean =

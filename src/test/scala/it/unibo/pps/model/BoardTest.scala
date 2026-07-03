@@ -1,7 +1,8 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.{Board, Disk}
-import it.unibo.pps.utils.{Position, Shape, Color}
+import it.unibo.pps.state.{BoardState, DiskState}
+import it.unibo.pps.utils.{Color, Position, Shape}
 
 import scala.collection.immutable.HashMap
 import org.scalatest.flatspec.AnyFlatSpec
@@ -99,3 +100,15 @@ class BoardTest extends AnyFlatSpec:
 
   "A Board" should "know if is equal to another board" in:
     initialBoard.equals(initialBoard) should be(true)
+
+  "A Board" should "return its correct state" in:
+    val boardState: BoardState = initialBoard.state
+    val diskStates: Seq[DiskState] = Seq(
+      DiskState(whiteDisk.color, Position(upLeftCenterPos.row, upLeftCenterPos.column)),
+      DiskState(blackDisk.color, Position(upLeftCenterPos.row, upLeftCenterPos.column + DIST)),
+      DiskState(blackDisk.color, Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column)),
+      DiskState(whiteDisk.color, Position(upLeftCenterPos.row + DIST, upLeftCenterPos.column + DIST))
+    )
+    val expectedState: BoardState = BoardState(BOARD_SHAPE, diskStates)
+    boardState.shape.equals(expectedState.shape) should be(true)
+    boardState.disks.toSet.equals(expectedState.disks.toSet) should be(true)
