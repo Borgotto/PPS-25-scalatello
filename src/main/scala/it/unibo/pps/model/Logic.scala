@@ -37,7 +37,7 @@ class LogicImpl(
       case User(_) => throw IllegalStateException("It is user's turn now")
       case opponent: Opponent =>
         val position = opponent.strategy.computePlacement(using board.state)
-        val newBoard = board.captureDisks(position)
+        val newBoard = board.placeDisk(opponent.color, position).captureDisks(position)
         val userColor = opponent.color.opposite
         val newActivePlayer = if board.getAvailablePlacements(userColor).isEmpty
           then Opponent(opponent.color) 
