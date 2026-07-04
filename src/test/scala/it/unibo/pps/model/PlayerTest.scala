@@ -10,10 +10,10 @@ class PlayerTest extends AnyFlatSpec:
 
   "A User" should "return the correct placement strategy" in:
     val user: Player = User()
-    val strategy = user.getPlacementStrategy
+    val strategy = user.placementStrategy
     strategy shouldBe a [UserPlacementStrategy]
 
   "An Opponent" should "return the correct placement strategy" in:
     val opponent: Player = Opponent.RandomOpponent
-    val strategy = opponent.getPlacementStrategy
+    val strategy = opponent.placementStrategy
     strategy shouldBe a [OpponentPlacementStrategy]
