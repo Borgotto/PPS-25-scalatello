@@ -130,6 +130,8 @@ class BoardComputations:
       shape match
         case Shape.Square(n) => 
            neighbourPos.row.inRange(minCoordinate, n - 1) && neighbourPos.column.inRange(minCoordinate, n - 1)
+        case Shape.Rectangle(h, w) => 
+          neighbourPos.row.inRange(minCoordinate, h - 1) && neighbourPos.column.inRange(minCoordinate, w - 1)
 
   extension (p: Position)
     private def inBetween(firstPos: Position, secondPos: Position): Boolean =
