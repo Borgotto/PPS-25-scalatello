@@ -21,7 +21,6 @@ object Board:
       shape match
         case Shape.Square(n) => Position(n / 2 - dist, n / 2 - dist)
         case Shape.Rectangle(h, w) => Position(h / 2 - dist, w / 2 - dist)
-
     val initialDisks: HashMap[Position, Disk] = HashMap(
       Position(topLeftCenterPos.row, topLeftCenterPos.column) -> Disk(Color.White),
       Position(topLeftCenterPos.row, topLeftCenterPos.column + dist) -> Disk(Color.Black),
