@@ -19,7 +19,6 @@ title: Diagramma UML architetturale
 classDiagram
   namespace ViewPackage {
     class View {
-      <<interface>>
       + showMenu()
       + update(state: MatchState)
     }
@@ -27,34 +26,121 @@ classDiagram
   }
   namespace ControllerPackage {
     class MatchController {
-      <<interface>>
-      + initializeMatch()
+      + startMatch()
       + handleSelection(position: Position)
       + saveMatch()
       + loadMatch()
     }
     class SaveManager {
-      <<interface>>
       + save(state: MatchState)
       + load(): MatchState
     }
   }
   namespace ModelPackage {
     class MatchLogic {
-      <<interface>>
-      + initialize()
-      + getMatchState(): MatchState
-      + placeUserDisk(position: Position): bool
-      + placeOpponentDisk(): bool
+      + state: MatchState
+      + placeUserDisk(position: Position): MatchLogic
+      + placeOpponentDisk(): MatchLogic
     }
+    class Board {
+      + state: BoardState
+      + isPlacementValid(color: Color, position: Position): Boolean
+      + placeDisk(color: Color, position: Position): Board
+      + captureDisks(newDiskPosition: Position): Board
+      + getAvailablePlacements(color: Color): Seq[Position]
+    }
+    class Disk {
+      + state: DiskState
+      + flip(): Disk
+    }
+    class Player {
+      + state: PlayerState
+    }
+    class PlacementStrategy
+    class User
+    class Opponent
   }
 
-  View --> MatchController
-  MatchController ..> View : notifies
-  MatchController --> MatchLogic
-  SaveManager <-- MatchController
+    MatchLogic --> Board
+    MatchLogic --> Player
+    MatchLogic --> PlacementStrategy: applies
 
-  View <|.. CLIView
+    Player <|-- User
+    Player <|-- Opponent
+
+    Player --> PlacementStrategy : provides
+
+    Board --> Disk
+
+    View --> MatchController
+    MatchController ..> View : notifies
+    MatchController --> MatchLogic
+    SaveManager <-- MatchController
+
+    View <|.. CLIView
+```
+
+Struttura degli state:
+
+```mermaid
+classDiagram
+    class MatchState {
+      + status: Status
+      + activePlayer: PlayerState
+      + board: BoardState
+    }
+    class Status {
+      <<enumeration>>
+      InProgress
+      UserWon
+      OpponentWon
+      Tie
+    }
+    class PlayerState {
+      <<enumeration>>
+      User
+      Opponent
+      + color: Color
+      + strategy: PlacementStrategy
+    }
+    class BoardState {
+      + shape: Shape
+      + disks: Seq[DiskState]
+    }
+    class Shape {
+      <<enumeration>>
+    }
+    class Square {
+      + size: int
+    }
+    class Rectangle {
+      + height: int
+      + width: int
+    }
+    class DiskState {
+      + color: Color
+      + position: Position
+    }
+    class Color {
+      <<enumeration>>
+      Black
+      White
+    }
+    class Position {
+      + row: int
+      + column: int
+    }
+
+    MatchState --> BoardState
+    MatchState --> Status
+    MatchState --> PlayerState
+    PlayerState --> Color
+    BoardState --> DiskState
+    Shape <|-- Square
+    Shape <|-- Rectangle
+    BoardState --> Shape
+    DiskState --> Color
+    DiskState --> Position
 ```
 
 ## Interazione tra View, Controller e Model
@@ -66,12 +152,12 @@ sequenceDiagram
     View->>Controller: handleSelection(position)
     Controller->>Logic: placeUserDisk(position)
     Logic->>Controller: true
-    Controller->>Logic: getMatchState()
+    Controller->>Logic: get match state
     Logic->>Controller: MatchState
     Controller->>View: update(matchState)
     Controller->>Logic: placeOpponentDisk()
     Logic->>Controller: true
-    Controller->>Logic: getMatchState()
+    Controller->>Logic: get match state
     Logic->>Controller: MatchState
     Controller->>View: update(matchState)
 ```
