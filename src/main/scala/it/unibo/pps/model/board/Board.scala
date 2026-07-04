@@ -16,16 +16,17 @@ trait Board:
   
 object Board:
   def apply(shape: Shape): Board =
-    val distance: Int = 1;
-    val left: Int = shape.width / 2 - distance
-    val right: Int = left + distance
-    val initialDisks: HashMap[Position, Disk] = HashMap(
-      Position(left, left) -> Disk(Color.White),
-      Position(left, right) -> Disk(Color.Black),
-      Position(right, left) -> Disk(Color.Black),
-      Position(right, right) -> Disk(Color.White)
-    )
-    StandardBoard(shape, initialDisks)
+    val dist: Int = 1
+    shape match
+      case Shape.Square(n) =>
+        val upLeftCenterPos: Position = Position(n / 2 - dist, n / 2 - dist)
+        val initialDisks: HashMap[Position, Disk] = HashMap(
+          Position(upLeftCenterPos.row, upLeftCenterPos.column) -> Disk(Color.White),
+          Position(upLeftCenterPos.row, upLeftCenterPos.column + dist) -> Disk(Color.Black),
+          Position(upLeftCenterPos.row + dist, upLeftCenterPos.column) -> Disk(Color.Black),
+          Position(upLeftCenterPos.row + dist, upLeftCenterPos.column + dist) -> Disk(Color.White)
+        )
+        StandardBoard(shape, initialDisks)
   
   def apply(shape: Shape, disks: HashMap[Position, Disk]): Board = 
     StandardBoard(shape, disks)

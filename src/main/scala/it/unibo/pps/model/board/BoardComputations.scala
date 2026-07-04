@@ -1,7 +1,7 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.state.DiskState
-import it.unibo.pps.utils.{Color, Position}
+import it.unibo.pps.utils.{Color, Position, Shape}
 
 import scala.annotation.tailrec
 import scala.collection.immutable.HashMap
@@ -20,7 +20,7 @@ class BoardComputations:
   private def getNextEmptyNeighbour(diskPos: Position, distance: Position, board: Board): Option[Position] =
     val neighbourPos = Position(diskPos.row - distance.row, diskPos.column - distance.column)
     diskPos match
-      case p if !p.neighbourInBoundary(distance, board.shape.width) => Option.empty
+      case p if !p.neighbourInBoundary(distance, board.shape) => Option.empty
       case p if board.disks.contains(neighbourPos) => getNextEmptyNeighbour(neighbourPos, distance, board)
       case _ => Some(neighbourPos)
 
@@ -38,7 +38,7 @@ class BoardComputations:
     val neighbourPos = Position(diskPos.row - distance.row, diskPos.column - distance.column)
     val disksWithoutPlacedDisk: HashMap[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
     diskPos match
-      case p if !p.neighbourInBoundary(distance, board.shape.width) && !board.disks.contains(neighbourPos)
+      case p if !p.neighbourInBoundary(distance, board.shape) && !board.disks.contains(neighbourPos)
         => Option.empty
       case p if disksWithoutPlacedDisk(neighbourPos).color.equals(placedDisk._2.opposite)
         => getNextConnectingNeighbour(neighbourPos, placedDisk, distance, board)
@@ -124,11 +124,12 @@ class BoardComputations:
         case (_, _) => false
 
   extension (p: Position)
-    private def neighbourInBoundary(distance: Position, size: Int): Boolean =
+    private def neighbourInBoundary(distance: Position, shape: Shape): Boolean =
       val minCoordinate = 0
-      val maxCoordinate = size - 1
-      (p.row - distance.row).inRange(minCoordinate, maxCoordinate)
-        && (p.column - distance.column).inRange(minCoordinate, maxCoordinate)
+      val neighbourPos = Position(p.row - distance.row, p.column - distance.column)
+      shape match
+        case Shape.Square(n) => 
+           neighbourPos.row.inRange(minCoordinate, n - 1) && neighbourPos.column.inRange(minCoordinate, n - 1)
 
   extension (p: Position)
     private def inBetween(firstPos: Position, secondPos: Position): Boolean =
