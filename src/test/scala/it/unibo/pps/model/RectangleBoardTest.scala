@@ -67,8 +67,8 @@ class RectangleBoardTest extends AnyFlatSpec:
     val newRectangleBoard: Board = boardDuringGame.placeDisk(notValidMovePosition, Color.Black)
     newRectangleBoard.equals(boardDuringGame) should be(true)
 
-  "A Rectangle Board, after placing a disk" should "flip the correct disks" in :
-    val board: Board = boardDuringGame.placeDisk(validMovePosition, Color.Black).flipDisks(validMovePosition, Color.Black)
+  "A Rectangle Board, after placing a disk" should "capture the correct disks" in :
+    val board: Board = boardDuringGame.placeDisk(validMovePosition, Color.Black).captureDisks(validMovePosition, Color.Black)
     val expectedBoard: Board = Board(BOARD_SHAPE, boardDuringGame.disks ++ HashMap(
       Position(topLeftCenterPos.row, topLeftCenterPos.column) -> blackDisk,
       Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> blackDisk,

@@ -66,8 +66,8 @@ class SquareBoardTest extends AnyFlatSpec:
     val board: Board = boardDuringGame.placeDisk(notValidMovePos, Color.Black)
     board.equals(boardDuringGame) should be(true)
 
-  "A Square Board, after placing a disk" should "flip the correct disks" in :
-    val board: Board = boardDuringGame.placeDisk(validMovePos, Color.Black).flipDisks(validMovePos, Color.Black)
+  "A Square Board, after placing a disk" should "capture the correct disks" in :
+    val board: Board = boardDuringGame.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos, Color.Black)
     val expectedBoard: Board = Board(BOARD_SHAPE, boardDuringGame.disks ++ HashMap(
       Position(topLeftCenterPos.row, topLeftCenterPos.column) -> blackDisk,
       Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> blackDisk,

@@ -92,7 +92,7 @@ class BoardComputations:
         => Board(board.shape, board.disks + (diskPos -> disk))
       case _ => board
 
-  def flipDisks(diskPos: Position, diskColor: Color, board: Board): Board =
+  def captureDisks(diskPos: Position, diskColor: Color, board: Board): Board =
     val oppositeNeighboursPos: Set[(Position, Position)]
       = getOppositeColorNeighbours(diskColor, board).filter(e => e._1.equals(diskPos))
     val connectingDisksPos: Set[Option[Position]]

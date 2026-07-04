@@ -12,7 +12,7 @@ trait Board:
   def getAvailableMoves(diskColor: Color): Set[Position]
   def isMoveValid(diskPos: Position, diskColor: Color): Boolean
   def placeDisk(diskPos: Position, diskColor: Color): Board
-  def flipDisks(diskPos: Position, diskColor: Color): Board
+  def captureDisks(diskPos: Position, diskColor: Color): Board
   
 object Board:
   def apply(shape: Shape): Board =
@@ -50,8 +50,8 @@ object Board:
     override def placeDisk(diskPos: Position, diskColor: Color): Board =
       compute.placeDisk(diskPos, diskColor, this)
 
-    override def flipDisks(diskPos: Position, diskColor: Color): Board =
-      compute.flipDisks(diskPos, diskColor, this)
+    override def captureDisks(diskPos: Position, diskColor: Color): Board =
+      compute.captureDisks(diskPos, diskColor, this)
 
     override def equals(obj: Any): Boolean =
       obj match
