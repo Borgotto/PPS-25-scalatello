@@ -25,7 +25,7 @@ class BoardTest(shape: Shape) extends AnyFlatSpec:
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> blackDisk,
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST) -> whiteDisk
       )
-  private val boardDuringGame: Board =
+  private val boardDuringMatch: Board =
     shape match
       case _ => Board(shape, initialDisksOnBoard ++ HashMap(
         Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> whiteDisk,
@@ -63,28 +63,31 @@ class BoardTest(shape: Shape) extends AnyFlatSpec:
     availableMoves.equals(expectedMoves) should be(true)
     
   def validMoveTest(): Unit =
-    boardDuringGame.isMoveValid(validMovePos, Color.Black) should be(true)
+    boardDuringMatch.isMoveValid(validMovePos, Color.Black) should be(true)
     
   def notValidMoveTest(): Unit =
-    boardDuringGame.isMoveValid(notValidMovePos, Color.Black) should be(false)
+    boardDuringMatch.isMoveValid(notValidMovePos, Color.Black) should be(false)
     
   def equalsTest(): Unit =
     initialBoard.equals(initialBoard) should be(true)
     
+  def notEqualTest(): Unit =
+    initialBoard.equals(boardDuringMatch) should be(false)
+  
   def placeDiskInValidMoveTest(): Unit =
-    val board: Board = boardDuringGame.placeDisk(validMovePos, Color.Black)
-    val expectedBoard: Board = Board(shape, boardDuringGame.disks + (validMovePos -> blackDisk))
+    val board: Board = boardDuringMatch.placeDisk(validMovePos, Color.Black)
+    val expectedBoard: Board = Board(shape, boardDuringMatch.disks + (validMovePos -> blackDisk))
     board.equals(expectedBoard) should be(true)
     
   def placeDiskInNotValidMoveTest(): Unit =
-    val board: Board = boardDuringGame.placeDisk(notValidMovePos, Color.Black)
-    board.equals(boardDuringGame) should be(true)
+    val board: Board = boardDuringMatch.placeDisk(notValidMovePos, Color.Black)
+    board.equals(boardDuringMatch) should be(true)
     
   def captureDisksTest(): Unit =
-    val board: Board = boardDuringGame.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos, Color.Black)
+    val board: Board = boardDuringMatch.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos, Color.Black)
     val expectedBoard: Board = 
       shape match
-        case _ => Board(shape, boardDuringGame.disks ++ HashMap(
+        case _ => Board(shape, boardDuringMatch.disks ++ HashMap(
           Position(topLeftCenterPos.row, topLeftCenterPos.column) -> blackDisk,
           Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> blackDisk,
           Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST) -> blackDisk,

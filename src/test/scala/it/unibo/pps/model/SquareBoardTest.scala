@@ -28,6 +28,9 @@ class SquareBoardTest extends AnyFlatSpec:
   "A Square Board" should "know if is equal to another board" in:
     boardTest.equalsTest()
 
+  "A Square Board" should "know if is not equal to another board" in:
+    boardTest.notEqualTest()
+
   "A Square Board" should "be able to place a new disk in a valid position" in:
     boardTest.placeDiskInValidMoveTest()
 
