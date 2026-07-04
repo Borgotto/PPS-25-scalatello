@@ -66,16 +66,16 @@ La struttura del componente Player è stata progettata come un'interfaccia, che 
 
 ```mermaid
 classDiagram
-    class Player {
-        <<interface>>
+    class Player <<Interface>> {
         + color: Color
-        + strategy: PlacementStrategy
+        + strategy: UserPlacementStrategy | OpponentPlacementStrategy
     }
     class User {
+        + color: Color
         + strategy: UserPlacementStrategy
     }
-    class Opponent {
-        + strategy: OpponentPlacementStrategy
+    class Opponent <<Enumeration>> {
+        + RandomOpponent: Opponent
     }
 
     Player <|-- User
@@ -100,18 +100,22 @@ Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare l
 
 ```mermaid
 classDiagram
-    class PlacementStrategy~A, B~ {
-        + computePlacement(info: A): B
+    class PlacementStrategy~-C, O~ <<Interface>> {
+        + computePlacement(using context: C)*: O
     }
     class UserPlacementStrategy~Position, Position~ {
-        + computePlacement(userChoice: Position): Position
+        + computePlacement(using userChoice: Position): Position
     }
-    class OpponentPlacementStrategy~MatchState, Position~ {
-        + computePlacement(match: MatchState): Position
+    class OpponentPlacementStrategy ~MatchState, Position~ <<Abstract>> {
+        + computePlacement(using match: MatchState)*: Position
+    }
+    class RandomOpponentPlacementStrategy~MatchState, Position~ {
+        + computePlacement(using match: MatchState): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
+    OpponentPlacementStrategy <|.. RandomOpponentPlacementStrategy
 ```
 
 ### Scenario: calcolo delle mosse
@@ -165,9 +169,9 @@ Il caricamento tenta di leggere lo stato della partita da un file, e se il file 
 
 ```mermaid
 classDiagram
-    class SaveManager {
-        + save(matchState: MatchState, filePath: String): Boolean
-        + load(filePath: String): MatchState
+    class SaveManager <<Interface>> {
+        + save(matchState: MatchState, filePath: String)*: Boolean
+        + load(filePath: String)*: MatchState
     }
 ```
 
@@ -229,13 +233,13 @@ classDiagram
     + getAvailableMoves(color: Color): Set~Position~
     + isMoveValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + flipDisks(position: Position, color: Color): Board
+    + captureDisks(position: Position, color: Color): Board
   }
   class BoardComputations {
     + getAvailableMoves(color: Color, board: Board): Set~Position~
     + isMoveValid(position: Position, color: Color, board: Board): Boolean
     + placeDisk(position: Position, color: Color, board: Board): Board
-    + flipDisks(position: Position, color: Color, board: Board): Board
+    + captureDisks(position: Position, color: Color, board: Board): Board
   }
   Board --> BoardComputations: delegates
 ```
