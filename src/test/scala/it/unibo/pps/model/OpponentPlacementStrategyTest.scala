@@ -15,7 +15,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec:
   "RandomOpponentPlacementStrategy" should "return a random position " in:
     // The opponent's placement strategy needs the MatchState as context
     given matchState: MatchState = mock[MatchState]
-    val opponent: Opponent = Opponent.RandomOpponent
+    val opponent: Opponent = Opponent.RandomOpponent(Color.White)
 
     matchState.getBoard returns mock[Board]
     matchState.getBoard.getAvailableMoves(opponent.color) returns Position(0, 0) :: Nil
