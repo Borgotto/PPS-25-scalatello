@@ -8,7 +8,7 @@ import scala.collection.immutable.HashMap
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 
-class BoardTest extends AnyFlatSpec:
+class SquareBoardTest extends AnyFlatSpec:
   private val BOARD_SIZE: Int = 4
   private val BOARD_SHAPE: Shape = Shape.Square(BOARD_SIZE)
   private val DIST: Int = 1
