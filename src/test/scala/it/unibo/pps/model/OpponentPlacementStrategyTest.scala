@@ -22,5 +22,5 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec:
     matchState.getActivePlayer returns opponent
 
     val availableMoves: List[Position] = matchState.getBoard.getAvailableMoves(opponent.color)
-    val strategyResult: Position = opponent.getPlacementStrategy.computePlacement
+    val strategyResult: Position = opponent.placementStrategy.computePlacement
     availableMoves should contain (strategyResult)

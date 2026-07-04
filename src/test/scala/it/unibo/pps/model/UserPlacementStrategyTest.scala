@@ -15,5 +15,5 @@ class UserPlacementStrategyTest extends AnyFlatSpec:
     // The user choice represents the input coming from the view component
     given userChoice: Position = Position(3, 4)
     val user: User = mock[User]
-    user.getPlacementStrategy returns UserPlacementStrategy()
-    user.getPlacementStrategy.computePlacement shouldEqual userChoice
+    user.placementStrategy returns UserPlacementStrategy()
+    user.placementStrategy.computePlacement shouldEqual userChoice
