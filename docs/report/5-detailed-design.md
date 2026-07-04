@@ -233,13 +233,13 @@ classDiagram
     + getAvailableMoves(color: Color): Set~Position~
     + isMoveValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + flipDisks(position: Position, color: Color): Board
+    + captureDisks(position: Position, color: Color): Board
   }
   class BoardComputations {
     + getAvailableMoves(color: Color, board: Board): Set~Position~
     + isMoveValid(position: Position, color: Color, board: Board): Boolean
     + placeDisk(position: Position, color: Color, board: Board): Board
-    + flipDisks(position: Position, color: Color, board: Board): Board
+    + captureDisks(position: Position, color: Color, board: Board): Board
   }
   Board --> BoardComputations: delegates
 ```
