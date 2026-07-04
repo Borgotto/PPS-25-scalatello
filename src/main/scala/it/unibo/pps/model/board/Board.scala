@@ -17,20 +17,23 @@ trait Board:
 object Board:
   def apply(shape: Shape): Board =
     val dist: Int = 1
+    val topLeftCenterPos: Position =
+      shape match
+        case Shape.Square(n) => Position(n / 2 - dist, n / 2 - dist)
+        case Shape.Rectangle(h, w) => Position(h / 2 - dist, w / 2 - dist)
+
+    val initialDisks: HashMap[Position, Disk] = HashMap(
+      Position(topLeftCenterPos.row, topLeftCenterPos.column) -> Disk(Color.White),
+      Position(topLeftCenterPos.row, topLeftCenterPos.column + dist) -> Disk(Color.Black),
+      Position(topLeftCenterPos.row + dist, topLeftCenterPos.column) -> Disk(Color.Black),
+      Position(topLeftCenterPos.row + dist, topLeftCenterPos.column + dist) -> Disk(Color.White)
+    )
+    apply(shape, initialDisks)
+  
+  def apply(shape: Shape, disks: HashMap[Position, Disk]): Board =
     shape match
-      case Shape.Square(n) =>
-        val upLeftCenterPos: Position = Position(n / 2 - dist, n / 2 - dist)
-        val initialDisks: HashMap[Position, Disk] = HashMap(
-          Position(upLeftCenterPos.row, upLeftCenterPos.column) -> Disk(Color.White),
-          Position(upLeftCenterPos.row, upLeftCenterPos.column + dist) -> Disk(Color.Black),
-          Position(upLeftCenterPos.row + dist, upLeftCenterPos.column) -> Disk(Color.Black),
-          Position(upLeftCenterPos.row + dist, upLeftCenterPos.column + dist) -> Disk(Color.White)
-        )
-        StandardBoard(shape, initialDisks)
-  
-  def apply(shape: Shape, disks: HashMap[Position, Disk]): Board = 
-    StandardBoard(shape, disks)
-  
+      case _ => StandardBoard(shape, disks)
+
   private class StandardBoard(override val shape: Shape,
                               override val disks: HashMap[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
