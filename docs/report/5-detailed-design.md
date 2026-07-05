@@ -227,7 +227,7 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
-    + disks: HashMap~Position, Disk~
+    + disks: Map~Position, Disk~
     + shape: Shape
     + state: BoardState
     + getAvailableMoves(color: Color): Set~Position~
