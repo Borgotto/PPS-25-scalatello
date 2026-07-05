@@ -4,7 +4,7 @@ import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.BoardState
 import it.unibo.pps.utils.{Color, Shape}
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{be, should}
+import org.scalatest.matchers.should.Matchers.{an, be, should}
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
@@ -111,13 +111,7 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   "A Board, if the move is not valid" should "not place the new disk" in:
     forEvery(notPlaceDiskTestTable):
       (boardDuringMatch, notValidMovePos) =>
-        try {
-          boardDuringMatch.placeDisk(notValidMovePos, Color.Black)
-          fail("should have thrown IllegalArgumentException")
-        }
-        catch {
-          case _: IllegalArgumentException =>
-        }
+        an [IllegalArgumentException] should be thrownBy boardDuringMatch.placeDisk(notValidMovePos, Color.Black)
 
   private val captureDisksTestTable = Table(
     ("boardDuringMatch", "validMovePos", "expectedBoardAfterCapture"),
@@ -138,13 +132,8 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   "A Board, if the move is not valid" should "not capture any disks" in:
     forEvery(notCaptureDisksTestTable):
       (initialBoard, notValidMovePos) =>
-        try {
+        an [IllegalArgumentException] should be thrownBy
           initialBoard.placeDisk(notValidMovePos, Color.Black).captureDisks(notValidMovePos)
-          fail("should have thrown IllegalArgumentException")
-        }
-        catch {
-          case _: IllegalArgumentException =>
-        }
 
   private val boardStateTestTable = Table(
     ("initialBoard", "boardShape", "expectedDiskStates"),
