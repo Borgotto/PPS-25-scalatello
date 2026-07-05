@@ -4,7 +4,6 @@ import it.unibo.pps.state.DiskState
 import it.unibo.pps.utils.{Color, Position, Shape}
 
 import scala.annotation.tailrec
-import scala.collection.immutable.HashMap
 
 class BoardComputations:
   private def calculateDirection(distance: Position): Position =
@@ -36,7 +35,7 @@ class BoardComputations:
   private def getNextConnectingNeighbour(diskPos: Position, placedDisk: (Position, Color),
                                          distance: Position, board: Board): Option[Position] =
     val neighbourPos = Position(diskPos.row - distance.row, diskPos.column - distance.column)
-    val disksWithoutPlacedDisk: HashMap[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
+    val disksWithoutPlacedDisk: Map[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
     diskPos match
       case p if !p.neighbourInBounds(distance, board.shape) && !board.disks.contains(neighbourPos)
         => Option.empty
@@ -70,7 +69,7 @@ class BoardComputations:
             || e._1.inBetween(diskPos, connectingDiskPos)).keySet
     yield diskToFlip
 
-  private def getUpdatedDisks(disksToFlip: Set[Position], board: Board): HashMap[Position, Disk] =
+  private def getUpdatedDisks(disksToFlip: Set[Position], board: Board): Map[Position, Disk] =
     for disk <- board.disks
     yield
       disk match
@@ -102,7 +101,7 @@ class BoardComputations:
           = getConnectingDisks(oppositeNeighboursPos, diskColor, diskPos, board)
         val disksToFlip: Set[Position]
           = getDisksToFlip(diskPos, connectingDisksPos.filter(e => e.isDefined).map(e => e.get), board)
-        val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
+        val flippedDisks: Map[Position, Disk] = getUpdatedDisks(disksToFlip, board)
         Board(board.shape, flippedDisks)
       case _ => board
 

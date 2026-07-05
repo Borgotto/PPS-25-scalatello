@@ -51,7 +51,7 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     (rectangleParams.outOfBoundsTestBoard, rectangleParams.expectedNotOutOfBoundsMoves)
   )
   "A Board" should "not say that moves out of bounds are available" in:
-    forEvery(outOfBoundsTestTable) { (board, expectedMoves) =>
+    forEvery(outOfBoundsTestTable) { (board, expectedMoves) => 
       board.getAvailableMoves(Color.Black).equals(expectedMoves) should be(true)
     }
 

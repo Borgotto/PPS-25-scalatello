@@ -4,8 +4,6 @@ import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.DiskState
 import it.unibo.pps.utils.{Color, Position, Shape}
 
-import scala.collection.immutable.HashMap
-
 class BoardTestParams(val shape: Shape):
   private val DIST: Int = 1
   private val whiteDisk: Disk = Disk(Color.White)
@@ -15,9 +13,9 @@ class BoardTestParams(val shape: Shape):
     shape match
       case Shape.Square(n) => Position(n / 2 - DIST, n / 2 - DIST)
       case Shape.Rectangle(h, w) => Position(h / 2 - DIST, w / 2 - DIST)
-  val initialDisksOnBoard: HashMap[Position, Disk] =
+  val initialDisksOnBoard: Map[Position, Disk] =
     shape match
-      case _ => HashMap(
+      case _ => Map(
         Position(topLeftCenterPos.row, topLeftCenterPos.column) -> whiteDisk,
         Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> blackDisk,
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> blackDisk,
@@ -25,7 +23,7 @@ class BoardTestParams(val shape: Shape):
       )
   val boardDuringMatch: Board =
     shape match
-      case _ => Board(shape, initialDisksOnBoard ++ HashMap(
+      case _ => Board(shape, initialDisksOnBoard ++ Map(
         Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> whiteDisk,
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
         Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> blackDisk,
@@ -51,7 +49,7 @@ class BoardTestParams(val shape: Shape):
       )
   val expectedBoardAfterCapture: Board =
     shape match
-      case _ => Board(shape, boardDuringMatch.disks ++ HashMap(
+      case _ => Board(shape, boardDuringMatch.disks ++ Map(
         Position(topLeftCenterPos.row, topLeftCenterPos.column) -> blackDisk,
         Position(topLeftCenterPos.row, topLeftCenterPos.column + DIST) -> blackDisk,
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST) -> blackDisk,
@@ -68,12 +66,12 @@ class BoardTestParams(val shape: Shape):
       )
   val outOfBoundsTestBoard: Board =
     shape match
-      case Shape.Square(n) => Board(shape, initialDisksOnBoard ++ HashMap(
+      case Shape.Square(n) => Board(shape, initialDisksOnBoard ++ Map(
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST) -> whiteDisk
         ))
-      case Shape.Rectangle(h, w) => Board(shape, initialDisksOnBoard ++ HashMap(
+      case Shape.Rectangle(h, w) => Board(shape, initialDisksOnBoard ++ Map(
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
