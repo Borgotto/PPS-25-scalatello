@@ -22,15 +22,15 @@ class BoardComputations:
       val disksWithoutPlacedDisk: Map[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
       neighbourPos match
         case p if !p.inBounds(board.shape) || !board.disks.contains(p) => Option.empty
-        case p if disksWithoutPlacedDisk(p).color.equals(placedDisk._2.opposite)
-        => _getNextConnectingNeighbour(p, placedDisk, distance)
+        case p if disksWithoutPlacedDisk(p).color.equals(placedDisk._2.opposite) => 
+          _getNextConnectingNeighbour(p, placedDisk, distance)
         case p => Some(p)
 
     for (disk, neighbour) <- oppositeNeighboursPos
         diskPosition: Position = Position(neighbour.row, neighbour.column)
         direction: Position = disk - neighbour
-        connectingDiskPosition: Option[Position]
-          = _getNextConnectingNeighbour(diskPosition, (placedDiskPos, diskColor), direction)
+        connectingDiskPosition: Option[Position] = 
+          _getNextConnectingNeighbour(diskPosition, (placedDiskPos, diskColor), direction)
         if connectingDiskPosition.isDefined
     yield connectingDiskPosition.get
 

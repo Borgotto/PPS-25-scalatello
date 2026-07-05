@@ -52,7 +52,8 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   )
   "A Board" should "not say that moves out of bounds are available" in:
     forEvery(outOfBoundsTestTable):
-      (board, expectedMoves) => board.getAvailableMoves(Color.Black).equals(expectedMoves) should be(true)
+      (board, expectedMoves) =>
+        board.getAvailableMoves(Color.Black).equals(expectedMoves) should be(true)
 
   private val validMovesTestTable = Table(
     ("board", "validMovePos"),
@@ -60,7 +61,8 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     (rectangleParams.boardDuringMatch, rectangleParams.validMovePos)
   )
   "A Board" should "know if a move is valid" in:
-    forEvery(validMovesTestTable): (board, validMovePos) =>
+    forEvery(validMovesTestTable):
+      (board, validMovePos) =>
       board.isMoveValid(validMovePos, Color.Black) should be(true)
 
   private val notValidMovesTestTable = Table(
@@ -89,7 +91,8 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   )
   "A Board" should "know if is not equal to another board" in:
     forEvery(notEqualsTestTable):
-      (board, notEqualBoard) => board.equals(notEqualBoard) should be(false)
+      (board, notEqualBoard) =>
+        board.equals(notEqualBoard) should be(false)
 
   private val placeDiskTestTable = Table(
     ("boardDuringMatch", "boardShape", "validMovePos"),
