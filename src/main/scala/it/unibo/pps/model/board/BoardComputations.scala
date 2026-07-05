@@ -92,15 +92,19 @@ class BoardComputations:
         => Board(board.shape, board.disks + (diskPos -> disk))
       case _ => board
 
-  def captureDisks(diskPos: Position, diskColor: Color, board: Board): Board =
-    val oppositeNeighboursPos: Set[(Position, Position)]
-      = getOppositeColorNeighbours(diskColor, board).filter(e => e._1.equals(diskPos))
-    val connectingDisksPos: Set[Option[Position]]
-      = getConnectingDisks(oppositeNeighboursPos, diskColor, diskPos, board)
-    val disksToFlip: Set[Position]
-      = getDisksToFlip(diskPos, connectingDisksPos.filter(e => e.isDefined).map(e => e.get), board)
-    val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
-    Board(board.shape, flippedDisks)
+  def captureDisks(diskPos: Position, board: Board): Board =
+    board.disks match
+      case disks if disks.contains(diskPos) => 
+        val diskColor: Color = disks(diskPos).color
+        val oppositeNeighboursPos: Set[(Position, Position)]
+          = getOppositeColorNeighbours(diskColor, board).filter(e => e._1.equals(diskPos))
+        val connectingDisksPos: Set[Option[Position]]
+          = getConnectingDisks(oppositeNeighboursPos, diskColor, diskPos, board)
+        val disksToFlip: Set[Position]
+          = getDisksToFlip(diskPos, connectingDisksPos.filter(e => e.isDefined).map(e => e.get), board)
+        val flippedDisks: HashMap[Position, Disk] = getUpdatedDisks(disksToFlip, board)
+        Board(board.shape, flippedDisks)
+      case _ => board
 
   def fromMapToSeq(board: Board): Seq[DiskState] =
     val diskStates =

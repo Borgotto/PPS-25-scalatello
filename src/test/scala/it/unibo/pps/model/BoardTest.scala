@@ -116,7 +116,7 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   )
   "A Board, after placing a disk" should "capture the correct disks" in:
     forEvery(captureDisksTestTable) { (boardDuringMatch, validMovePos, expectedBoardAfterCapture) =>
-      val board: Board = boardDuringMatch.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos, Color.Black)
+      val board: Board = boardDuringMatch.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos)
       board.equals(expectedBoardAfterCapture) should be(true)
     }
 
