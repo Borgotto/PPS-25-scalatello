@@ -66,4 +66,19 @@ class BoardTestParams(val shape: Shape):
         DiskState(blackDisk.color, Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column)),
         DiskState(whiteDisk.color, Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST))
       )
-  
+  val outOfBoundsTestBoard: Board =
+    shape match
+      case Shape.Square(n) => Board(shape, initialDisksOnBoard ++ HashMap(
+          Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
+          Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
+          Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST) -> whiteDisk
+        ))
+      case Shape.Rectangle(h, w) => Board(shape, initialDisksOnBoard ++ HashMap(
+          Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
+          Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST - DIST) -> whiteDisk,
+          Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
+          Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST) -> whiteDisk
+        ))
+  val expectedNotOutOfBoundsMoves: Set[Position] =
+    shape match
+      case _ => Set(Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column - DIST))

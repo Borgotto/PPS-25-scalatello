@@ -3,7 +3,6 @@ package it.unibo.pps.model
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.BoardState
 import it.unibo.pps.utils.{Color, Shape}
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -44,6 +43,16 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   "A Board" should "know which moves are available for a given player" in:
     forEvery(availableMovesTestTable) { (initialBoard, expectedMoves) =>
       initialBoard.getAvailableMoves(Color.Black).equals(expectedMoves) should be(true)
+    }
+
+  private val outOfBoundsTestTable = Table(
+    ("board", "expectedMoves"),
+    (squareParams.outOfBoundsTestBoard, squareParams.expectedNotOutOfBoundsMoves),
+    (rectangleParams.outOfBoundsTestBoard, rectangleParams.expectedNotOutOfBoundsMoves)
+  )
+  "A Board" should "not say that moves out of bounds are available" in:
+    forEvery(outOfBoundsTestTable) { (board, expectedMoves) =>
+      board.getAvailableMoves(Color.Black).equals(expectedMoves) should be(true)
     }
 
   private val validMovesTestTable = Table(
@@ -118,6 +127,17 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     forEvery(captureDisksTestTable) { (boardDuringMatch, validMovePos, expectedBoardAfterCapture) =>
       val board: Board = boardDuringMatch.placeDisk(validMovePos, Color.Black).captureDisks(validMovePos)
       board.equals(expectedBoardAfterCapture) should be(true)
+    }
+
+  private val notCaptureDisksTestTable = Table(
+    ("initialBoard", "notValidMovePos"),
+    (squareParams.initialBoard, squareParams.notValidMovePos),
+    (rectangleParams.initialBoard, rectangleParams.notValidMovePos)
+  )
+  "A Board, if the move is not valid" should "not capture any disks" in:
+    forEvery(notCaptureDisksTestTable) { (initialBoard, notValidMovePos) =>
+      val board: Board = initialBoard.placeDisk(notValidMovePos, Color.Black).captureDisks(notValidMovePos)
+      board.equals(initialBoard) should be(true)
     }
 
   private val boardStateTestTable = Table(
