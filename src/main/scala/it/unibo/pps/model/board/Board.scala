@@ -32,26 +32,24 @@ object Board:
     shape match
       case _ => StandardBoard(shape, disks)
 
-  private class StandardBoard(override val shape: Shape,
-                              override val disks: Map[Position, Disk]) extends Board:
+  private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
+    private given contextBoard: Board = this
 
-    override val state: BoardState =
-      val diskState: Seq[DiskState] = compute.fromMapToSeq(this)
-      BoardState(shape, diskState)
+    val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSeq)
 
-    override def getAvailableMoves(diskColor: Color): Set[Position] =
-      compute.getAvailableMoves(diskColor, this)
+    def getAvailableMoves(diskColor: Color): Set[Position] =
+      compute.getAvailableMoves(diskColor)
 
-    override def isMoveValid(diskPos: Position, diskColor: Color): Boolean =
-      compute.isMoveValid(diskPos, diskColor, this)
+    def isMoveValid(diskPos: Position, diskColor: Color): Boolean =
+      compute.isMoveValid(diskPos, diskColor)
 
-    override def placeDisk(diskPos: Position, diskColor: Color): Board =
-      compute.placeDisk(diskPos, diskColor, this)
+    def placeDisk(diskPos: Position, diskColor: Color): Board =
+      compute.placeDisk(diskPos, diskColor)
 
-    override def captureDisks(diskPos: Position): Board =
-      compute.captureDisks(diskPos, this)
+    def captureDisks(diskPos: Position): Board =
+      compute.captureDisks(diskPos)
 
     override def equals(obj: Any): Boolean =
       obj match
-        case o: Board => disks.equals(o.disks) && shape.equals(o.shape)
+        case b: Board => disks.equals(b.disks) && shape.equals(b.shape)
