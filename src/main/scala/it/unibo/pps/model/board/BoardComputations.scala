@@ -50,7 +50,7 @@ class BoardComputations:
         if diskToFlip.inBetween(diskPos, connectingDiskPos)
     yield diskToFlip
 
-  def getAvailableMoves(diskColor: Color)(using board: Board): Set[Position] =
+  def getAvailablePlacements(diskColor: Color)(using board: Board): Set[Position] =
     @tailrec
     def _getNextEmptyNeighbour(diskPos: Position, distance: Position)(using board: Board): Option[Position] =
       val neighbourPos = diskPos - distance
@@ -65,11 +65,11 @@ class BoardComputations:
         if availableMove.isDefined
     yield availableMove.get
 
-  def isMoveValid(diskPos: Position, diskColor: Color)(using board: Board): Boolean =
-    getAvailableMoves(diskColor).contains(diskPos)
+  def isPlacementValid(diskPos: Position, diskColor: Color)(using board: Board): Boolean =
+    getAvailablePlacements(diskColor).contains(diskPos)
 
   def placeDisk(diskPos: Position, diskColor: Color)(using board: Board): Board =
-    if !isMoveValid(diskPos, diskColor) then throw IllegalArgumentException("The move is not valid")
+    if !isPlacementValid(diskPos, diskColor) then throw IllegalArgumentException("The move is not valid")
     Board(board.shape, board.disks + (diskPos -> Disk(diskColor)))
 
   def captureDisks(diskPos: Position)(using board: Board): Board =

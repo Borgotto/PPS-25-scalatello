@@ -5,5 +5,5 @@ import it.unibo.pps.utils.{Position, Shape}
 case class BoardState(
   shape: Shape,
   disks: Seq[DiskState],
-  availablePlacements: Set[Position]
+  userAvailablePlacements: Set[Position]
 )

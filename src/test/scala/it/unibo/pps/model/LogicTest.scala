@@ -108,10 +108,10 @@ class LogicTest extends AnyFlatSpec:
       .BW.
       ....
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
-  "User move that captures more than one opponent disk horizontally" should "be allowed and capture target disks" in :
+  "User move that captures more than one opponent disk horizontally" should "be allowed and capture target disks" in:
     val userColor = Black
     val initialBoard = """
       ....
@@ -126,7 +126,7 @@ class LogicTest extends AnyFlatSpec:
       .BW.
       ....
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures one opponent disk vertically" should "be allowed and capture target disk" in:
@@ -144,7 +144,7 @@ class LogicTest extends AnyFlatSpec:
       .BW.
       ....
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures more than one opponent disk vertically" should "be allowed and capture target disks" in :
@@ -162,7 +162,7 @@ class LogicTest extends AnyFlatSpec:
       .BB.
       ..B.
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures one opponent disk along forward diagonal" should "be allowed and capture target disk" in:
@@ -180,7 +180,7 @@ class LogicTest extends AnyFlatSpec:
       BBW.
       ....
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures more than one opponent disk along forward diagonal" should "be allowed and capture target disks" in :
@@ -198,7 +198,7 @@ class LogicTest extends AnyFlatSpec:
       .BB.
       B...
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures one opponent disk along backward diagonal" should "be allowed and capture target disk" in:
@@ -216,7 +216,7 @@ class LogicTest extends AnyFlatSpec:
        .BB.
        ....
      """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "User move that captures more than one opponent disk along backward diagonal" should "be allowed and capture target disks" in :
@@ -234,7 +234,7 @@ class LogicTest extends AnyFlatSpec:
       .BB.
       ...B
     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.board.disks should be(expectedBoard.state.disks)
 
   "Opponent" should "move after the user when having available moves" in:
@@ -246,9 +246,8 @@ class LogicTest extends AnyFlatSpec:
        ....
      """.toBoard
     val targetPosition = Position(1, 0)
-    val mockAvailablePlacements = Set(Position(0, 0))
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
-    logic.state.activePlayer should be(Opponent(USER_COLOR.opposite))
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
+    logic.state.activePlayer should be(Opponent(userColor.opposite))
 
   "User" should "move again if opponent does not have available moves" in:
     val userColor = Black
@@ -259,8 +258,8 @@ class LogicTest extends AnyFlatSpec:
       .BBB
      """.toBoard
     val targetPosition = Position(0, 3)
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
-    logic.state.activePlayer should be(User(USER_COLOR))
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
+    logic.state.activePlayer should be(User(userColor))
 
   "User" should "move after opponent when having available moves" in :
     val userColor = White
@@ -270,7 +269,7 @@ class LogicTest extends AnyFlatSpec:
        .BW.
        ....
      """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeOpponentDisk()
+    val logic = LogicImpl(userColor, initialBoard).placeOpponentDisk()
     logic.state.activePlayer should be(User(userColor))
 
   "Opponent" should "move again if user does not have available moves" in:
@@ -281,7 +280,7 @@ class LogicTest extends AnyFlatSpec:
        .BW.
        ....
      """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeOpponentDisk()
+    val logic = LogicImpl(userColor, initialBoard).placeOpponentDisk()
     logic.state.activePlayer should be(Opponent(userColor.opposite))
 
   "Match" should "end if board is full" in:
@@ -293,13 +292,7 @@ class LogicTest extends AnyFlatSpec:
        BBW.
      """.toBoard
     val targetPosition = Position(3, 3)
-    val expectedBoard: Board = """
-      BBBB
-      BBBB
-      BBBB
-      BBBB
-    """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.status should not be InProgress
 
   "Match" should "end if both players do not have available moves" in:
@@ -311,13 +304,7 @@ class LogicTest extends AnyFlatSpec:
        ....
      """.toBoard
     val targetPosition = Position(2, 3)
-    val expectedBoard: Board ="""
-      BBBB
-      BBBB
-      BBBB
-      ....
-    """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.status should not be InProgress
 
   "User" should "win if the match is ended and he has more disks on the field than the opponent" in:
@@ -328,13 +315,7 @@ class LogicTest extends AnyFlatSpec:
        WWWW
        WBW.
      """.toBoard
-    val expectedBoard = """
-       WWWW
-       WWWW
-       WWWW
-       WBBB
-     """.toBoard
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeOpponentDisk()
+    val logic = LogicImpl(userColor, initialBoard).placeOpponentDisk()
     logic.state.status should be(UserWon)
 
   "Opponent" should "win if the match is ended and he has more disks on the field than the user" in :
@@ -345,30 +326,18 @@ class LogicTest extends AnyFlatSpec:
        WWWW
        WBW.
      """.toBoard
-    val expectedBoard = """
-       WWWW
-       WWWW
-       WWWW
-       WBBB
-     """.toBoard
     val targetPosition = Position(3, 3)
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.status should be(OpponentWon)
 
   "Match result" should "be a tie if the match is ended and players have the same number of disks on the field" in:
     val userColor = Black
     val initialBoard = """
        WWWW
-       BBWW
-       BBWW
+       WWWW
+       BBBB
        BBW.
      """.toBoard
-    val expectedBoard = """
-       WWWW
-       BBWW
-       BBWW
-       BBBB
-     """.toBoard
     val targetPosition = Position(3, 3)
-    val logic = LogicImpl(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
+    val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
     logic.state.status should be(Tie)

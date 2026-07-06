@@ -1,13 +1,12 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.state.{BoardState, DiskState}
-
 import it.unibo.pps.utils.{Color, Position, Shape}
 
 trait Board:
   private[board] val shape: Shape
   private[board] val disks: Map[Position, Disk]
-  def state: BoardState
+  val state: BoardState
   def isPlacementValid(color: Color, position: Position): Boolean
   def placeDisk(color: Color, position: Position): Board
   def captureDisks(newDiskPosition: Position): Board
@@ -28,14 +27,14 @@ object Board:
       Position(topLeftCenterPos.row + dist, topLeftCenterPos.column + dist) -> Disk(Color.White)
     )
     apply(shape, initialDisks)
-    
+
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
       case _ => StandardBoard(shape, disks)
 
   private class StandardBoard(
     val shape: Shape,
-    val disks: Map[Position, Disk]
+    val disks: Map[Position, Disk],
   ) extends Board:
     
     private val compute: BoardComputations = BoardComputations()
@@ -48,10 +47,10 @@ object Board:
     )
 
     def getAvailablePlacements(color: Color): Set[Position] =
-      compute.getAvailableMoves(color)
+      compute.getAvailablePlacements(color)
 
     def isPlacementValid(color: Color, position: Position): Boolean =
-      compute.isMoveValid(position, color)
+      compute.isPlacementValid(position, color)
 
     def placeDisk(color: Color, position: Position): Board =
       compute.placeDisk(position, color)

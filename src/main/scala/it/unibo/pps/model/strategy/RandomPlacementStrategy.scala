@@ -1,11 +1,13 @@
 package it.unibo.pps.model.strategy
 
-import scala.util.Random
-import it.unibo.pps.state.{BoardState, MatchState}
-import it.unibo.pps.utils.Position
+import it.unibo.pps.model.board.Board
+import it.unibo.pps.utils.{Color, Position}
 
-case class RandomPlacementStrategy() extends PlacementStrategy[BoardState, Position]:
-  override def computePlacement(using boardState: BoardState): Position =
-    val availablePlacements = boardState.availablePlacements
+import scala.util.Random
+
+case class RandomPlacementStrategy(color: Color) extends PlacementStrategy[Board, Position]:
+  override def computePlacement(using board: Board): Position =
+    val availablePlacements = board.getAvailablePlacements(color)
+    if availablePlacements.isEmpty then throw IllegalStateException("Opponent has no available placements")
     val randomIndex = Random.nextInt(availablePlacements.size)
     availablePlacements.toSeq(randomIndex)
