@@ -247,7 +247,7 @@ classDiagram
     <<trait>>
     +startMatch()
     +handleSelection(position: Position)
-    +saveMatch(state: MatchState)
+    +saveMatch()
     +loadMatch()
   }
 ```
