@@ -7,5 +7,5 @@ import it.unibo.pps.utils.Position
 case class RandomPlacementStrategy() extends PlacementStrategy[BoardState, Position]:
   override def computePlacement(using boardState: BoardState): Position =
     val availablePlacements = boardState.availablePlacements
-    val randomIndex = Random.nextInt(availablePlacements.length)
-    availablePlacements(randomIndex)
+    val randomIndex = Random.nextInt(availablePlacements.size)
+    availablePlacements.toSeq(randomIndex)

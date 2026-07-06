@@ -1,6 +1,6 @@
 package it.unibo.pps.testutils
 
-import it.unibo.pps.model.board.{Board, BoardImpl, Disk}
+import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.utils.Position
 import it.unibo.pps.utils.Color.*
 import it.unibo.pps.utils.Shape.*
@@ -31,10 +31,10 @@ object TestExtensions:
         (char, col) <- line.trim.replaceAll("\\s+", "").zipWithIndex
       } yield {
         char match
-          case 'B' => Some(Disk(Black, Position(row, col)))
-          case 'W' => Some(Disk(White, Position(row, col)))
+          case 'B' => Some(Position(row, col) -> Disk(Black))
+          case 'W' => Some(Position(row, col) -> Disk(White))
           case '.' => None
           case _ => throw IllegalArgumentException(s"Invalid character $char in board string")
       }
 
-      BoardImpl(shape, disks.flatten)
+      Board(shape, disks.flatten.toMap)

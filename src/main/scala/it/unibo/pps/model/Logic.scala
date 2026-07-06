@@ -1,6 +1,6 @@
 package it.unibo.pps.model
 
-import it.unibo.pps.model.board.{Board, BoardImpl}
+import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.Player
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
@@ -69,7 +69,7 @@ object LogicImpl:
     case White => Opponent(Black)
     
   def apply(boardShape: Shape, userColor: Color): LogicImpl =
-    new LogicImpl(InProgress, getInitialActivePlayer(userColor), BoardImpl(boardShape))
+    new LogicImpl(InProgress, getInitialActivePlayer(userColor), Board(boardShape))
     
   def apply(userColor: Color, board: Board) =
     new LogicImpl(InProgress, getInitialActivePlayer(userColor), board)

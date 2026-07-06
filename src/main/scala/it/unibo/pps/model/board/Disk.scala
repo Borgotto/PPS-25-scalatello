@@ -1,7 +1,6 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.state.DiskState
-import it.unibo.pps.utils.{Color, Position}
+import it.unibo.pps.utils.Color
 
-class Disk(color: Color, position: Position):
-  def state = DiskState(color, position)
+case class Disk(color: Color):
+  def flip(): Disk = Disk(color.opposite)
