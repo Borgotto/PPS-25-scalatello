@@ -203,8 +203,8 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
-    + disks: Map~Position, Disk~
-    + shape: Shape
+    ~ disks: Map~Position, Disk~
+    ~ shape: Shape
     + state: BoardState
     + getAvailableMoves(color: Color): Set~Position~
     + isMoveValid(position: Position, color: Color): Boolean
