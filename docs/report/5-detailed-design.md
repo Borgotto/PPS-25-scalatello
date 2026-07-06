@@ -235,7 +235,7 @@ Per semplificare questa operazione viene utilizzato il **factory pattern**.
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
 
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
-- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passandole un riferimento alla `Board` tramite un parametro dei diversi metodi, per permetterle di operare sull'istanza corrente della stessa;
+- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passandole un riferimento alla `Board` tramite un parametro dei diversi metodi, per permetterle di operare sull'istanza corrente della stessa.
 
 ### MatchController
 
@@ -245,16 +245,16 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 classDiagram
   class MatchController {
     <<trait>>
-    +initializeMatch()
+    +startMatch()
     +handleSelection(position: Position)
-    +saveMatch(state: MatchState)
+    +saveMatch()
     +loadMatch()
   }
 ```
 
 In dettaglio:
 
-- `initializeMatch()` inizializza la partita con la configurazione iniziale della scacchiera stabilita dalle regole del gioco;
+- `startMatch()` crea una nuova partita occupandosi di creare tutti i componenti necessari;
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
