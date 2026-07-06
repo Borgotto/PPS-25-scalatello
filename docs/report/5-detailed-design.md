@@ -34,30 +34,6 @@ classDiagram
     View --> Controller
 ```
 
-## BoardManager
-
-TODO: aggiornare
-
-```mermaid
-classDiagram
-    class Board {
-        <<interface>>
-        + initialize()
-        + getBoardState(): BoardState
-        + placeDisk(color: Color, strategy: PlacementStrategy): bool
-        + getAvailablePlacements(color: Color): List~Position~
-    }
-    class BoardManager {
-        <<interface>>
-        + isPlacementLegal(color: Color,position: Position): bool
-        + captureFromPosition(color: Color, position: Position)
-        + computeAvailablePlacements(color Color): List~Position~
-        + computeBestPlacement(color: Color, strategy: PlacementStrategy): Position
-    }
-
-    Board --> BoardManager
-```
-
 ---
 
 ## Player
