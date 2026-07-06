@@ -206,14 +206,14 @@ classDiagram
     ~ disks: Map~Position, Disk~
     ~ shape: Shape
     + state: BoardState
-    + getAvailableMoves(color: Color): Set~Position~
-    + isMoveValid(position: Position, color: Color): Boolean
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
     + captureDisks(position: Position): Board
   }
   class BoardComputations {
-    + getAvailableMoves(color: Color, board: Board): Set~Position~
-    + isMoveValid(position: Position, color: Color, board: Board): Boolean
+    + getAvailablePlacements(color: Color, board: Board): Set~Position~
+    + isPlacementValid(position: Position, color: Color, board: Board): Boolean
     + placeDisk(position: Position, color: Color, board: Board): Board
     + captureDisks(position: Position, board: Board): Board
   }
