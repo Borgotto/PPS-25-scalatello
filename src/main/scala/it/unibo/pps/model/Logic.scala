@@ -9,7 +9,7 @@ import it.unibo.pps.utils.Color.*
 import it.unibo.pps.utils.MatchStatus.*
 
 trait Logic:
-  val state: MatchState
+  def state: MatchState
   def placeUserDisk(position: Position): Logic
   def placeOpponentDisk(): Logic
 

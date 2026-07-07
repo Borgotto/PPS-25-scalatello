@@ -5,9 +5,9 @@ import it.unibo.pps.model.strategy.*
 import it.unibo.pps.state.PlayerState
 
 trait Player:
-  val color: Color
-  val strategy: UserPlacementStrategy | OpponentPlacementStrategy
-  val state: PlayerState
+  def color: Color
+  def strategy: UserPlacementStrategy | OpponentPlacementStrategy
+  def state: PlayerState
 
 case class User(color: Color) extends Player:
   override val strategy: UserPlacementStrategy = UserPlacementStrategy()

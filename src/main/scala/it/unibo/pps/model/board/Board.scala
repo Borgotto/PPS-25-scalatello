@@ -4,9 +4,9 @@ import it.unibo.pps.state.{BoardState, DiskState}
 import it.unibo.pps.utils.{Color, Position, Shape}
 
 trait Board:
-  private[board] val shape: Shape
-  private[board] val disks: Map[Position, Disk]
-  val state: BoardState
+  private[board] def shape: Shape
+  private[board] def disks: Map[Position, Disk]
+  def state: BoardState
   def isPlacementValid(color: Color, position: Position): Boolean
   def placeDisk(color: Color, position: Position): Board
   def captureDisks(newDiskPosition: Position): Board
