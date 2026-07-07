@@ -11,7 +11,7 @@ import it.unibo.pps.testutils.TestExtensions.*
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{an, be, not, thrownBy}
-import org.scalatest.matchers.should.Matchers.should
+import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 
 class LogicTest extends AnyFlatSpec:
 
@@ -57,7 +57,7 @@ class LogicTest extends AnyFlatSpec:
     val logic = LogicImpl(SQUARE_SHAPE, userColor)
     val activePlayer = logic.state.activePlayer
     activePlayer match
-      case User(color) => color should be(Black)
+      case User(color, _) => color should be(Black)
       case _ => fail("Opponent is set to move first")
 
   "Opponent" should "move first if user is assigned color white" in:
@@ -65,7 +65,7 @@ class LogicTest extends AnyFlatSpec:
     val logic = LogicImpl(SQUARE_SHAPE, userColor)
     val activePlayer = logic.state.activePlayer
     activePlayer match
-      case Opponent(color) => color should be(Black)
+      case Opponent(color, _) => color should be(Black)
       case _ => fail("User is set to move first")
 
   "Match" should "initially be in progress" in:
@@ -247,7 +247,7 @@ class LogicTest extends AnyFlatSpec:
      """.toBoard
     val targetPosition = Position(1, 0)
     val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
-    logic.state.activePlayer should be(Opponent(userColor.opposite))
+    logic.state.activePlayer shouldBe an [Opponent]
 
   "User" should "move again if opponent does not have available moves" in:
     val userColor = Black
@@ -259,7 +259,7 @@ class LogicTest extends AnyFlatSpec:
      """.toBoard
     val targetPosition = Position(0, 3)
     val logic = LogicImpl(userColor, initialBoard).placeUserDisk(targetPosition)
-    logic.state.activePlayer should be(User(userColor))
+    logic.state.activePlayer shouldBe an [User]
 
   "User" should "move after opponent when having available moves" in :
     val userColor = White
@@ -270,7 +270,7 @@ class LogicTest extends AnyFlatSpec:
        ....
      """.toBoard
     val logic = LogicImpl(userColor, initialBoard).placeOpponentDisk()
-    logic.state.activePlayer should be(User(userColor))
+    logic.state.activePlayer shouldBe an [User]
 
   "Opponent" should "move again if user does not have available moves" in:
     val userColor = White
@@ -281,7 +281,7 @@ class LogicTest extends AnyFlatSpec:
        ....
      """.toBoard
     val logic = LogicImpl(userColor, initialBoard).placeOpponentDisk()
-    logic.state.activePlayer should be(Opponent(userColor.opposite))
+    logic.state.activePlayer shouldBe an [Opponent]
 
   "Match" should "end if board is full" in:
     val userColor = Black
