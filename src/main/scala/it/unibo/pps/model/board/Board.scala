@@ -11,9 +11,9 @@ trait Board:
   def placeDisk(color: Color, position: Position): Board
   def captureDisks(newDiskPosition: Position): Board
   def getAvailablePlacements(color: Color): Set[Position]
-  
+
 object Board:
-  
+
   def apply(shape: Shape): Board =
     val dist: Int = 1
     val topLeftCenterPos: Position =
@@ -36,7 +36,7 @@ object Board:
     val shape: Shape,
     val disks: Map[Position, Disk],
   ) extends Board:
-    
+
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
 
@@ -61,4 +61,3 @@ object Board:
     override def equals(obj: Any): Boolean =
       obj match
         case b: Board => state.disks.equals(b.state.disks) && shape.equals(b.state.shape)
-        

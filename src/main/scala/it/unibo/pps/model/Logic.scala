@@ -1,7 +1,8 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.model.Player
+import it.unibo.pps.model.player.{Player, User, Opponent}
+import it.unibo.pps.model.player.Opponent.RandomOpponent
 import it.unibo.pps.state.{BoardState, MatchState}
 import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
 import it.unibo.pps.utils.Color.*
@@ -36,7 +37,7 @@ class LogicImpl(
 
   private def getUpdatedBoard(newDiskColor: Color, newDiskPosition: Position): Board =
     board.placeDisk(newDiskColor, newDiskPosition).captureDisks(newDiskPosition)
-  
+
   private def getUpdatedStatus(board: Board): MatchStatus =
     if !areBothPlayersStuck(board) then InProgress
     else
@@ -48,13 +49,13 @@ class LogicImpl(
         case _ => Tie
 
   private val nextPlayer: Player = activePlayer match
-    case User(color) => Opponent(color.opposite)
+    case User(color) => RandomOpponent(color.opposite)
     case Opponent(color) => User(color.opposite)
 
   private def getUpdatedActivePlayer(board: Board): Player =
     val availablePlacements = board.getAvailablePlacements(activePlayer.color.opposite)
     if availablePlacements.isEmpty then activePlayer else nextPlayer
-  
+
   private def getUpdatedLogic(newDiskColor: Color, newDiskPosition: Position): Logic =
     val updatedBoard = getUpdatedBoard(newDiskColor, newDiskPosition)
     val updatedStatus = getUpdatedStatus(updatedBoard)
@@ -74,14 +75,13 @@ class LogicImpl(
       getUpdatedLogic(opponentColor, position)
 
 object LogicImpl:
-  
+
   private def getInitialActivePlayer(userColor: Color): Player = userColor match
     case Black => User(Black)
-    case White => Opponent(Black)
-    
+    case White => RandomOpponent(Black)
+
   def apply(boardShape: Shape, userColor: Color): LogicImpl =
     new LogicImpl(InProgress, getInitialActivePlayer(userColor), Board(boardShape))
-    
+
   def apply(userColor: Color, board: Board) =
     new LogicImpl(InProgress, getInitialActivePlayer(userColor), board)
-    

@@ -3,6 +3,7 @@ package it.unibo.pps.model.board
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.BoardState
 import it.unibo.pps.utils.{Color, Position, Shape}
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{an, be, should}
 import org.scalatest.prop.TableDrivenPropertyChecks
