@@ -11,7 +11,7 @@ trait Player:
 
 case class User(color: Color) extends Player:
   val strategy: UserPlacementStrategy = UserPlacementStrategy()
-  val state = PlayerState.User(color)
+  val state = PlayerState.User(color, strategy)
 
 enum Opponent extends Player:
   case RandomOpponent(color: Color)
@@ -19,7 +19,7 @@ enum Opponent extends Player:
   val strategy: OpponentPlacementStrategy = this match
     case RandomOpponent(_) => RandomPlacementStrategy(color)
     
-  val state = PlayerState.Opponent(color)
-  
+  val state = PlayerState.Opponent(color, strategy)
+
 object Opponent:
   def unapply(opponent: Opponent): Option[Color] = Some(opponent.color)
