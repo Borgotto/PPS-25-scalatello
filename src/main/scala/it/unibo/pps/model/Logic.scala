@@ -23,7 +23,7 @@ class LogicImpl(
     case User(color) => board.state.copy(userAvailablePlacements = board.getAvailablePlacements(color))
     case Opponent(_) => board.state
 
-  override val state: MatchState = MatchState(status, activePlayer.state, boardState)
+  val state: MatchState = MatchState(status, activePlayer.state, boardState)
 
   private val userColor: Color = activePlayer match
     case User(color) => color
@@ -62,13 +62,13 @@ class LogicImpl(
     val updatedActivePlayer = getUpdatedActivePlayer(updatedBoard)
     new LogicImpl(updatedStatus, updatedActivePlayer, updatedBoard)
 
-  override def placeUserDisk(position: Position): Logic = activePlayer match
+  def placeUserDisk(position: Position): Logic = activePlayer match
     case Opponent(_) => throw IllegalStateException("It is opponent's turn now")
     case user: User =>
       if !board.isPlacementValid(userColor, position) then this
       else getUpdatedLogic(userColor, position)
 
-  override def placeOpponentDisk(): Logic = activePlayer match
+  def placeOpponentDisk(): Logic = activePlayer match
     case User(_) => throw IllegalStateException("It is user's turn now")
     case opponent: Opponent =>
       val position = opponent.strategy.computePlacement(using board)

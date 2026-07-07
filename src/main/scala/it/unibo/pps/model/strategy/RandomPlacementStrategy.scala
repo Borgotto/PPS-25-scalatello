@@ -7,7 +7,7 @@ import it.unibo.pps.utils.{Color, Position}
 import scala.util.Random
 
 class RandomPlacementStrategy(color: Color) extends OpponentPlacementStrategy:
-  override def computePlacement(using board: Board): Position =
+  def computePlacement(using board: Board): Position =
     val availablePlacements = board.getAvailablePlacements(color)
     if availablePlacements.isEmpty then throw IllegalStateException("Opponent has no available placements")
     val randomIndex = Random.nextInt(availablePlacements.size)
