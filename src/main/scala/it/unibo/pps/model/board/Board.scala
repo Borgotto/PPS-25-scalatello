@@ -7,13 +7,12 @@ trait Board:
   private[board] def shape: Shape
   private[board] def disks: Map[Position, Disk]
   def state: BoardState
-  def isPlacementValid(color: Color, position: Position): Boolean
-  def placeDisk(color: Color, position: Position): Board
-  def captureDisks(newDiskPosition: Position): Board
-  def getAvailablePlacements(color: Color): Set[Position]
+  def getAvailablePlacements(diskColor: Color): Set[Position]
+  def isPlacementValid(diskColor: Color, diskPos: Position): Boolean
+  def placeDisk(diskColor: Color, diskPos: Position): Board
+  def captureDisks(diskPos: Position): Board
 
 object Board:
-
   def apply(shape: Shape): Board =
     val dist: Int = 1
     val topLeftCenterPos: Position =
@@ -32,31 +31,23 @@ object Board:
     shape match
       case _ => StandardBoard(shape, disks)
 
-  private class StandardBoard(
-    val shape: Shape,
-    val disks: Map[Position, Disk],
-  ) extends Board:
-
+  private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
 
-    val state: BoardState = BoardState(
-      shape,
-      disks.map((pos, disk) => DiskState(disk.color, pos)).toSeq,
-      Set[Position]()
-    )
+    val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSeq, Set())
 
-    def getAvailablePlacements(color: Color): Set[Position] =
-      compute.getAvailablePlacements(color)
+    def getAvailablePlacements(diskColor: Color): Set[Position] =
+      compute.getAvailablePlacements(diskColor)
 
-    def isPlacementValid(color: Color, position: Position): Boolean =
-      compute.isPlacementValid(position, color)
+    def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
+      compute.isPlacementValid(diskPos, diskColor)
 
-    def placeDisk(color: Color, position: Position): Board =
-      compute.placeDisk(position, color)
+    def placeDisk(diskColor: Color, diskPos: Position): Board =
+      compute.placeDisk(diskPos, diskColor)
 
-    def captureDisks(newDiskPosition: Position): Board =
-      compute.captureDisks(newDiskPosition)
+    def captureDisks(diskPos: Position): Board =
+      compute.captureDisks(diskPos)
 
     override def equals(obj: Any): Boolean =
       obj match

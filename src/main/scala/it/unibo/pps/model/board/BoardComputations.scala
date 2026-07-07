@@ -6,7 +6,6 @@ import scala.annotation.tailrec
 import scala.math.Ordering.Int
 
 class BoardComputations:
-
   private def getOppositeColorNeighbours(diskColor: Color)(using board: Board): Set[(Position, Position)] =
     for diskPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
         possibleNeighbourPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor.opposite)).keySet
@@ -69,7 +68,7 @@ class BoardComputations:
     getAvailablePlacements(diskColor).contains(diskPos)
 
   def placeDisk(diskPos: Position, diskColor: Color)(using board: Board): Board =
-    if !isPlacementValid(diskPos, diskColor) then throw IllegalArgumentException("The move is not valid")
+    if !isPlacementValid(diskPos, diskColor) then throw IllegalArgumentException("The placement is not valid")
     Board(board.shape, board.disks + (diskPos -> Disk(diskColor)))
 
   def captureDisks(diskPos: Position)(using board: Board): Board =
