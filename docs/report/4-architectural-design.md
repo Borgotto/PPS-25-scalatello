@@ -50,7 +50,7 @@ classDiagram
       + getAvailablePlacements(color: Color): Seq[Position]
     }
     class Disk {
-      + state: DiskState
+      + color: Color
       + flip(): Disk
     }
     class Player {
