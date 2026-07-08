@@ -9,6 +9,7 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.20" % Test,
       "org.mockito" % "mockito-scala_3" % "2.2.1" % Test,
-      "org.mockito" % "mockito-scala-scalatest_3" % "2.2.1" % Test
+      "org.mockito" % "mockito-scala-scalatest_3" % "2.2.1" % Test,
+      "org.scala-lang" %% "toolkit" % "0.9.2"
     ),
   )
