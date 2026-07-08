@@ -1,4 +1,12 @@
 package it.unibo.pps
 
+import it.unibo.pps.view.CLIView
+import it.unibo.pps.view.i18n.I18n
+
+import java.util.Locale
+
 object Scalatello:
-  @main def main(): Unit = println("Application entry point executed")
+
+  @main def main(): Unit = 
+    val i18n = I18n(Locale.ENGLISH)
+    CLIView(i18n).showMenu()
