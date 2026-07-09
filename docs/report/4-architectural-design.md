@@ -27,8 +27,7 @@ classDiagram
   namespace ControllerPackage {
     class MatchController {
       + startMatch()
-      + handleUserSelection(position: Position)
-      + handleOpponentTurn()
+      + handleSelection(position: Position)
       + saveMatch()
       + loadMatch()
     }
