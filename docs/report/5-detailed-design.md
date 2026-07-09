@@ -255,7 +255,7 @@ classDiagram
 In dettaglio:
 
 - `startMatch()` crea una nuova partita occupandosi di creare tutti i componenti necessari;
-- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco;
+- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
 
