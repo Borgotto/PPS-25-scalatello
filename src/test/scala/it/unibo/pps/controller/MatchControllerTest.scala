@@ -11,22 +11,22 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 
 class MatchControllerTest extends AnyFlatSpec:
+  private val BOARD_SIZE = 4
+  private val BOARD_SHAPE: Shape = Shape.Square(BOARD_SIZE)
+  private val USER_COLOR: Color = Color.Black
+
+  private val topLeftCenterPos = Position(BOARD_SIZE/2 - 1, BOARD_SIZE/2 - 1)
+  private val dist = 1
+  private val validPos = Position(topLeftCenterPos.row, topLeftCenterPos.column - dist)
+
   private val view: View = mock[View]
+  private val controller: MatchController = MatchControllerImpl(view)
+  controller.startMatch(BOARD_SHAPE, USER_COLOR)
 
   "A controller, to start a match" should "instantiate the correct Logic object" in:
-    val boardSize = 4
-    val boardShape: Shape = Shape.Square(boardSize)
-    val userColor: Color = Color.Black
-    val controller: MatchController = MatchControllerImpl(view)
-    controller.startMatch(boardShape, userColor)
-    controller.logic.state.equals(LogicImpl(boardShape, userColor).state) should be(true)
+    controller.logic.state.equals(LogicImpl(BOARD_SHAPE, USER_COLOR).state) should be(true)
 
   "A controller" should "handle correctly the selected position and the opponent turn accordingly, " +
     "so the active player should be the user again" in:
-    val boardSize = 4
-    val boardShape: Shape = Shape.Square(boardSize)
-    val userColor: Color = Color.Black
-    val controller: MatchController = MatchControllerImpl(view)
-    controller.startMatch(boardShape, userColor)
-    controller.handleSelection(Position(boardSize/2 - 1, boardSize/2 - 1 - 1))
-    controller.logic.state.activePlayer.color should be(userColor)
+    controller.handleSelection(validPos)
+    controller.logic.state.activePlayer.color should be(USER_COLOR)
