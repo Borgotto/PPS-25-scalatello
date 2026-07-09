@@ -246,10 +246,10 @@ classDiagram
   class MatchController {
     <<trait>>
     +startMatch()
-    +handleUserSelection(position: Position)
-    +handleOppentTurn()
-    +saveMatch()
-    +loadMatch()
+    +handleUserSelection(position: Position): MatchController
+    +handleOppentTurn(): MatchController
+    +saveMatch(): MatchController
+    +loadMatch(): MatchController
   }
 ```
 

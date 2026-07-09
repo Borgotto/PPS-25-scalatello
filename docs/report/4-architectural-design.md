@@ -27,10 +27,10 @@ classDiagram
   namespace ControllerPackage {
     class MatchController {
       + startMatch()
-      + handleUserSelection(position: Position)
-      + handleOpponentTurn()
-      + saveMatch()
-      + loadMatch()
+      + handleUserSelection(position: Position): MatchController
+      + handleOpponentTurn(): MatchController
+      + saveMatch(): MatchController
+      + loadMatch(): MatchController
     }
     class SaveManager {
       + save(state: MatchState)
