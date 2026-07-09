@@ -246,7 +246,8 @@ classDiagram
   class MatchController {
     <<trait>>
     +startMatch()
-    +handleSelection(position: Position)
+    +handleUserSelection(position: Position)
+    +handleOppentTurn()
     +saveMatch()
     +loadMatch()
   }
