@@ -245,16 +245,18 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 classDiagram
   class MatchController {
     <<trait>>
-    +startMatch()
-    +handleSelection(position: Position)
-    +saveMatch(filePath: String)
-    +loadMatch(filePath: String)
+    + startMatch(shape: Shape, color: Color)
+    + resumeMatch(color: Color, board: Board)
+    + handleSelection(position: Position)
+    + saveMatch(filePath: String)
+    + loadMatch(filePath: String)
   }
 ```
 
 In dettaglio:
 
-- `startMatch()` crea una nuova partita occupandosi di creare tutti i componenti necessari;
+- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari;
+- `resumeMatch()` dopo aver caricato un salvataggio esistente, aggiorna lo stato della partita in base a quello precedente; 
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
