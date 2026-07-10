@@ -1,7 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.model.LogicImpl
-import it.unibo.pps.state.MatchState
+import it.unibo.pps.model.board.Board
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
@@ -23,17 +23,22 @@ class MatchControllerTest extends AnyFlatSpec:
   private val controller: MatchController = MatchControllerImpl(view)
   controller.startMatch(BOARD_SHAPE, USER_COLOR)
 
-  "A controller, to start a match" should "instantiate the correct Logic object" in:
+  "A Controller, to start a match" should "instantiate the correct Logic object" in:
     controller.logic.state.equals(LogicImpl(BOARD_SHAPE, USER_COLOR).state) should be(true)
 
-  "A controller, if the first player is the opponent" should "immediately handle its turn, " +
+  "A Controller, if the first player is the opponent" should "immediately handle its turn, " +
     "so then the active player should be the user" in:
     val controllerOpponent: MatchController = MatchControllerImpl(view)
     val userColor: Color = Color.White
     controllerOpponent.startMatch(BOARD_SHAPE, userColor)
     controllerOpponent.logic.state.activePlayer.color.equals(userColor) should be(true)
 
-  "A controller" should "handle correctly the selected position and the opponent turn accordingly, " +
+  "A Controller, after loading a saved game" should "instantiate the Logic object accordingly" in:
+    val controllerAfterLoad: MatchController = MatchControllerImpl(view)
+    controllerAfterLoad.loadSavedMatch(USER_COLOR, Board(BOARD_SHAPE))
+    controllerAfterLoad.logic.state.equals(LogicImpl(USER_COLOR, Board(BOARD_SHAPE)).state) should be(true)
+
+  "A Controller" should "handle correctly the selected position and the opponent turn accordingly, " +
     "so the active player should be the user again" in:
     controller.handleSelection(validPos)
     controller.logic.state.activePlayer.color should be(USER_COLOR)
