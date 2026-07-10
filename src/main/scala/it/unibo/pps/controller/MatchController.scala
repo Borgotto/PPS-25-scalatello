@@ -8,6 +8,7 @@ trait MatchController:
   private[controller] var logic: Logic
   def startMatch(shape: Shape, userColor: Color): Unit
   def handleSelection(diskPos: Position): Unit
+  def saveMatch(filePath: String): Unit
   
 class MatchControllerImpl(private val view: View) extends MatchController:
   private[controller] var logic: Logic = _
@@ -32,3 +33,7 @@ class MatchControllerImpl(private val view: View) extends MatchController:
     logic = logic.placeUserDisk(diskPos)
     view.update(logic.state)
     handleOpponentTurn(userColor)
+
+  def saveMatch(filePath: String): Unit =
+    val saveManager: SaveManager = SaveManagerImpl(filePath)
+    saveManager.save(logic.state)
