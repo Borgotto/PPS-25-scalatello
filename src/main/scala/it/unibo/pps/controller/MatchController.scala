@@ -34,6 +34,7 @@ class MatchControllerImpl(private val view: View) extends MatchController:
       
   def resumeMatch(userColor: Color, board: Board): Unit =
     logic = LogicImpl(userColor, board)
+    view.update(logic.state)
   
   def handleSelection(diskPos: Position): Unit =
     val userColor = logic.state.activePlayer.color
