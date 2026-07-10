@@ -24,6 +24,7 @@ class BoardComputations:
         case p if disksWithoutPlacedDisk(p).color.equals(placedDisk._2.opposite) =>
           _getNextConnectingNeighbour(p, placedDisk, distance)
         case p => Some(p)
+
     for (disk, neighbour) <- oppositeNeighboursPos
         diskPosition: Position = Position(neighbour.row, neighbour.column)
         direction: Position = disk - neighbour
@@ -57,6 +58,7 @@ class BoardComputations:
         case p if !p.inBounds(board.shape) => Option.empty
         case p if board.disks.contains(p) => _getNextEmptyNeighbour(p, distance)
         case p => Some(p)
+
     for (disk, neighbour) <- getOppositeColorNeighbours(diskColor)
         diskPos: Position = Position(neighbour.row, neighbour.column)
         distance: Position = disk - neighbour
@@ -81,7 +83,6 @@ class BoardComputations:
     private def inRange(y: Int, z: Int): Boolean =
       x <= Int.max(y, z) && x >= Int.min(y, z)
 
-  extension (x: Int)
     private def inBetween(y: Int, z: Int): Boolean =
       x.inRange(Int.min(y, z) + 1, Int.max(y, z) - 1)
 
@@ -96,21 +97,18 @@ class BoardComputations:
           p.row.inRange(minPosition.row, height - 1) &&
           p.column.inRange(minPosition.column, width - 1)
 
-  extension (p: Position)
     private def inBetween(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
         case (f, s) if f.row.equals(s.row) => p.column.inBetween(f.column, s.column) && p.row.equals(f.row)
         case (f, s) if f.column.equals(s.column) => p.row.inBetween(f.row, s.row) && p.column.equals(f.column)
         case (f, s) => p.onSameDiagonal(f, s)
 
-  extension (p: Position)
     private def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
       val distance: Position = firstPos - secondPos
       val direction: Position = distance / Position(distance.row.abs, distance.column.abs)
       getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
       distance.row.abs.equals(distance.column.abs)
 
-  extension (p: Position)
     private def /(pos: Position): Position =
       (pos.row, pos.column) match
         case (r, c) if r.equals(0) && c.equals(0) => Position(r, c)
@@ -118,11 +116,9 @@ class BoardComputations:
         case (r, c) if c.equals(0) => Position(p.row / r, c)
         case (_, _) => Position(p.row / pos.row, p.column / pos.column)
 
-  extension (p: Position)
     private def -(pos: Position): Position =
       Position(p.row - pos.row, p.column - pos.column)
 
-  extension (p: Position)
     private def inNeighbourhood(pos: Position): Boolean =
       val maxDistance: Int = 1
       val distance: Position = p - pos
