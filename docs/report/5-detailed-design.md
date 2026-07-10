@@ -247,8 +247,8 @@ classDiagram
     <<trait>>
     +startMatch()
     +handleSelection(position: Position)
-    +saveMatch()
-    +loadMatch()
+    +saveMatch(filePath: String)
+    +loadMatch(filePath: String)
   }
 ```
 
