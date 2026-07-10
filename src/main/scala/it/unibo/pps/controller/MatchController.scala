@@ -2,7 +2,6 @@ package it.unibo.pps.controller
 
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.{Logic, LogicImpl}
-import it.unibo.pps.state.MatchState
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
