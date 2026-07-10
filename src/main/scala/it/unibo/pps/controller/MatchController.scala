@@ -14,14 +14,22 @@ class MatchControllerImpl(private val view: View) extends MatchController:
 
   def startMatch(shape: Shape, userColor: Color): Unit =
     logic = LogicImpl(shape, userColor)
-    view.update(logic.state)
+    
+    logic.state.activePlayer.color match
+      case c if c.equals(userColor.opposite) =>
+        while
+          logic.state.activePlayer.color.equals(userColor.opposite)
+        do
+          logic = logic.placeOpponentDisk()
+          view.update(logic.state)
+      case _ => view.update(logic.state)
 
   def handleSelection(diskPos: Position): Unit =
     val userColor = logic.state.activePlayer.color
     logic = logic.placeUserDisk(diskPos)
     view.update(logic.state)
     while
-      !logic.state.activePlayer.color.equals(userColor)
+      logic.state.activePlayer.color.equals(userColor.opposite)
     do
       logic = logic.placeOpponentDisk()
       view.update(logic.state)

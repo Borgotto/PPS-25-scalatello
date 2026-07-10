@@ -26,6 +26,13 @@ class MatchControllerTest extends AnyFlatSpec:
   "A controller, to start a match" should "instantiate the correct Logic object" in:
     controller.logic.state.equals(LogicImpl(BOARD_SHAPE, USER_COLOR).state) should be(true)
 
+  "A controller, if the first player is the opponent" should "immediately handle its turn, " +
+    "so then the active player should be the user" in:
+    val controllerOpponent: MatchController = MatchControllerImpl(view)
+    val userColor: Color = Color.White
+    controllerOpponent.startMatch(BOARD_SHAPE, userColor)
+    controllerOpponent.logic.state.activePlayer.color.equals(userColor) should be(true)
+
   "A controller" should "handle correctly the selected position and the opponent turn accordingly, " +
     "so the active player should be the user again" in:
     controller.handleSelection(validPos)
