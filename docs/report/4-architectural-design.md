@@ -28,8 +28,8 @@ classDiagram
     class MatchController {
       + startMatch()
       + handleSelection(position: Position)
-      + saveMatch()
-      + loadMatch()
+      + saveMatch(filePath: String)
+      + loadMatch(filePath: String)
     }
     class SaveManager {
       + save(state: MatchState)
