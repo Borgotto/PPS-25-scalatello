@@ -1,6 +1,7 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.model.{Logic, LogicImpl}
+import it.unibo.pps.state.MatchState
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
@@ -9,6 +10,7 @@ trait MatchController:
   def startMatch(shape: Shape, userColor: Color): Unit
   def handleSelection(diskPos: Position): Unit
   def saveMatch(filePath: String): Unit
+  def loadMatch(filePath: String): Unit
   
 class MatchControllerImpl(private val view: View) extends MatchController:
   private[controller] var logic: Logic = _
@@ -37,3 +39,8 @@ class MatchControllerImpl(private val view: View) extends MatchController:
   def saveMatch(filePath: String): Unit =
     val saveManager: SaveManager = SaveManagerImpl(filePath)
     saveManager.save(logic.state)
+
+  def loadMatch(filePath: String): Unit =
+    val saveManager: SaveManager = SaveManagerImpl(filePath)
+    view.update(saveManager.load())
+    
