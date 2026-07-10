@@ -9,7 +9,7 @@ import it.unibo.pps.view.View
 trait MatchController:
   private[controller] var logic: Logic
   def startMatch(shape: Shape, userColor: Color): Unit
-  def loadSavedMatch(userColor: Color, board: Board): Unit
+  def resumeMatch(userColor: Color, board: Board): Unit
   def handleSelection(diskPos: Position): Unit
   def saveMatch(filePath: String): Unit
   def loadMatch(filePath: String): Unit
@@ -32,7 +32,7 @@ class MatchControllerImpl(private val view: View) extends MatchController:
         handleOpponentTurn(userColor)
       case _ => view.update(logic.state)
       
-  def loadSavedMatch(userColor: Color, board: Board): Unit =
+  def resumeMatch(userColor: Color, board: Board): Unit =
     logic = LogicImpl(userColor, board)
   
   def handleSelection(diskPos: Position): Unit =
