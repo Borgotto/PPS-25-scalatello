@@ -31,7 +31,7 @@ class MatchControllerTest extends AnyFlatSpec:
     val controllerOpponent: MatchController = MatchControllerImpl(view)
     val userColor: Color = Color.White
     controllerOpponent.startMatch(BOARD_SHAPE, userColor)
-    controllerOpponent.logic.state.activePlayer.color.equals(userColor) should be(true)
+    controllerOpponent.logic.state.activePlayer.color should be(userColor)
 
   "A Controller, after loading a saved game" should "instantiate the Logic object accordingly" in:
     val controllerAfterLoad: MatchController = MatchControllerImpl(view)
