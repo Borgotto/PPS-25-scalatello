@@ -1,23 +1,20 @@
 package it.unibo.pps.controller.saveManager
 
-trait Saveable[Class]:
-  def encode(data: Class): String
-  def decode(data: String): Class
+import os.{Path, read, write}
+import it.unibo.pps.utils.Serializer.{Serializer, StringSerializer, MatchSerializer}
 
-trait SaveManager:
-  type FilePath
-  def filePath: FilePath
-  def save[Class](data: Class)(using saveable: Saveable[Class]): Unit
-  def load[Class]()(using saveable: Saveable[Class]): Class
+trait SaveManager[C](val filePath: Path)(using serializer: Serializer[C]):
+  def save(data: C): Unit =
+    val serializedData = serializer.encode(data)
+    write.over(filePath, serializedData)
+  def load: C =
+    val serializedData = read(filePath)
+    serializer.decode(serializedData)
 
-case class SaveManagerImpl(filePath: os.Path) extends SaveManager:
-  type FilePath = os.Path
+case class StringSaveManager(override val filePath: Path)
+  extends SaveManager(filePath)
+  (using StringSerializer)
 
-  def save[Class](data: Class)(using saveable: Saveable[Class]): Unit =
-    val serializedData = saveable.encode(data)
-    os.write.over(filePath, serializedData)
-
-  def load[Class]()(using saveable: Saveable[Class]): Class =
-    val serializedData = os.read(filePath)
-    saveable.decode(serializedData)
-
+case class MatchStateSaveManager(override val filePath: Path)
+  extends SaveManager(filePath)
+  (using MatchSerializer)
