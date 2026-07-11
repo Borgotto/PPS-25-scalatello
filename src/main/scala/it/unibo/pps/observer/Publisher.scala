@@ -1,4 +1,4 @@
-package it.unibo.pps.view.observer
+package it.unibo.pps.observer
 
 trait Publisher[State]:
   def subscribe(subscriber: Subscriber[State]): Unit

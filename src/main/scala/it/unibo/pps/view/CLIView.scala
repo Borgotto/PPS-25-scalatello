@@ -1,8 +1,10 @@
 package it.unibo.pps.view
 
 import it.unibo.pps.controller.ControllerImpl
-import it.unibo.pps.state.MatchState
-import it.unibo.pps.utils.{Color, Shape}
+import it.unibo.pps.state.{BoardState, MatchState}
+import it.unibo.pps.state.PlayerState.{Opponent, User}
+import it.unibo.pps.utils.MatchStatus.*
+import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.i18n.I18n
 import it.unibo.pps.view.io.{IO, given_Monad_IO}
 import it.unibo.pps.view.io.IO.{read, write}
@@ -89,13 +91,28 @@ class CLIView(private val i18n: I18n) extends View(i18n):
   private def handleSelectedShape(option: String): IO[Shape] = option match
     case ShapeOption.Square.code =>
       for
-        size <- askForSize("menu.board.square_size_question")
+        size <- askForValidInput(
+          "menu.board.square_size_question",
+          isSelectedSizeValid,
+          _.toInt,
+          "menu.board.invalid_size"
+        )
         shape <- IO(() => Shape.Square(size))
       yield shape
     case ShapeOption.Rectangular.code =>
       for
-        height <- askForSize("menu.board.rectangle_height_question")
-        width <- askForSize("menu.board.rectangle_width_question")
+        height <- askForValidInput(
+          "menu.board.rectangle_height_question",
+          isSelectedSizeValid,
+          _.toInt,
+          "menu.board.invalid_size"
+        )
+        width <- askForValidInput(
+          "menu.board.rectangle_width_question",
+          isSelectedSizeValid,
+          _.toInt,
+          "menu.board.invalid_size"
+        )
         shape <- IO(() => Shape.Rectangle(height, width))
       yield shape
     case _ =>
@@ -104,22 +121,69 @@ class CLIView(private val i18n: I18n) extends View(i18n):
         shape <- askForBoardShape()
       yield shape
 
-  private def askForSize(request: String): IO[Int] =
+  private def askForValidInput[T](
+    requestKey: String,
+    isInputValid: String => IO[Boolean],
+    convert: String => T,
+    invalidInputMessageKey: String
+  ): IO[T] =
     for
-      _ <- write(i18n.t(request))
+      _ <- write(i18n.t(requestKey))
       input <- read()
-      isSizeValid <- validateSelectedSize(input)
-      size <- if isSizeValid then IO(() => input.toInt) else
+      isValid <- isInputValid(input)
+      convertedInput <- if isValid then IO(() => convert(input)) else
         for
-          _ <- write(i18n.t("menu.board.invalid_size"))
-          s <- askForSize(request)
-        yield s
-    yield size
+          _ <- write(i18n.t(invalidInputMessageKey))
+          convertedInput <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
+        yield convertedInput
+    yield convertedInput
 
-  private def validateSelectedSize(size: String): IO[Boolean] = IO(() =>
+  private def isSelectedSizeValid(size: String): IO[Boolean] = IO(() =>
     size.toIntOption match
       case Some(n) if n % 2 == 0 && n >= minBoardSize => true
       case _ => false
   )
 
-  override def update(state: MatchState): Unit = ???
+  override def update(state: MatchState): Unit =
+    renderBoard(state.board)
+    handleState(state)
+
+  private def renderBoard(state: BoardState): Unit = ???
+
+  private def handleState(state: MatchState): Unit =
+    state.status match
+      case InProgress => state.activePlayer match
+        case User(_, _) => onUserTurn(state.board.shape.maxRow, state.board.shape.maxColumn)
+        case Opponent(_, _) => onOpponentTurn()
+      case UserWon => ???
+      case OpponentWon => ???
+      case Tie => ???
+
+  private def onUserTurn(maxRow: Int, maxColumn: Int): Unit =
+    for
+      _ <- write(i18n.t("match.user_turn_message"))
+      row <- askForValidInput(
+        "match.placement_request_row",
+        isIntWithinBounds(0, maxRow),
+        _.toInt,
+        "match.invalid_row"
+      )
+      column <- askForValidInput(
+        "match.placement_request_column",
+        isIntWithinBounds(0, maxColumn),
+        _.toInt,
+        "match.invalid_column"
+      )
+      _ <- IO(() => controller.handleSelection(Position(row, column)))
+    yield ()
+
+  private def isIntWithinBounds(min: Int, max: Int)(s: String): IO[Boolean] = IO(() =>
+    s.toIntOption match
+      case Some(n) if n >= min && n <= max => true
+      case _ => false
+  )
+
+  private def onOpponentTurn(): Unit =
+    for
+      _ <- write(i18n.t("match.opponent_turn_message"))
+    yield ()
