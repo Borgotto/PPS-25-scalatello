@@ -246,7 +246,6 @@ classDiagram
   class MatchController {
     <<trait>>
     + startMatch(shape: Shape, color: Color)
-    + resumeMatch(color: Color, board: Board)
     + handleSelection(position: Position)
     + saveMatch(filePath: String)
     + loadMatch(filePath: String)
@@ -255,8 +254,7 @@ classDiagram
 
 In dettaglio:
 
-- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari;
-- `resumeMatch()` dopo aver caricato un salvataggio esistente, aggiorna lo stato della partita in base a quello precedente; 
+- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
