@@ -1,7 +1,7 @@
 package it.unibo.pps.view
 
 import it.unibo.pps.controller.ControllerImpl
-import it.unibo.pps.state.MatchState
+import it.unibo.pps.state.{BoardState, MatchState}
 import it.unibo.pps.state.PlayerState.{Opponent, User}
 import it.unibo.pps.utils.MatchStatus.*
 import it.unibo.pps.utils.{Color, Position, Shape}
@@ -152,37 +152,58 @@ class CLIView(private val i18n: I18n) extends View(i18n):
   private def handleState(state: MatchState): Unit =
     state.status match
       case InProgress => state.activePlayer match
-        case User(_, _) => onUserTurn(state.board.shape.maxRow, state.board.shape.maxColumn)
+        case User(_, _) => onUserTurn(state.board)
         case Opponent(_, _) => onOpponentTurn()
       case UserWon => ???
       case OpponentWon => ???
       case Tie => ???
 
-  private def onUserTurn(maxRow: Int, maxColumn: Int): Unit =
+  private def onOpponentTurn(): Unit =
+    for
+      _ <- write(i18n.t("match.opponent_turn_message"))
+    yield ()
+
+  private def onUserTurn(state: BoardState): Unit =
     for
       _ <- write(i18n.t("match.user_turn_message"))
+      position <- askForValidPlacement(state)
+      _ <- IO(() => controller.handleSelection(position))
+    yield ()
+
+  private def askForValidPlacement(state: BoardState): IO[Position] =
+    for
       row <- askForValidInput(
         "match.placement_request_row",
-        isIntWithinBounds(0, maxRow),
+        isValidRowForPlacement(state),
         _.toInt,
         "match.invalid_row"
       )
       column <- askForValidInput(
         "match.placement_request_column",
-        isIntWithinBounds(0, maxColumn),
+        isValidColumnForPlacement(state, row),
         _.toInt,
         "match.invalid_column"
       )
-      _ <- IO(() => controller.handleSelection(Position(row, column)))
-    yield ()
+      position <- IO(() => Position(row, column))
+    yield position
 
-  private def isIntWithinBounds(min: Int, max: Int)(s: String): IO[Boolean] = IO(() =>
-    s.toIntOption match
-      case Some(n) if n >= min && n <= max => true
-      case _ => false
+  private def isValidRowForPlacement(state: BoardState)(s: String): IO[Boolean] = IO(() =>
+    isConvertibleToInt(s)
+      && isWithinBounds(0, state.shape.maxRow)(s.toInt)
+      && isRowAmongAvailablePlacements(state.userAvailablePlacements)(s.toInt)
   )
 
-  private def onOpponentTurn(): Unit =
-    for
-      _ <- write(i18n.t("match.opponent_turn_message"))
-    yield ()
+  private def isValidColumnForPlacement(state: BoardState, selectedRow: Int)(s: String): IO[Boolean] = IO(() =>
+    isConvertibleToInt(s)
+      && isWithinBounds(0, state.shape.maxColumn)(s.toInt)
+      && state.userAvailablePlacements.contains(Position(selectedRow, s.toInt))
+  )
+
+  private def isConvertibleToInt(s: String): Boolean = s.toIntOption match
+    case Some(_) => true
+    case _ => false
+
+  private def isWithinBounds(min: Int, max: Int)(n: Int): Boolean = n >= min && n <= max
+
+  private def isRowAmongAvailablePlacements(availablePlacements: Set[Position])(row: Int): Boolean =
+    availablePlacements.map(position => position.row).contains(row)
