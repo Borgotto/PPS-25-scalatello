@@ -1,7 +1,8 @@
 package it.unibo.pps.controller
 
-import it.unibo.pps.model.board.Board
+import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.model.{Logic, LogicImpl}
+import it.unibo.pps.state.MatchState
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
@@ -30,10 +31,6 @@ class MatchControllerImpl(private val view: View) extends MatchController:
       case c if c.equals(userColor.opposite) =>
         handleOpponentTurn(userColor)
       case _ => view.update(logic.state)
-      
-  def resumeMatch(userColor: Color, board: Board): Unit =
-    logic = LogicImpl(userColor, board)
-    view.update(logic.state)
   
   def handleSelection(diskPos: Position): Unit =
     val userColor = logic.state.activePlayer.color
@@ -45,7 +42,11 @@ class MatchControllerImpl(private val view: View) extends MatchController:
     val saveManager: SaveManager = SaveManagerImpl(filePath)
     saveManager.save(logic.state)
 
+  private def stateToLogic(state: MatchState): Logic =
+    val disksMap: Map[Position, Disk] = state.board.disks.map(disk => disk.position -> Disk(disk.color)).toMap
+    LogicImpl(state.activePlayer.color, Board(state.board.shape, disksMap))
+
   def loadMatch(filePath: String): Unit =
     val saveManager: SaveManager = SaveManagerImpl(filePath)
-    view.update(saveManager.load())
-    
+    logic = stateToLogic(saveManager.load())
+    view.update(logic.state)
