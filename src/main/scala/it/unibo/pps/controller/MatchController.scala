@@ -9,7 +9,6 @@ import it.unibo.pps.view.View
 trait MatchController:
   private[controller] var logic: Logic
   def startMatch(shape: Shape, userColor: Color): Unit
-  def resumeMatch(userColor: Color, board: Board): Unit
   def handleSelection(diskPos: Position): Unit
   def saveMatch(filePath: String): Unit
   def loadMatch(filePath: String): Unit
