@@ -29,7 +29,8 @@ class MatchControllerTest extends AnyFlatSpec with PrivateMethodTester:
   extension (s: MatchState)
     private def equalsToState(state: MatchState): Boolean =
       s.status.equals(state.status) &&
-        s.activePlayer.equals(state.activePlayer) &&
+        s.activePlayer.color.equals(state.activePlayer.color) &&
+        s.activePlayer.strategy.equals(state.activePlayer.strategy) &&
         s.board.shape.equals(state.board.shape) &&
         s.board.disks.toSet.equals(state.board.disks.toSet) &&
         s.board.userAvailablePlacements.equals(state.board.userAvailablePlacements)
