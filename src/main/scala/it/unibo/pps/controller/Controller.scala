@@ -28,7 +28,8 @@ class ControllerImpl extends Controller, Publisher[MatchState]:
     logic = LogicImpl(boardShape, userColor)
     notifySubscribers(logic.state)
 
-  def handleSelection(position: Position): Unit = ???
+  def handleSelection(position: Position): Unit =
+    println(s"\nSelected position: $position")
 
 object ControllerImpl:
 
