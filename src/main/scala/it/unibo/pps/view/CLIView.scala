@@ -1,11 +1,12 @@
 package it.unibo.pps.view
 
 import it.unibo.pps.controller.ControllerImpl
-import it.unibo.pps.state.{BoardState, MatchState}
+import it.unibo.pps.state.MatchState
 import it.unibo.pps.state.PlayerState.{Opponent, User}
 import it.unibo.pps.utils.MatchStatus.*
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.i18n.I18n
+import it.unibo.pps.view.io.BoardRenderingExtensions.render
 import it.unibo.pps.view.io.{IO, given_Monad_IO}
 import it.unibo.pps.view.io.IO.{read, write}
 
@@ -145,10 +146,8 @@ class CLIView(private val i18n: I18n) extends View(i18n):
   )
 
   override def update(state: MatchState): Unit =
-    renderBoard(state.board)
+    println(state.board.render())
     handleState(state)
-
-  private def renderBoard(state: BoardState): Unit = ???
 
   private def handleState(state: MatchState): Unit =
     state.status match
