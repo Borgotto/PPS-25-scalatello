@@ -1,5 +1,6 @@
 package it.unibo.pps.controller
 
+import it.unibo.pps.controller.matchController.{MatchController, MatchControllerImpl}
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.model.{Logic, LogicImpl}
 import it.unibo.pps.model.strategy.UserPlacementStrategy

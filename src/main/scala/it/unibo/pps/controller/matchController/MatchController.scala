@@ -1,5 +1,6 @@
-package it.unibo.pps.controller
+package it.unibo.pps.controller.matchController
 
+import it.unibo.pps.controller.saveManager.{SaveManager, SaveManagerImpl}
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.model.{Logic, LogicImpl}
 import it.unibo.pps.state.MatchState
