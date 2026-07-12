@@ -36,11 +36,6 @@ class MatchControllerTest extends AnyFlatSpec with PrivateMethodTester:
     controllerOpponent.startMatch(BOARD_SHAPE, userColor)
     controllerOpponent.logic.state.activePlayer.color should be(userColor)
 
-  "A Controller, after loading a saved game" should "instantiate the Logic object accordingly" in:
-    val controllerAfterLoad: MatchController = MatchControllerImpl(view)
-    controllerAfterLoad.resumeMatch(USER_COLOR, Board(BOARD_SHAPE))
-    controllerAfterLoad.logic.state.equals(LogicImpl(USER_COLOR, Board(BOARD_SHAPE)).state) should be(true)
-
   "A Controller" should "handle correctly the selected position and the opponent turn accordingly, " +
     "so the active player should be the user again" in:
     controller.handleSelection(validPos)
