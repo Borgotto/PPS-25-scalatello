@@ -57,7 +57,14 @@ class CLIView(private val i18n: I18n) extends View(i18n):
     for
       userColor <- askForUserColor()
       shape <- askForBoardShape()
+      _ <- showMatchStartMessage()
       _ <- IO(() => controller.startMatch(shape, userColor))
+    yield ()
+
+  private def showMatchStartMessage(): IO[Unit] =
+    for
+      _ <- write(i18n.t("match.match_started_message"))
+      _ <- write(i18n.t("match.legend"))
     yield ()
 
   private def askForUserColor(): IO[Color] =

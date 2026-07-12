@@ -13,12 +13,14 @@ object BoardRenderingExtensions:
       val maxColumnIndex = state.shape.maxColumn
       val firstLine = renderFormattedFirstLine(maxColumnIndex)
       val rows = renderRows(maxRowIndex, maxColumnIndex)
-      "\n".concat((firstLine +: rows).mkString("\n"))
+      val separator = "\n" + "\u2500" * firstLine.length
+      s"\n$firstLine" + rows.mkString(separator)
 
     private def renderFormattedFirstLine(maxColumnIndex: Int): String =
       (0 to maxColumnIndex)
         .map(index => if index == 0 then "     0" else f"$index%4d")
         .mkString("")
+        .concat("  ")
 
     private def renderRows(maxRowIndex: Int, maxColumnIndex: Int): Seq[String] =
       for rowIndex <- 0 to maxRowIndex yield renderRow(rowIndex, maxColumnIndex)
@@ -36,4 +38,4 @@ object BoardRenderingExtensions:
         case None if state.userAvailablePlacements.contains(position) => "*"
         case _ => " "
 
-    private def formatRow(rowIndex: Int, cells: Seq[String]): String = f"$rowIndex%-2d | " + cells.mkString(" | ") + " |"
+    private def formatRow(rowIndex: Int, cells: Seq[String]): String = f"\n$rowIndex%-2d \u2502 " + cells.mkString(" \u2502 ") + " \u2502"
