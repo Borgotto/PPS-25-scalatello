@@ -1,7 +1,6 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.model.{Logic, LogicImpl}
-import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.strategy.UserPlacementStrategy
 import it.unibo.pps.state.{BoardState, DiskState, MatchState, PlayerState}
 import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
