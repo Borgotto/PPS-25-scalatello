@@ -1,16 +1,16 @@
 package it.unibo.pps.controller
 
-import os.{Path, read, temp, write}
-import it.unibo.pps.state.{BoardState, MatchState, PlayerState}
-import it.unibo.pps.utils.{Color, MatchStatus, Shape}
-import it.unibo.pps.model.strategy.UserPlacementStrategy
+import it.unibo.pps.state.{BoardState, DiskState, MatchState, PlayerState}
+import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
+import it.unibo.pps.model.strategy.{UserPlacementStrategy, RandomPlacementStrategy}
 
-import it.unibo.pps.controller.saveManager.*
-import it.unibo.pps.utils.Serializer.*
+import it.unibo.pps.controller.saveManager.{SaveManager, StringSaveManager, MatchStateSaveManager}
+import it.unibo.pps.utils.Serializer.{Serializer, StringSerializer, MatchSerializer}
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe}
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
+import os.{Path, read, temp, write}
 
 class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
@@ -18,7 +18,40 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   private val inputs: TableFor3[SaveManager[?], Serializer[?], ?] = Table(
     ("an instance of SaveManager", "its serializer", "some test data"),
     (StringSaveManager(tmpFile), StringSerializer, "Test string"),
-    (MatchStateSaveManager(tmpFile), MatchSerializer, MatchState(MatchStatus.InProgress,PlayerState.User(Color.Black, UserPlacementStrategy()), BoardState(Shape.Square(5), Seq.empty, Set.empty)))
+    (
+      MatchStateSaveManager(tmpFile),
+      MatchSerializer,
+      MatchState(
+        MatchStatus.InProgress,
+        PlayerState.User(Color.Black, UserPlacementStrategy()),
+        BoardState(Shape.Square(4), Seq.empty, Set.empty)
+      )
+    ),
+    (
+      MatchStateSaveManager(tmpFile),
+      MatchSerializer,
+      MatchState(
+        MatchStatus.InProgress,
+        PlayerState.Opponent(Color.White, RandomPlacementStrategy(Color.White)),
+        BoardState(
+          Shape.Rectangle(4, 6),
+          Seq(
+            DiskState(Color.Black, Position(1, 2)),
+            DiskState(Color.White, Position(2, 3))
+          ),
+          Set(Position(0, 1), Position(2, 2))
+        )
+      )
+    ),
+    (
+      MatchStateSaveManager(tmpFile),
+      MatchSerializer,
+      MatchState(
+        MatchStatus.UserWon,
+        PlayerState.User(Color.White, UserPlacementStrategy()),
+        BoardState(Shape.Square(8), Seq.empty, Set.empty)
+      )
+    )
   )
 
   behave like saveManager (using inputs)
