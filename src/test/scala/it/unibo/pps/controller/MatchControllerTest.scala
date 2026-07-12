@@ -1,5 +1,6 @@
 package it.unibo.pps.controller
 
+import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.model.{Logic, LogicImpl}
 import it.unibo.pps.model.strategy.UserPlacementStrategy
 import it.unibo.pps.state.{BoardState, DiskState, MatchState, PlayerState}
@@ -19,32 +20,92 @@ class MatchControllerTest extends AnyFlatSpec with PrivateMethodTester:
 
   private val topLeftCenterPos = Position(BOARD_SIZE/2 - 1, BOARD_SIZE/2 - 1)
   private val dist = 1
-  private val validPos = Position(topLeftCenterPos.row, topLeftCenterPos.column - dist)
 
   private val view: View = mock[View]
   private val controller: MatchController = MatchControllerImpl(view)
   controller.startMatch(BOARD_SHAPE, USER_COLOR)
 
-  "A Controller, to start a match" should "instantiate the correct Logic object" in:
-    controller.logic.state.equals(LogicImpl(BOARD_SHAPE, USER_COLOR).state) should be(true)
+  extension (s: MatchState)
+    private def equalsToState(state: MatchState): Boolean =
+      s.status.equals(state.status) &&
+        s.activePlayer.equals(state.activePlayer) &&
+        s.board.shape.equals(state.board.shape) &&
+        s.board.disks.toSet.equals(state.board.disks.toSet) &&
+        s.board.userAvailablePlacements.equals(state.board.userAvailablePlacements)
 
-  "A Controller, if the first player is the opponent" should "immediately handle its turn, " +
-    "so then the active player should be the user" in:
+  "A Controller, to start a match" should "instantiate the correct Logic object" in:
+    controller.logic.state.equalsToState(LogicImpl(BOARD_SHAPE, USER_COLOR).state) should be(true)
+
+  "A Controller, if the first player is the opponent" should "handle its turn, " +
+    "instantiating the Logic object accordingly" in:
     val controllerOpponent: MatchController = MatchControllerImpl(view)
     val userColor: Color = Color.White
-    controllerOpponent.startMatch(BOARD_SHAPE, userColor)
-    controllerOpponent.logic.state.activePlayer.color should be(userColor)
+    controllerOpponent.logic = LogicImpl(userColor,
+      Board(BOARD_SHAPE, Map(
+          Position(topLeftCenterPos.row - dist, topLeftCenterPos.column) -> Disk(Color.White),
+          topLeftCenterPos -> Disk(Color.White),
+          Position(topLeftCenterPos.row, topLeftCenterPos.column + dist) -> Disk(Color.Black)
+        )
+      )
+    )
+    val expectedState: MatchState =
+      MatchState(MatchStatus.InProgress,
+        PlayerState.User(userColor, UserPlacementStrategy()),
+        BoardState(BOARD_SHAPE, Seq(
+            DiskState(Color.White, Position(topLeftCenterPos.row - dist, topLeftCenterPos.column)),
+            DiskState(Color.Black, topLeftCenterPos),
+            DiskState(Color.Black,  Position(topLeftCenterPos.row, topLeftCenterPos.column + dist)),
+            DiskState(Color.Black, Position(topLeftCenterPos.row, topLeftCenterPos.column - dist))
+          ), Set(
+            Position(topLeftCenterPos.row + dist, topLeftCenterPos.column),
+            Position(topLeftCenterPos.row + dist, topLeftCenterPos.column + dist + dist)
+          )
+        )
+      )
+    val handleOpponentTurn = PrivateMethod[Unit](Symbol("handleOpponentTurn"))
+    controllerOpponent invokePrivate handleOpponentTurn(userColor)
+    controllerOpponent.logic.state.equalsToState(expectedState) should be(true)
 
-  "A Controller" should "handle correctly the selected position and the opponent turn accordingly, " +
-    "so the active player should be the user again" in:
+  "A Controller" should "handle correctly the selected position and the opponent turn, " +
+    "instantiating the Logic object accordingly" in:
+    val expectedState: MatchState =
+      MatchState(MatchStatus.InProgress,
+        PlayerState.User(USER_COLOR, UserPlacementStrategy()),
+        BoardState(BOARD_SHAPE,
+          Seq(
+            DiskState(Color.White, Position(topLeftCenterPos.row - dist, topLeftCenterPos.column - dist)),
+            DiskState(Color.White, topLeftCenterPos),
+            DiskState(Color.Black, Position(topLeftCenterPos.row, topLeftCenterPos.column + dist)),
+            DiskState(Color.Black, Position(topLeftCenterPos.row, topLeftCenterPos.column + dist + dist)),
+            DiskState(Color.White, Position(topLeftCenterPos.row + dist, topLeftCenterPos.column + dist))
+          ), Set(
+            Position(topLeftCenterPos.row, topLeftCenterPos.column - dist),
+            Position(topLeftCenterPos.row + dist + dist, topLeftCenterPos.column),
+            Position(topLeftCenterPos.row + dist + dist, topLeftCenterPos.column + dist)
+          )
+        )
+      )
+    controller.logic = LogicImpl(USER_COLOR,
+      Board(BOARD_SHAPE, Map(
+          Position(topLeftCenterPos.row - dist, topLeftCenterPos.column - dist) -> Disk(Color.White),
+          Position(topLeftCenterPos.row, topLeftCenterPos.column + dist) -> Disk(Color.White),
+          Position(topLeftCenterPos.row, topLeftCenterPos.column + dist + dist) -> Disk(Color.Black)
+        )
+      )
+    )
+    println(controller.logic.state)
+    val validPos = Position(topLeftCenterPos.row, topLeftCenterPos.column)
     controller.handleSelection(validPos)
-    controller.logic.state.activePlayer.color should be(USER_COLOR)
+    println(controller.logic.state)
+    println(expectedState)
+    controller.logic.state.equalsToState(expectedState) should be(true)
 
   "A Controller" should "instantiate the correct Logic object from a MatchState" in:
     val stateToLogic = PrivateMethod[Logic](Symbol("stateToLogic"))
     val expectedState: MatchState =
       MatchState(MatchStatus.InProgress,
         PlayerState.User(USER_COLOR, UserPlacementStrategy()),
-        BoardState(BOARD_SHAPE, Seq(DiskState(Color.Black, Position(0, 0))), Set()))
+        BoardState(BOARD_SHAPE, Seq(DiskState(Color.Black, Position(0, 0))), Set())
+      )
     val logic: Logic = controller invokePrivate stateToLogic(expectedState)
-    logic.state.equals(expectedState) should be(true)
+    logic.state.equalsToState(expectedState) should be(true)
