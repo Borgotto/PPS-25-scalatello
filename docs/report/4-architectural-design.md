@@ -27,7 +27,6 @@ classDiagram
   namespace ControllerPackage {
     class MatchController {
       + startMatch(shape: Shape, color: Color)
-      + resumeMatch(color: Color, board: Board)
       + handleSelection(position: Position)
       + saveMatch(filePath: String)
       + loadMatch(filePath: String)
