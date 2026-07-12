@@ -29,7 +29,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         val saveManager = sm.asInstanceOf[SaveManager[C]]
         val serializer = se.asInstanceOf[Serializer[C]]
         val encoded = serializer.encode
-        val testSubject = saveManager.getClass.getSimpleName
+        val testSubject = saveManager.getClass.getSimpleName + " (input #" + inputs.indexOf((sm, se, data)) + ")"
 
         testSubject should "save data correctly" in:
           saveManager.save(data)
