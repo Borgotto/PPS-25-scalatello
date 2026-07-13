@@ -30,8 +30,10 @@ class CLIView(private val i18n: I18n) extends View(i18n):
   private val controller = MatchController(this)
 
   override def showMenu(): Unit =
-    println(i18n.t("menu.title"))
-    askForActionSelection()
+    for
+      _ <- write(i18n.t("menu.title"))
+      _ <- askForActionSelection()
+    yield ()
 
   private def askForActionSelection(): IO[Unit] =
     for
@@ -161,9 +163,9 @@ class CLIView(private val i18n: I18n) extends View(i18n):
       case InProgress => state.activePlayer match
         case User(_, _) => onUserTurn(state.board)
         case Opponent(_, _) => onOpponentTurn()
-      case UserWon => ???
-      case OpponentWon => ???
-      case Tie => ???
+      case UserWon => onMatchEnd("match.result.user_won")
+      case OpponentWon => onMatchEnd("match.result.opponent_won")
+      case Tie => onMatchEnd("match.result.tie")
 
   private def onOpponentTurn(): Unit =
     for
@@ -214,3 +216,10 @@ class CLIView(private val i18n: I18n) extends View(i18n):
 
   private def isRowAmongAvailablePlacements(availablePlacements: Set[Position])(row: Int): Boolean =
     availablePlacements.map(position => position.row).contains(row)
+  
+  private def onMatchEnd(matchResultMessageKey: String): Unit =
+    for 
+      _ <- write(i18n.t(matchResultMessageKey))
+      _ <- write(i18n.t("match.back_to_menu_message"))
+    yield ()
+  
