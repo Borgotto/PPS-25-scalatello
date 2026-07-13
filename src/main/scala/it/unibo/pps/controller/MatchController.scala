@@ -11,14 +11,13 @@ import it.unibo.pps.view.View
 import scala.annotation.tailrec
 
 trait MatchController:
-  private[controller] var logic: Logic
   def startMatch(boardShape: Shape, userColor: Color): Unit
   def handleSelection(position: Position): Unit
   def saveMatch(filePath: String): Unit
   def loadMatch(filePath: String): Unit
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
-  private[controller] var logic: Logic = _
+  private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
 
   override def subscribe(subscriber: Subscriber[MatchState]): Unit =
