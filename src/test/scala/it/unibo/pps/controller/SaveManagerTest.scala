@@ -1,11 +1,10 @@
 package it.unibo.pps.controller
 
-import it.unibo.pps.state.{BoardState, DiskState, MatchState, PlayerState}
-import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
-import it.unibo.pps.model.strategy.{UserPlacementStrategy, RandomPlacementStrategy}
-
-import it.unibo.pps.controller.saveManager.{SaveManager, StringSaveManager, MatchStateSaveManager}
-import it.unibo.pps.utils.Serializer.{Serializer, StringSerializer, MatchSerializer}
+import it.unibo.pps.state.*
+import it.unibo.pps.utils.*
+import it.unibo.pps.model.strategy.*
+import it.unibo.pps.controller.saveManager.SaveManager.*
+import it.unibo.pps.utils.Serializer.{Serializer, Serializers}
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe}
@@ -17,10 +16,10 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   private val tmpFile: Path = temp()
   private val inputs: TableFor3[SaveManager[?], Serializer[?], ?] = Table(
     ("an instance of SaveManager", "its serializer", "some test data"),
-    (StringSaveManager(tmpFile), StringSerializer, "Test string"),
+    (SaveManagers.StringSaveManager(tmpFile), Serializers.StringSerializer, "Test string"),
     (
-      MatchStateSaveManager(tmpFile),
-      MatchSerializer,
+      SaveManagers.MatchStateSaveManager(tmpFile),
+      Serializers.MatchSerializer,
       MatchState(
         MatchStatus.InProgress,
         PlayerState.User(Color.Black, UserPlacementStrategy()),
@@ -28,8 +27,8 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       )
     ),
     (
-      MatchStateSaveManager(tmpFile),
-      MatchSerializer,
+      SaveManagers.MatchStateSaveManager(tmpFile),
+      Serializers.MatchSerializer,
       MatchState(
         MatchStatus.InProgress,
         PlayerState.Opponent(Color.White, RandomPlacementStrategy(Color.White)),
@@ -44,8 +43,8 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       )
     ),
     (
-      MatchStateSaveManager(tmpFile),
-      MatchSerializer,
+      SaveManagers.MatchStateSaveManager(tmpFile),
+      Serializers.MatchSerializer,
       MatchState(
         MatchStatus.UserWon,
         PlayerState.User(Color.White, UserPlacementStrategy()),

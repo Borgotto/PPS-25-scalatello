@@ -1,3 +1,5 @@
 package it.unibo.pps.utils
 
-case class Position(row: Int, column: Int)
+import upickle.default.ReadWriter
+
+case class Position(row: Int, column: Int) derives ReadWriter
