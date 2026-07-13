@@ -18,7 +18,6 @@ trait MatchController:
   def loadMatch(filePath: String): Unit
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
-  
   private[controller] var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
 
@@ -39,12 +38,13 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
       case Opponent(_, _) => handleOpponentTurn()
 
   @tailrec
-  private def handleOpponentTurn(): Unit = logic.state.activePlayer match
-    case User(_, _) => ()
-    case Opponent(_, _) =>
-      logic = logic.placeOpponentDisk()
-      notifySubscribers(logic.state)
-      handleOpponentTurn()
+  private def handleOpponentTurn(): Unit =
+    logic.state.activePlayer match
+      case User(_, _) => ()
+      case Opponent(_, _) =>
+        logic = logic.placeOpponentDisk()
+        notifySubscribers(logic.state)
+        handleOpponentTurn()
   
   def handleSelection(position: Position): Unit =
     logic = logic.placeUserDisk(position)
@@ -61,7 +61,6 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     notifySubscribers(logic.state)
 
 object MatchController:
-
   def apply(view: View): MatchController =
     val controller = new MatchControllerImpl()
     controller.subscribe(view)
