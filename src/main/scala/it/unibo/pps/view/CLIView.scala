@@ -1,6 +1,6 @@
 package it.unibo.pps.view
 
-import it.unibo.pps.controller.ControllerImpl
+import it.unibo.pps.controller.MatchController
 import it.unibo.pps.state.{BoardState, MatchState}
 import it.unibo.pps.state.PlayerState.{Opponent, User}
 import it.unibo.pps.utils.MatchStatus.*
@@ -27,7 +27,7 @@ class CLIView(private val i18n: I18n) extends View(i18n):
 
   private val minBoardSize = 4
 
-  private val controller = ControllerImpl(this)
+  private val controller = MatchController(this)
 
   override def showMenu(): Unit =
     println(i18n.t("menu.title"))

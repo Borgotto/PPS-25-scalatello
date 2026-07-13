@@ -1,9 +1,9 @@
 package it.unibo.pps.model
 
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.model.player.{Player, User, Opponent}
+import it.unibo.pps.model.player.{Opponent, Player, User}
 import it.unibo.pps.model.player.Opponent.RandomOpponent
-import it.unibo.pps.state.{BoardState, MatchState}
+import it.unibo.pps.state.{BoardState, MatchState, PlayerState}
 import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
 import it.unibo.pps.utils.Color.*
 import it.unibo.pps.utils.MatchStatus.*
@@ -74,7 +74,7 @@ class LogicImpl(
       val position = opponent.strategy.computePlacement(using board)
       getUpdatedLogic(opponentColor, position)
 
-object LogicImpl:
+object Logic:
 
   private def getInitialActivePlayer(userColor: Color): Player = userColor match
     case Black => User(Black)
@@ -85,3 +85,10 @@ object LogicImpl:
 
   def apply(userColor: Color, board: Board) =
     new LogicImpl(InProgress, getInitialActivePlayer(userColor), board)
+
+  def apply(state: MatchState): LogicImpl =
+    val board = Board(state.board)
+    val activePlayer = state.activePlayer match
+      case PlayerState.User(color, _) => User(color)
+      case PlayerState.Opponent(color, _) => RandomOpponent(color)
+    new LogicImpl(InProgress, activePlayer, board)
