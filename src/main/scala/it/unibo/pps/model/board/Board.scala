@@ -34,11 +34,11 @@ object Board:
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
       case _ =>
-        given contextComputations: PositionComputationsExtensions = PositionComputationsExtensions()
+        given contextComputations: PosComputeExtensions = PosComputeExtensions()
         StandardBoard(shape, disks)
   
   private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk])
-                             (using PositionComputationsExtensions) extends Board:
+                             (using PosComputeExtensions) extends Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
 

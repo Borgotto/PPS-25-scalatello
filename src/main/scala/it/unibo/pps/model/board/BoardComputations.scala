@@ -4,7 +4,7 @@ import it.unibo.pps.utils.{Color, Position}
 
 import scala.annotation.tailrec
 
-class BoardComputations(using board: Board)(using PositionComputationsExtensions):  
+class BoardComputations(using board: Board)(using PosComputeExtensions):  
   private def getOppositeColorNeighbours(diskColor: Color): Set[(Position, Position)] =
     for diskPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
         possibleNeighbourPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor.opposite)).keySet
