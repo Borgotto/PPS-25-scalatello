@@ -212,10 +212,10 @@ classDiagram
     + captureDisks(position: Position): Board
   }
   class BoardComputations {
-    + getAvailablePlacements(color: Color, board: Board): Set~Position~
-    + isPlacementValid(position: Position, color: Color, board: Board): Boolean
-    + placeDisk(position: Position, color: Color, board: Board): Board
-    + captureDisks(position: Position, board: Board): Board
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
+    + placeDisk(position: Position, color: Color): Board
+    + captureDisks(position: Position): Board
   }
   Board --> BoardComputations: delegates
 ```
@@ -235,7 +235,7 @@ Per semplificare questa operazione viene utilizzato il **factory pattern**.
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
 
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
-- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passandole un riferimento alla `Board` tramite un parametro dei diversi metodi, per permetterle di operare sull'istanza corrente della stessa.
+- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
 
 ### MatchController
 
