@@ -15,21 +15,21 @@ import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 
 class LogicTest extends AnyFlatSpec:
 
-  val USER_COLOR: Color = Black
+  val userColor: Color = Black
 
-  val SQUARE_SIZE = 4
-  val SQUARE_SHAPE: Shape = Square(SQUARE_SIZE)
-  val INITIAL_SQUARE_BOARD: Board = """
+  val squareSize = 4
+  val squareShape: Shape = Square(squareSize)
+  val initialSquareBoard: Board = """
     ....
     .WB.
     .BW.
     ....
   """.toBoard
 
-  val RECTANGLE_HEIGHT = 4
-  val RECTANGLE_WIDTH = 6
-  val RECTANGULAR_SHAPE: Shape = Rectangle(RECTANGLE_HEIGHT, RECTANGLE_WIDTH)
-  val INITIAL_RECTANGULAR_BOARD: Board = """
+  val rectangleHeight = 4
+  val rectangleWidth = 6
+  val rectangularShape: Shape = Rectangle(rectangleHeight, rectangleWidth)
+  val initialRectangularBoard: Board = """
     ......
     ..WB..
     ..BW..
@@ -37,24 +37,24 @@ class LogicTest extends AnyFlatSpec:
   """.toBoard
 
   "Square board" should "have correct shape and size" in:
-    val logic = Logic(SQUARE_SHAPE, USER_COLOR)
+    val logic = Logic(squareShape, userColor)
     val boardShape = logic.state.board.shape
     boardShape match
-      case Square(n) => n should be(SQUARE_SIZE)
+      case Square(n) => n should be(squareSize)
       case shape => fail(s"Board shape is $shape")
 
   "Rectangular board" should "have correct shape and size" in:
-    val logic = Logic(RECTANGULAR_SHAPE, USER_COLOR)
+    val logic = Logic(rectangularShape, userColor)
     val boardShape = logic.state.board.shape
     boardShape match
       case Rectangle(h, w) =>
-        h should be(RECTANGLE_HEIGHT)
-        w should be(RECTANGLE_WIDTH)
+        h should be(rectangleHeight)
+        w should be(rectangleWidth)
       case shape => fail(s"Board shape is $shape")
 
   "User" should "move first if assigned color black" in:
     val userColor = Black
-    val logic = Logic(SQUARE_SHAPE, userColor)
+    val logic = Logic(squareShape, userColor)
     val activePlayer = logic.state.activePlayer
     activePlayer match
       case User(color, _) => color should be(Black)
@@ -62,36 +62,36 @@ class LogicTest extends AnyFlatSpec:
 
   "Opponent" should "move first if user is assigned color white" in:
     val userColor = White
-    val logic = Logic(SQUARE_SHAPE, userColor)
+    val logic = Logic(squareShape, userColor)
     val activePlayer = logic.state.activePlayer
     activePlayer match
       case Opponent(color, _) => color should be(Black)
       case _ => fail("User is set to move first")
 
   "Match" should "initially be in progress" in:
-    val logic = Logic(SQUARE_SHAPE, USER_COLOR)
+    val logic = Logic(squareShape, userColor)
     logic.state.status should be(InProgress)
 
   "Initial board configuration" should "be correct" in:
-    val logic = Logic(SQUARE_SHAPE, USER_COLOR)
-    logic.state.board.disks should be(INITIAL_SQUARE_BOARD.state.disks)
+    val logic = Logic(squareShape, userColor)
+    logic.state.board.disks should be(initialSquareBoard.state.disks)
 
   "Trying to place user disk when it is opponent's turn" should "not be allowed" in:
     val userColor = White
     val targetPosition = Position(0, 0)
-    val logic = Logic(SQUARE_SHAPE, userColor)
+    val logic = Logic(squareShape, userColor)
     an [IllegalStateException] shouldBe thrownBy { logic.placeUserDisk(targetPosition) }
 
   "Trying to place opponent disk when it is user's turn" should "not be allowed" in :
     val userColor = Black
-    val logic = Logic(SQUARE_SHAPE, userColor)
+    val logic = Logic(squareShape, userColor)
     an [IllegalStateException] shouldBe thrownBy { logic.placeOpponentDisk() }
 
   "User move that does not capture any opponent disk" should "not be allowed" in:
     val userColor = Black
     val targetPosition = Position(0, 0)
-    val logic = Logic(SQUARE_SHAPE, userColor).placeUserDisk(targetPosition)
-    logic.state.board.disks should be(INITIAL_SQUARE_BOARD.state.disks)
+    val logic = Logic(squareShape, userColor).placeUserDisk(targetPosition)
+    logic.state.board.disks should be(initialSquareBoard.state.disks)
 
   "User move that captures one opponent disk horizontally" should "be allowed and capture target disk" in:
     val userColor = Black
