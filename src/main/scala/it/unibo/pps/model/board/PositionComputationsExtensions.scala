@@ -38,12 +38,12 @@ object PositionComputationsExtensions:
     def inBounds(shape: Shape): Boolean =
       val minPosition: Position = Position(0, 0)
       shape match
-        case Shape.Square(size) =>
-          p.row.inRange(minPosition.row, size - 1) &&
-            p.column.inRange(minPosition.column, size - 1)
-        case Shape.Rectangle(height, width) =>
-          p.row.inRange(minPosition.row, height - 1) &&
-            p.column.inRange(minPosition.column, width - 1)
+        case Shape.Square(_) =>
+          p.row.inRange(minPosition.row, shape.maxRow) &&
+            p.column.inRange(minPosition.column, shape.maxColumn)
+        case Shape.Rectangle(_, _) =>
+          p.row.inRange(minPosition.row, shape.maxRow) &&
+            p.column.inRange(minPosition.column, shape.maxColumn)
 
     def inBetween(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
