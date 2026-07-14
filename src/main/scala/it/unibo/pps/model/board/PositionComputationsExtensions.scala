@@ -5,7 +5,7 @@ import it.unibo.pps.utils.{Position, Shape}
 import scala.annotation.tailrec
 import scala.math.Ordering.Int
 
-object PositionComputationsExtensions:
+class PositionComputationsExtensions:
   @tailrec
   private def getPosOnSameDiagonal(source: Position, destination: Position,
                                    direction: Position, acc: Set[Position] = Set()): Set[Position] =
