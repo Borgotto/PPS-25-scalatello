@@ -1,6 +1,8 @@
 package it.unibo.pps.utils
 
-enum Color:
+import upickle.default.ReadWriter
+
+enum Color derives ReadWriter:
   case Black
   case White
 

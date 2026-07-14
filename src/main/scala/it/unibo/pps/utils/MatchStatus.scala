@@ -1,6 +1,8 @@
 package it.unibo.pps.utils
 
-enum MatchStatus:
+import upickle.default.ReadWriter
+
+enum MatchStatus derives ReadWriter:
   case InProgress
   case UserWon
   case OpponentWon

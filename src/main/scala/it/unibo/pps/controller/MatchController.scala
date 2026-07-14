@@ -1,6 +1,6 @@
 package it.unibo.pps.controller
 
-import it.unibo.pps.controller.saveManager.{SaveManager, SaveManagerImpl}
+import it.unibo.pps.controller.save.SaveManager.SaveManagers.MatchStateSaveManager
 import it.unibo.pps.model.Logic
 import it.unibo.pps.observer.{Publisher, Subscriber}
 import it.unibo.pps.state.MatchState
@@ -13,10 +13,13 @@ import scala.annotation.tailrec
 trait MatchController:
   def startMatch(boardShape: Shape, userColor: Color): Unit
   def handleSelection(position: Position): Unit
-  def saveMatch(filePath: String): Unit
-  def loadMatch(filePath: String): Unit
+  def saveMatch(fileName: String): Unit
+  def loadMatch(fileName: String): Unit
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
+
+  private val saveDirectory = os.home / ".scalatello"
+
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
 
@@ -50,12 +53,14 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     notifySubscribers(logic.state)
     handleOpponentTurn()
 
-  def saveMatch(filePath: String): Unit =
-    val saveManager: SaveManager = SaveManagerImpl(filePath)
+  def saveMatch(fileName: String): Unit =
+    val filePath = saveDirectory / fileName
+    val saveManager = MatchStateSaveManager(filePath)
     saveManager.save(logic.state)
 
-  def loadMatch(filePath: String): Unit =
-    val saveManager: SaveManager = SaveManagerImpl(filePath)
+  def loadMatch(fileName: String): Unit =
+    val filePath = saveDirectory / fileName
+    val saveManager = MatchStateSaveManager(filePath)
     logic = Logic(saveManager.load())
     notifySubscribers(logic.state)
 
