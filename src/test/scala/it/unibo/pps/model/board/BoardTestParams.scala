@@ -66,12 +66,12 @@ class BoardTestParams(val shape: Shape):
       )
   val outOfBoundsTestBoard: Board =
     shape match
-      case Shape.Square(n) => Board(shape, initialDisksOnBoard ++ Map(
+      case Shape.Square(_) => Board(shape, initialDisksOnBoard ++ Map(
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST) -> whiteDisk
         ))
-      case Shape.Rectangle(h, w) => Board(shape, initialDisksOnBoard ++ Map(
+      case Shape.Rectangle(_, _) => Board(shape, initialDisksOnBoard ++ Map(
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST - DIST) -> whiteDisk,
           Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column) -> whiteDisk,
@@ -99,4 +99,3 @@ class BoardTestParams(val shape: Shape):
         Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST + DIST),
         Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST)
       )
-      
