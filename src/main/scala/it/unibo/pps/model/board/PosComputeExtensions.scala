@@ -37,13 +37,7 @@ class PosComputeExtensions:
     
     def inBounds(shape: Shape): Boolean =
       val minPosition: Position = Position(0, 0)
-      shape match
-        case Shape.Square(_) =>
-          p.row.inRange(minPosition.row, shape.maxRow) &&
-            p.column.inRange(minPosition.column, shape.maxColumn)
-        case Shape.Rectangle(_, _) =>
-          p.row.inRange(minPosition.row, shape.maxRow) &&
-            p.column.inRange(minPosition.column, shape.maxColumn)
+      p.row.inRange(minPosition.row, shape.maxRow) && p.column.inRange(minPosition.column, shape.maxColumn)
 
     def inBetween(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
