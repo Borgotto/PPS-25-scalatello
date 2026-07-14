@@ -27,14 +27,14 @@ object Board:
     )
     apply(shape, initialDisks)
 
+  def apply(state: BoardState): Board =
+    val disks = state.disks.map(disk => disk.position -> Disk(disk.color)).toMap
+    apply(state.shape, disks)
+    
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
       case _ => StandardBoard(shape, disks)
   
-  def apply(state: BoardState): Board =
-    val disks = state.disks.map(disk => disk.position -> Disk(disk.color)).toMap
-    Board(state.shape, disks)
-
   private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk]) extends Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
