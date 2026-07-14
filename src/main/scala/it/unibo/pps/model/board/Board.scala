@@ -13,18 +13,29 @@ trait Board:
   def captureDisks(diskPos: Position): Board
 
 object Board:
+  extension (s: String)
+    def toPosDiskMap: Map[Position, Disk] =
+      val pattern = """(\((?<position>\d+,\s*\d+)\)\s*->\s*(?<color>[A-Za-z]))""".r
+      pattern.findAllMatchIn(s).map(w =>
+        val position: Position = w.group("position")
+        val disk = w.group("color").toLowerCase match
+          case "w" => Disk(Color.White)
+          case "b" => Disk(Color.Black)
+        position -> disk
+      ).toMap
+
   def apply(shape: Shape): Board =
     val dist: Int = 1
-    val topLeftCenterPos: Position =
+    val topLeftCenter =
       shape match
-        case Shape.Square(n) => Position(n / 2 - dist, n / 2 - dist)
-        case Shape.Rectangle(h, w) => Position(h / 2 - dist, w / 2 - dist)
-    val initialDisks: Map[Position, Disk] = Map(
-      Position(topLeftCenterPos.row, topLeftCenterPos.column) -> Disk(Color.White),
-      Position(topLeftCenterPos.row, topLeftCenterPos.column + dist) -> Disk(Color.Black),
-      Position(topLeftCenterPos.row + dist, topLeftCenterPos.column) -> Disk(Color.Black),
-      Position(topLeftCenterPos.row + dist, topLeftCenterPos.column + dist) -> Disk(Color.White)
-    )
+        case Shape.Square(n) => (n / 2 - dist, n / 2 - dist)
+        case Shape.Rectangle(h, w) => (h / 2 - dist, w / 2 - dist)
+
+    val initialDisks = s"""(${topLeftCenter._1}, ${topLeftCenter._2}) -> W;
+        (${topLeftCenter._1}, ${topLeftCenter._2 + dist}) -> B;
+        (${topLeftCenter._1 + dist}, ${topLeftCenter._2}) -> B;
+        (${topLeftCenter._1 + dist}, ${topLeftCenter._2 + dist}) -> W;""".toPosDiskMap
+    
     apply(shape, initialDisks)
 
   def apply(state: BoardState): Board =
