@@ -47,7 +47,9 @@ class BoardComputations:
     def _getNextEmptyNeighbour(diskPos: Position, distance: Position)(using board: Board): Option[Position] =
       val neighbourPos = diskPos - distance
       neighbourPos match
-        case p if !p.inBounds(board.shape) => Option.empty
+        case p
+          if (!p.inBounds(board.shape)) ||
+            (board.disks.contains(p) && board.disks(p).color.equals(diskColor)) => Option.empty
         case p if board.disks.contains(p) => _getNextEmptyNeighbour(p, distance)
         case p => Some(p)
 

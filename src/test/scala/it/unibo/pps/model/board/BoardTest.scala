@@ -151,3 +151,16 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         val expectedState: BoardState = BoardState(boardShape, expectedDiskStates, Set[Position]())
         boardState.shape.equals(expectedState.shape) should be(true)
         boardState.disks.toSet.equals(expectedState.disks.toSet) should be(true)
+
+  private val movesNotAfterSameColor = Table(
+    ("board", "expectedAvailableMoves"),
+    (squareParams.notAfterSameColorTestBoard, squareParams.expectedNotAfterSameColorMoves),
+    (rectangleParams.notAfterSameColorTestBoard, rectangleParams.expectedNotAfterSameColorMoves)
+  )
+  "A Board" should "not say that a placement is available if it is after a disk of the same color" in:
+    forEvery(movesNotAfterSameColor):
+      (board, expectedAvailableMoves) =>
+        println(board.disks)
+        println(expectedAvailableMoves)
+        println(board.getAvailablePlacements(Color.Black))
+        board.getAvailablePlacements(Color.Black).equals(expectedAvailableMoves) should be(true)

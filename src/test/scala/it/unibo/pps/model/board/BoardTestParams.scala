@@ -80,3 +80,23 @@ class BoardTestParams(val shape: Shape):
   val expectedNotOutOfBoundsMoves: Set[Position] =
     shape match
       case _ => Set(Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column - DIST))
+  val notAfterSameColorTestBoard: Board =
+    shape match
+      case _ => Board(shape, initialDisksOnBoard ++ Map(
+        Position(topLeftCenterPos.row - DIST, topLeftCenterPos.column) -> blackDisk,
+        Position(topLeftCenterPos.row - DIST, topLeftCenterPos.column - DIST) -> whiteDisk
+      ))
+  val expectedNotAfterSameColorMoves: Set[Position] =
+    shape match
+      case Shape.Square(_) => Set(
+        Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST),
+        Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST + DIST),
+        Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST)
+      )
+      case Shape.Rectangle(_, _) => Set(
+        Position(topLeftCenterPos.row - DIST, topLeftCenterPos.column - DIST - DIST),
+        Position(topLeftCenterPos.row, topLeftCenterPos.column - DIST),
+        Position(topLeftCenterPos.row + DIST, topLeftCenterPos.column + DIST + DIST),
+        Position(topLeftCenterPos.row + DIST + DIST, topLeftCenterPos.column + DIST)
+      )
+      
