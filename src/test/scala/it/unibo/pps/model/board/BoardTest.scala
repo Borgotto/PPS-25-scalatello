@@ -160,7 +160,4 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   "A Board" should "not say that a placement is available if it is after a disk of the same color" in:
     forEvery(movesNotAfterSameColor):
       (board, expectedAvailableMoves) =>
-        println(board.disks)
-        println(expectedAvailableMoves)
-        println(board.getAvailablePlacements(Color.Black))
         board.getAvailablePlacements(Color.Black).equals(expectedAvailableMoves) should be(true)

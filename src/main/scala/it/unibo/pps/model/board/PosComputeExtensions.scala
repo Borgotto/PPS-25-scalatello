@@ -5,7 +5,7 @@ import it.unibo.pps.utils.{Position, Shape}
 import scala.annotation.tailrec
 import scala.math.Ordering.Int
 
-object PositionComputationsExtensions:
+class PosComputeExtensions:
   @tailrec
   private def getPosOnSameDiagonal(source: Position, destination: Position,
                                    direction: Position, acc: Set[Position] = Set()): Set[Position] =
@@ -37,13 +37,7 @@ object PositionComputationsExtensions:
     
     def inBounds(shape: Shape): Boolean =
       val minPosition: Position = Position(0, 0)
-      shape match
-        case Shape.Square(size) =>
-          p.row.inRange(minPosition.row, size - 1) &&
-            p.column.inRange(minPosition.column, size - 1)
-        case Shape.Rectangle(height, width) =>
-          p.row.inRange(minPosition.row, height - 1) &&
-            p.column.inRange(minPosition.column, width - 1)
+      p.row.inRange(minPosition.row, shape.maxRow) && p.column.inRange(minPosition.column, shape.maxColumn)
 
     def inBetween(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
