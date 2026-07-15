@@ -1,6 +1,6 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
+import it.unibo.pps.model.board.BoardCreationExtensions.{toPosDiskMap, half}
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.DiskState
 import it.unibo.pps.utils.{Color, Position, Shape}
@@ -13,8 +13,8 @@ class BoardTestParams(val shape: Shape):
   
   val topLeftCenter: Position =
     shape match
-      case Shape.Square(n) => (n / 2 - DIST, n / 2 - DIST)
-      case Shape.Rectangle(h, w) => (h / 2 - DIST, w / 2 - DIST)
+      case Shape.Square(n) => (n.half - DIST, n.half - DIST)
+      case Shape.Rectangle(h, w) => (h.half - DIST, w.half - DIST)
 
   val validMovePos: Position =
     shape match

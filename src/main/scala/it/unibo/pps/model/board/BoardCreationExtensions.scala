@@ -13,3 +13,6 @@ object BoardCreationExtensions:
           case "b" => Disk(Color.Black)
         position -> disk
       ).toMap
+      
+  extension (i: Int)
+    def half: Int = i/2
