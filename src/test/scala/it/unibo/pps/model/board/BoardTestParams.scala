@@ -26,10 +26,12 @@ class BoardTestParams(val shape: Shape):
   val initialDisksOnBoard: Map[Position, Disk] =
     shape match
       case _ =>
-    s"""${bottomRightCenterPos.left.up} -> W;
-        ${bottomRightCenterPos.up} -> B;
-        ${bottomRightCenterPos.left} -> B;
-        $bottomRightCenterPos -> W;""".toPosDiskMap
+        s"""
+          ${bottomRightCenterPos.left.up} -> W
+          ${bottomRightCenterPos.up} -> B
+          ${bottomRightCenterPos.left} -> B
+          $bottomRightCenterPos -> W
+        """.toPosDiskMap
 
   val initialBoard: Board = Board(shape)
 

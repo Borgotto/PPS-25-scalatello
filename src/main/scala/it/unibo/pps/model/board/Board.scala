@@ -20,11 +20,13 @@ object Board:
         case Shape.Square(n) => (n.half, n.half)
         case Shape.Rectangle(h, w) => (h.half, w.half)
 
-    val initialDisks =
-    s"""${bottomRightCenterPos.left.up} -> W;
-        ${bottomRightCenterPos.up} -> B;
-        ${bottomRightCenterPos.left} -> B;
-        $bottomRightCenterPos -> W;""".toPosDiskMap
+    val initialDisks: Map[Position, Disk] =
+      s"""
+        ${bottomRightCenterPos.left.up} -> W
+        ${bottomRightCenterPos.up} -> B
+        ${bottomRightCenterPos.left} -> B
+        $bottomRightCenterPos -> W
+      """.toPosDiskMap
     
     apply(shape, initialDisks)
 
