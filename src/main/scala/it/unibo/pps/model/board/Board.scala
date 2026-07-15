@@ -15,16 +15,16 @@ trait Board:
 
 object Board:
   def apply(shape: Shape): Board =
-    val dist: Int = 1
-    val topLeftCenter =
+    val bottomRightCenterPos: Position =
       shape match
-        case Shape.Square(n) => (n.half - dist, n.half - dist)
-        case Shape.Rectangle(h, w) => (h.half - dist, w.half - dist)
+        case Shape.Square(n) => (n.half, n.half)
+        case Shape.Rectangle(h, w) => (h.half, w.half)
 
-    val initialDisks = s"""(${topLeftCenter._1}, ${topLeftCenter._2}) -> W;
-        (${topLeftCenter._1}, ${topLeftCenter._2 + dist}) -> B;
-        (${topLeftCenter._1 + dist}, ${topLeftCenter._2}) -> B;
-        (${topLeftCenter._1 + dist}, ${topLeftCenter._2 + dist}) -> W;""".toPosDiskMap
+    val initialDisks =
+    s"""${bottomRightCenterPos.left.up} -> W;
+        ${bottomRightCenterPos.up} -> B;
+        ${bottomRightCenterPos.left} -> B;
+        $bottomRightCenterPos -> W;""".toPosDiskMap
     
     apply(shape, initialDisks)
 
