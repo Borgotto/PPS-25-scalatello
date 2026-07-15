@@ -7,8 +7,11 @@ import it.unibo.pps.utils.MatchStatus.*
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.i18n.I18n
 import it.unibo.pps.view.io.BoardRenderingExtensions.render
-import it.unibo.pps.view.io.{IO, given_Monad_IO}
-import it.unibo.pps.view.io.IO.{read, write}
+import it.unibo.pps.view.io.{IO, ShortcutListener, given_Monad_IO}
+import it.unibo.pps.view.io.IO.write
+
+import org.jline.terminal.TerminalBuilder
+import org.jline.reader.{LineReader, LineReaderBuilder}
 
 enum Action(val code: String):
   case NewGame extends Action("1")
@@ -23,11 +26,16 @@ enum ColorOption(val code: String):
   case Black extends ColorOption("1")
   case White extends ColorOption("2")
 
-class CLIView(private val i18n: I18n) extends View(i18n):
+class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private val minBoardSize = 4
 
   private val controller = MatchController(this)
+
+  private val terminal = TerminalBuilder.builder().system(true).build()
+  protected val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
+
+  private def read(): IO[String] = IO(() => reader.readLine())
 
   override def showMenu(): Unit =
     for
@@ -60,6 +68,7 @@ class CLIView(private val i18n: I18n) extends View(i18n):
       userColor <- askForUserColor()
       shape <- askForBoardShape()
       _ <- showMatchStartMessage()
+      _ <- IO(() => enableSaveShortcut(showSaveMenu()))
       _ <- IO(() => controller.startMatch(shape, userColor))
     yield ()
 
@@ -218,8 +227,10 @@ class CLIView(private val i18n: I18n) extends View(i18n):
     availablePlacements.map(position => position.row).contains(row)
   
   private def onMatchEnd(matchResultMessageKey: String): Unit =
-    for 
+    for
+      _ <- IO(() => disableSaveShortcut())
       _ <- write(i18n.t(matchResultMessageKey))
       _ <- write(i18n.t("match.back_to_menu_message"))
     yield ()
-  
+
+  private def showSaveMenu(): Unit = println("Save shortcut captured")
