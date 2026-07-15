@@ -9,12 +9,15 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
+import os.{Path, home}
+import scala.util.{Success, Failure}
+
 
 trait MatchController:
   def startMatch(boardShape: Shape, userColor: Color): Unit
   def handleSelection(position: Position): Unit
-  def saveMatch(fileName: String): Unit
-  def loadMatch(fileName: String): Unit
+  def saveMatch(fileName: String): Option[Throwable]
+  def loadMatch(fileName: String): Option[Throwable]
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
@@ -53,16 +56,22 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     notifySubscribers(logic.state)
     handleOpponentTurn()
 
-  def saveMatch(fileName: String): Unit =
-    val filePath = saveDirectory / fileName
-    val saveManager = MatchStateSaveManager(filePath)
-    saveManager.save(logic.state)
+  def saveMatch(fileName: String): Option[Throwable] =
+    given filepath: Path = saveDirectory / fileName
+    val saveManager = MatchStateSaveManager(saveDirectory)
+    saveManager.save(logic.state) match
+      case Success(_) => Option.empty
+      case Failure(exception) => Some(exception)
 
-  def loadMatch(fileName: String): Unit =
-    val filePath = saveDirectory / fileName
-    val saveManager = MatchStateSaveManager(filePath)
-    logic = Logic(saveManager.load())
-    notifySubscribers(logic.state)
+  def loadMatch(fileName: String): Option[Throwable] =
+    given filepath: Path = saveDirectory / fileName
+    val saveManager = MatchStateSaveManager(saveDirectory)
+    saveManager.load match
+      case Success(matchState: MatchState) =>
+        logic = Logic(matchState)
+        notifySubscribers(logic.state)
+        Option.empty
+      case Failure(exception) => Some(exception)
 
 object MatchController:
   def apply(view: View): MatchController =

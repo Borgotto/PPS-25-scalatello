@@ -5,20 +5,24 @@ import it.unibo.pps.utils.*
 import it.unibo.pps.model.strategy.*
 import it.unibo.pps.controller.save.SaveManager.*
 import it.unibo.pps.utils.Serializer.{Serializer, Serializers}
-
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe}
+import org.scalatest.matchers.should.Matchers.{a, be, noException, shouldBe, shouldEqual, shouldNot}
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
-import os.{Path, read, temp, write}
+import os.{Path, pwd, read, temp, write}
+
+import scala.util.{Failure, Success}
 
 class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
-  private val tmpFile: Path = temp()
+  private val tmpDir: Path = temp.dir()
+  private val tmpFile: Path = tmpDir / "tmp_save_file.txt"
+  private val nonExistentFile: Path = "/non_existent_file.txt"
+
   private val inputs: TableFor3[SaveManager[?], Serializer[?], ?] = Table(
     ("an instance of SaveManager", "its serializer", "some test data"),
-    (SaveManagers.StringSaveManager(tmpFile), Serializers.StringSerializer, "Test string"),
+    (SaveManagers.StringSaveManager(tmpDir), Serializers.StringSerializer, "Test string"),
     (
-      SaveManagers.MatchStateSaveManager(tmpFile),
+      SaveManagers.MatchStateSaveManager(tmpDir),
       Serializers.MatchSerializer,
       MatchState(
         MatchStatus.InProgress,
@@ -27,7 +31,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       )
     ),
     (
-      SaveManagers.MatchStateSaveManager(tmpFile),
+      SaveManagers.MatchStateSaveManager(tmpDir),
       Serializers.MatchSerializer,
       MatchState(
         MatchStatus.InProgress,
@@ -43,7 +47,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       )
     ),
     (
-      SaveManagers.MatchStateSaveManager(tmpFile),
+      SaveManagers.MatchStateSaveManager(tmpDir),
       Serializers.MatchSerializer,
       MatchState(
         MatchStatus.UserWon,
@@ -64,15 +68,15 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         val testSubject = saveManager.getClass.getSimpleName + " (input #" + inputs.indexOf((sm, se, data)) + ")"
 
         testSubject should "save data correctly" in:
-          saveManager.save(data)
-          read(saveManager.filePath) shouldBe encoded(data)
+          saveManager.save(data)(using tmpFile)
+          read(tmpFile) shouldBe encoded(data)
 
         it should "load data correctly" in:
-          write.over(saveManager.filePath, encoded(data))
-          saveManager.load() shouldBe data
+          write.over(tmpFile, encoded(data))
+          saveManager.load(using tmpFile) shouldBe Success(data)
 
         it should "not throw an exception when saving data" in:
-          noException should be thrownBy saveManager.save
+          noException should be thrownBy saveManager.save(data)(using tmpFile)
 
         it should "not throw an exception when loading data" in:
-          noException should be thrownBy saveManager.load()
+          noException should be thrownBy saveManager.load(using tmpFile)
