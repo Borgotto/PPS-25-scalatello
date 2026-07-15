@@ -89,6 +89,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("match.match_started_message"))
       _ <- write(i18n.t("match.legend"))
+      _ <- write(i18n.t("match.save_shortcut"))
     yield ()
 
   private def askForUserColor(): IO[Color] =
