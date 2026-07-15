@@ -1,6 +1,6 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.model.board.Board.toPosDiskMap
+import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.DiskState
 import it.unibo.pps.utils.{Color, Position, Shape}
