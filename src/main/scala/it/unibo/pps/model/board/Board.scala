@@ -1,5 +1,6 @@
 package it.unibo.pps.model.board
 
+import it.unibo.pps.model.board.BoardCreationExtensions.{toPosDiskMap, half}
 import it.unibo.pps.state.{BoardState, DiskState}
 import it.unibo.pps.utils.{Color, Position, Shape}
 
@@ -13,28 +14,19 @@ trait Board:
   def captureDisks(diskPos: Position): Board
 
 object Board:
-  extension (s: String)
-    def toPosDiskMap: Map[Position, Disk] =
-      val pattern = """(\((?<position>\d+,\s*\d+)\)\s*->\s*(?<color>[A-Za-z]))""".r
-      pattern.findAllMatchIn(s).map(w =>
-        val position: Position = w.group("position")
-        val disk = w.group("color").toLowerCase match
-          case "w" => Disk(Color.White)
-          case "b" => Disk(Color.Black)
-        position -> disk
-      ).toMap
-
   def apply(shape: Shape): Board =
-    val dist: Int = 1
-    val topLeftCenter =
+    val bottomRightCenterPos: Position =
       shape match
-        case Shape.Square(n) => (n / 2 - dist, n / 2 - dist)
-        case Shape.Rectangle(h, w) => (h / 2 - dist, w / 2 - dist)
+        case Shape.Square(n) => (n.half, n.half)
+        case Shape.Rectangle(h, w) => (h.half, w.half)
 
-    val initialDisks = s"""(${topLeftCenter._1}, ${topLeftCenter._2}) -> W;
-        (${topLeftCenter._1}, ${topLeftCenter._2 + dist}) -> B;
-        (${topLeftCenter._1 + dist}, ${topLeftCenter._2}) -> B;
-        (${topLeftCenter._1 + dist}, ${topLeftCenter._2 + dist}) -> W;""".toPosDiskMap
+    val initialDisks: Map[Position, Disk] =
+      s"""
+        ${bottomRightCenterPos.left.up} -> W
+        ${bottomRightCenterPos.up} -> B
+        ${bottomRightCenterPos.left} -> B
+        $bottomRightCenterPos -> W
+      """.toPosDiskMap
     
     apply(shape, initialDisks)
 
@@ -44,11 +36,14 @@ object Board:
     
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
-      case _ =>
+      case Shape.Square(_) =>
         given contextComputations: PosComputeExtensions = PosComputeExtensions()
-        StandardBoard(shape, disks)
+        BoardImpl(shape, disks)
+      case Shape.Rectangle(_,_) =>
+        given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
+        BoardImpl(shape, disks)
   
-  private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk])
+  private class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
                              (using PosComputeExtensions) extends Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
