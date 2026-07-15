@@ -80,3 +80,26 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
         it should "not throw an exception when loading data" in:
           noException should be thrownBy saveManager.load(using tmpFile)
+
+        it should "return identical data after round-trip save and load" in:
+          saveManager.save(data)(using tmpFile)
+          saveManager.load(using tmpFile) shouldEqual Success(data)
+
+        it should "overwrite previous data when saving multiple times" in:
+          val firstData = data
+          val secondData = data
+          saveManager.save(firstData)(using tmpFile)
+          saveManager.save(secondData)(using tmpFile)
+          saveManager.load(using tmpFile) shouldBe Success(secondData)
+
+        it should "persist data consistently across consecutive loads" in:
+          saveManager.save(data)(using tmpFile)
+          val firstLoad = saveManager.load(using tmpFile)
+          val secondLoad = saveManager.load(using tmpFile)
+          firstLoad shouldBe secondLoad
+
+        it should "allow multiple save and load cycles" in:
+          for i <- 1 to 5 do
+            saveManager.save(data)(using tmpFile)
+            val firstLoad = saveManager.load(using tmpFile)
+            firstLoad shouldBe Success(data)
