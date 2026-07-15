@@ -22,7 +22,5 @@ jobs:
           cache: sbt
       - name: Setup SBT
         uses: sbt/setup-sbt@v1
-      - name: Run the project
-        run: sbt run
       - name: Run the unit tests
         run: sbt test
