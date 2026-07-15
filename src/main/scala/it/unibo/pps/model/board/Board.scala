@@ -38,12 +38,12 @@ object Board:
     shape match
       case Shape.Square(_) =>
         given contextComputations: PosComputeExtensions = PosComputeExtensions()
-        StandardBoard(shape, disks)
+        BoardImpl(shape, disks)
       case Shape.Rectangle(_,_) =>
         given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
-        RectangleBoard(shape, disks)
+        BoardImpl(shape, disks)
   
-  private class StandardBoard(val shape: Shape, val disks: Map[Position, Disk])
+  private class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
                              (using PosComputeExtensions) extends Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
@@ -65,6 +65,3 @@ object Board:
     override def equals(obj: Any): Boolean =
       obj match
         case b: Board => state.disks.equals(b.state.disks) && shape.equals(b.state.shape)
-
-  private class RectangleBoard(override val shape: Shape, override val disks: Map[Position, Disk])
-                              (using PosComputeExtensions) extends StandardBoard(shape, disks)
