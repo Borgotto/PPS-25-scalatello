@@ -57,6 +57,7 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     val filePath = saveDirectory / fileName
     val saveManager = MatchStateSaveManager(filePath)
     saveManager.save(logic.state)
+    notifySubscribers(logic.state)
 
   def loadMatch(fileName: String): Unit =
     val filePath = saveDirectory / fileName
