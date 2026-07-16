@@ -6,6 +6,6 @@ import upickle.default.ReadWriter
 
 case class BoardState(
   shape: Shape,
-  disks: Seq[DiskState],
+  disks: Set[DiskState],
   userAvailablePlacements: Set[Position]
 ) derives ReadWriter

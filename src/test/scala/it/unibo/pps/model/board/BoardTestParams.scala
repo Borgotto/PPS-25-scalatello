@@ -86,9 +86,9 @@ class BoardTestParams(val shape: Shape):
           ..B.B.
         """.toBoard
 
-  val expectedDiskStates: Seq[DiskState] =
+  val expectedDiskStates: Set[DiskState] =
     shape match
-      case _ => Seq(
+      case _ => Set(
         DiskState(whiteDisk.color, bottomRightCenterPos.left.up),
         DiskState(blackDisk.color, bottomRightCenterPos.up),
         DiskState(blackDisk.color, bottomRightCenterPos.left),

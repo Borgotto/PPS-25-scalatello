@@ -48,7 +48,7 @@ object Board:
     private val compute: BoardComputations = BoardComputations()
     private given contextBoard: Board = this
 
-    val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSeq, Set())
+    val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
     def getAvailablePlacements(diskColor: Color): Set[Position] =
       compute.getAvailablePlacements(diskColor)

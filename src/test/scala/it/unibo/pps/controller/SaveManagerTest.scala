@@ -27,7 +27,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       MatchState(
         MatchStatus.InProgress,
         PlayerState.User(Color.Black, UserPlacementStrategy()),
-        BoardState(Shape.Square(4), Seq.empty, Set.empty)
+        BoardState(Shape.Square(4), Set.empty, Set.empty)
       )
     ),
     (
@@ -38,7 +38,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         PlayerState.Opponent(Color.White, RandomPlacementStrategy(Color.White)),
         BoardState(
           Shape.Rectangle(4, 6),
-          Seq(
+          Set(
             DiskState(Color.Black, Position(1, 2)),
             DiskState(Color.White, Position(2, 3))
           ),
@@ -52,7 +52,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       MatchState(
         MatchStatus.UserWon,
         PlayerState.User(Color.White, UserPlacementStrategy()),
-        BoardState(Shape.Square(8), Seq.empty, Set.empty)
+        BoardState(Shape.Square(8), Set.empty, Set.empty)
       )
     )
   )

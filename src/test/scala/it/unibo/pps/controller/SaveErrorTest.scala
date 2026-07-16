@@ -27,7 +27,7 @@ class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
   private val exampleMatchState = MatchState(
     MatchStatus.InProgress,
     PlayerState.User(Color.Black, UserPlacementStrategy()),
-    BoardState(Shape.Square(4), Seq.empty, Set.empty)
+    BoardState(Shape.Square(4), Set.empty, Set.empty)
   )
 
   "Saving" should "fail with a WriteError when trying to save to a non-writable path" in:
