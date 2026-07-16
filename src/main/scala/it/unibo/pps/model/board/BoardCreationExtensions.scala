@@ -26,7 +26,7 @@ object BoardCreationExtensions:
      *              Position(0,0) -> Disk(Color.White)
      *              Position(1,1) -> Disk(Color.Black)
      *            ) }}}
-     * @return the [[scala.collection.immutable.Map]] created from the string
+     * @return the [[scala.collection.immutable.Map]] created from the string.
      */
     def toPosDiskMap: Map[Position, Disk] =
       val pattern = """(\((?<position>\d+,\s*\d+)\)\s*->\s*(?<color>[A-Za-z]))""".r
@@ -39,7 +39,7 @@ object BoardCreationExtensions:
       ).toMap
       
   extension (i: Int)
-    /** Extension method of [[Int]]
-     * @return the number divided by 2
+    /** Extension method of [[Int]].
+     * @return the number divided by 2.
      */
     def half: Int = i/2
