@@ -13,7 +13,6 @@ import scala.util.{Success, Failure}
 
 import os.{Path, home}
 
-
 trait MatchController:
   def startMatch(boardShape: Shape, userColor: Color): Unit
   def handleSelection(position: Position): Unit
