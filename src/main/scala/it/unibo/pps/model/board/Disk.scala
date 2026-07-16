@@ -10,4 +10,4 @@ import it.unibo.pps.utils.Color
  */
 case class Disk(color: Color):
   /** @return a disk with the opposite color of the initial one. */
-  def flip(): Disk = Disk(color.opposite)
+  def flip: Disk = Disk(color.opposite)

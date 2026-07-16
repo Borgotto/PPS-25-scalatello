@@ -127,5 +127,5 @@ private[board] class BoardComputations(using board: Board)(using posComputations
   def captureDisks(diskPos: Position): Board =
     if !board.disks.contains(diskPos) then throw IllegalArgumentException("There isn't a disk in that position")
     val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
-    val disksAfterFlip = board.disks.map((pos, disk) => (pos, if disksToFlip.contains(pos) then disk.flip() else disk))
+    val disksAfterFlip = board.disks.map((pos, disk) => (pos, if disksToFlip.contains(pos) then disk.flip else disk))
     Board(board.shape, disksAfterFlip)

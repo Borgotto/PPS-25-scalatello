@@ -12,5 +12,5 @@ class DiskTest extends AnyFlatSpec:
 
   "A Disk" should "have the opposite color when flipped" in:
     val disk = Disk(Color.Black)
-    val flippedDisk = disk.flip()
+    val flippedDisk = disk.flip
     flippedDisk.color.equals(disk.color.opposite) should be(true)
