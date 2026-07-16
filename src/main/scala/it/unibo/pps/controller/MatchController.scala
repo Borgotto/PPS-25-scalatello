@@ -86,7 +86,7 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
 object MatchController:
   def apply(view: View): MatchController =
-    val controller = new MatchControllerImpl()
+    val controller = MatchControllerImpl()
     controller.subscribe(view)
     controller
     
