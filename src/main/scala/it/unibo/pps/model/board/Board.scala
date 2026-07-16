@@ -43,25 +43,25 @@ object Board:
         given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
         BoardImpl(shape, disks)
   
-  private class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
-                             (using PosComputeExtensions) extends Board:
-    private val compute: BoardComputations = BoardComputations()
-    private given contextBoard: Board = this
+private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
+                           (using PosComputeExtensions) extends Board:
+  private val compute: BoardComputations = BoardComputations()
+  private given contextBoard: Board = this
 
-    val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
+  val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
-    def getAvailablePlacements(diskColor: Color): Set[Position] =
-      compute.getAvailablePlacements(diskColor)
+  def getAvailablePlacements(diskColor: Color): Set[Position] =
+    compute.getAvailablePlacements(diskColor)
 
-    def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
-      compute.isPlacementValid(diskPos, diskColor)
+  def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
+    compute.isPlacementValid(diskPos, diskColor)
 
-    def placeDisk(diskColor: Color, diskPos: Position): Board =
-      compute.placeDisk(diskPos, diskColor)
+  def placeDisk(diskColor: Color, diskPos: Position): Board =
+    compute.placeDisk(diskPos, diskColor)
 
-    def captureDisks(diskPos: Position): Board =
-      compute.captureDisks(diskPos)
+  def captureDisks(diskPos: Position): Board =
+    compute.captureDisks(diskPos)
 
-    override def equals(obj: Any): Boolean =
-      obj match
-        case b: Board => state.disks.equals(b.state.disks) && shape.equals(b.state.shape)
+  override def equals(obj: Any): Boolean =
+    obj match
+      case b: Board => state.disks.equals(b.state.disks) && shape.equals(b.state.shape)
