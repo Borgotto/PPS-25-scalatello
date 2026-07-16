@@ -7,9 +7,9 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 /** Defines the board where the player can place disks to play the game.
  *
  * This provides methods to:
- *    - get a new [[Board]] instance with the [[disks]] updated.
- *    - know if a placement is valid,
- *    - know all available placements for a specified disk and
+ *    - get a new [[Board]] instance with the [[disks]] updated;
+ *    - know if a placement is valid;
+ *    - know all available placements for a specified disk and;
  *    - get its [[state]].
  *
  * All of them must be specified in classes using this.
