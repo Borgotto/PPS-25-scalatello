@@ -11,7 +11,7 @@ import it.unibo.pps.view.View
 import scala.annotation.tailrec
 import scala.util.{Success, Failure}
 
-import os.{Path, home}
+import os.Path
 
 trait MatchController:
   def startMatch(boardShape: Shape, userColor: Color): Unit
