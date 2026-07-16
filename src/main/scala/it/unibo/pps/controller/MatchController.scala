@@ -22,6 +22,7 @@ trait MatchController:
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
   private val saveDirectory = os.home / ".scalatello"
+  private val saveManager = MatchStateSaveManager(saveDirectory)
 
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
@@ -58,28 +59,24 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
   def saveMatch(fileName: String): Option[Throwable] =
     given filepath: Path = saveDirectory / fileName
-    val saveManager = MatchStateSaveManager(saveDirectory)
     saveManager.save(logic.state) match
       case Failure(exception) => Some(exception)
       case _ => Option.empty
 
   def loadMatch(fileName: String): Option[Throwable] =
     given filepath: Path = saveDirectory / fileName
-    val saveManager = MatchStateSaveManager(saveDirectory)
     saveManager.load match
       case Success(matchState: MatchState) =>
         logic = Logic(matchState)
         notifySubscribers(logic.state)
         Option.empty
       case Failure(exception) => Some(exception)
-  
+
   def saveFiles: Seq[Path] =
-    val saveManager = MatchStateSaveManager(saveDirectory)
     saveManager.savefiles
 
   def deleteSaveFile(fileName: String): Option[Throwable] =
     given filepath: Path = saveDirectory / fileName
-    val saveManager = MatchStateSaveManager(saveDirectory)
     saveManager.deleteSaveFile match
       case Failure(exception) => Some(exception)
       case _ => Option.empty
