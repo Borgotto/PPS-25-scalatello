@@ -44,7 +44,7 @@ object Board:
         BoardImpl(shape, disks)
   
 private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
-                           (using PosComputeExtensions) extends Board:
+                           (using posComputations: PosComputeExtensions) extends Board:
   private val compute: BoardComputations = BoardComputations()
   private given contextBoard: Board = this
 
