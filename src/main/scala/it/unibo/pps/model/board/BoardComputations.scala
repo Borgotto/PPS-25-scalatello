@@ -102,25 +102,27 @@ private[board] class BoardComputations(using board: Board)(using posComputations
     yield availableMove.get
 
   /** Delegate method of [[BoardImpl.isPlacementValid()]].
-   * @param diskPos the position where the player wants to place the disk.
    * @param diskColor the color of the disk that wants to be placed.
+   * @param diskPos the position where the player wants to place the disk.
    * @return `true` if the placement is valid, `false` otherwise.
    */
-  def isPlacementValid(diskPos: Position, diskColor: Color): Boolean =
+  def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
     getAvailablePlacements(diskColor).contains(diskPos)
 
   /** Delegate method of [[BoardImpl.placeDisk()]].
-   * @param diskPos the position where the player wants to place the disk.
    * @param diskColor the color of the disk that wants to be placed.
+   * @param diskPos the position where the player wants to place the disk.
    * @return a new instance of [[Board]] with the disk placed.
+   * @throws IllegalArgumentException if `diskPos` is not valid
    */
-  def placeDisk(diskPos: Position, diskColor: Color): Board =
-    if !isPlacementValid(diskPos, diskColor) then throw IllegalArgumentException("The placement is not valid")
+  def placeDisk(diskColor: Color, diskPos: Position): Board =
+    if !isPlacementValid(diskColor, diskPos) then throw IllegalArgumentException("The placement is not valid")
     Board(board.shape, board.disks + (diskPos -> Disk(diskColor)))
 
   /** Delegate method of [[BoardImpl.captureDisks()]].
    * @param diskPos the position of the placed disk.
    * @return a new instance of [[Board]] with the captured disks flipped.
+   * @throws IllegalArgumentException if `diskPos` is not on the board.
    */
   def captureDisks(diskPos: Position): Board =
     if !board.disks.contains(diskPos) then throw IllegalArgumentException("There isn't a disk in that position")

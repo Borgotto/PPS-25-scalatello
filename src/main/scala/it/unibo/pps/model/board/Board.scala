@@ -141,7 +141,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    * @return `true` if the placement is valid, `false` otherwise.
    */
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
-    compute.isPlacementValid(diskPos, diskColor)
+    compute.isPlacementValid(diskColor, diskPos)
 
   /** Implements [[Board.placeDisk()]].
    * @param diskColor the color of the disk that wants to be placed.
@@ -149,7 +149,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    * @return a new instance of [[Board]] with the disk placed.
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board =
-    compute.placeDisk(diskPos, diskColor)
+    compute.placeDisk(diskColor, diskPos)
 
   /** Implements [[Board.captureDisks()]].
    * @param diskPos the position of the placed disk.
