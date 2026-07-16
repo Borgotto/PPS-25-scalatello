@@ -5,6 +5,7 @@ import it.unibo.pps.model.Logic
 import it.unibo.pps.observer.{Publisher, Subscriber}
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.state.PlayerState.{Opponent, User}
+import it.unibo.pps.utils.MatchStatus.InProgress
 import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
@@ -44,6 +45,8 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
       case User(_, _) => ()
       case Opponent(_, _) => handleOpponentTurn()
 
+  private def isMatchOver: Boolean = logic.state.status != InProgress
+
   @tailrec
   private def handleOpponentTurn(): Unit =
     logic.state.activePlayer match
@@ -51,12 +54,12 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
       case Opponent(_, _) =>
         logic = logic.placeOpponentDisk()
         notifySubscribers(logic.state)
-        handleOpponentTurn()
+        if !isMatchOver then handleOpponentTurn()
   
   def handleSelection(position: Position): Unit =
     logic = logic.placeUserDisk(position)
     notifySubscribers(logic.state)
-    handleOpponentTurn()
+    if !isMatchOver then handleOpponentTurn()
 
   def saveMatch(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName

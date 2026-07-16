@@ -97,7 +97,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   // Main menu
 
-  override def showMenu(): Unit =
+  override def showMainMenu(): Unit =
     for
       _ <- write(i18n.t("main_menu.title"))
       _ <- askForActionSelection()
@@ -158,7 +158,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       _ <- write(i18n.t("setup_menu.board.shape_question"))
       _ <- write(i18n.t("setup_menu.board.square_shape"))
       _ <- write(i18n.t("setup_menu.board.rectangular_shape"))
-      _ <- write(i18n.t("setup_menu.choice_request"))
+      _ <- write(i18n.t("generic.choice_request"))
       option <- read()
       shape <- handleSelectedShape(option)
     yield shape
@@ -276,6 +276,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       _ <- IO(() => disableSaveShortcut())
       _ <- write(i18n.t(matchResultMessageKey))
       _ <- write(i18n.t("match.back_to_menu_message"))
+      _ <- IO(() => showMainMenu())
     yield ()
 
   // Save menu
@@ -340,5 +341,5 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
         for
           _ <- write(i18n.t("save_loading_menu.loading_failure"))
           _ <- write(i18n.t("save_loading_menu.back_to_menu_message"))
-          _ <- IO(() => showMenu())
+          _ <- IO(() => showMainMenu())
         yield ()

@@ -9,4 +9,4 @@ object Scalatello:
 
   @main def main(): Unit = 
     val i18n = I18n(Locale.ENGLISH)
-    CLIView(i18n).showMenu()
+    CLIView(i18n).showMainMenu()
