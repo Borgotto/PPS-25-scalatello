@@ -37,7 +37,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    */
   private def getConnectingDisks(oppositeNeighboursPos: Set[(Position, Position)], 
                                  diskColor: Color, placedDiskPos: Position): Set[Position] =
-    /** Helper recursive method to find the disks that connect to the placed disk.
+    /** Helper method to find the disks that connect to the placed disk.
      * @param diskPos the position of the considered disk.
      * @param placedDisk [[scala.Tuple2]] of ([[Position]], [[Color]]) of the placed disk.
      * @param direction the direction in which to look for a possible connecting disk.
@@ -79,7 +79,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
-    /** Helper recursive method to find the empty position next to a neighbour of the opposite color.
+    /** Helper method to find the empty position next to a neighbour of the opposite color.
      * @param diskPos the position of the considered disk.
      * @param direction the direction in which to look for a possible empty position.
      * @return a [[scala.Option]] of the empty [[Position]] if found, [[scala.Option.empty]] otherwise.
