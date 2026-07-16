@@ -23,11 +23,9 @@ object SaveManager:
       catch
         case e => Failure(SaveErrorHandler.handleLoadErrors(e))
 
-    def savefiles: Seq[Path] =
-      try
-        os.list(savePath).filter(load(using _).isSuccess)
-      catch
-        case _ => Seq.empty
+    def saveFileNames: Seq[String] =
+      try os.list(savePath).filter(load(using _).isSuccess).map(_.last)
+      catch case _ => Seq.empty
 
     def deleteSaveFile(using filePath: Path): Try[Unit] =
       load match

@@ -9,7 +9,7 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 import os.Path
 
 trait MatchController:
@@ -17,6 +17,8 @@ trait MatchController:
   def handleSelection(position: Position): Unit
   def saveMatch(fileName: String): Try[_]
   def loadMatch(fileName: String): Try[_]
+  def saveFileNames: Seq[String]
+  def deleteSaveFile(fileName: String): Try[_]
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
@@ -68,15 +70,14 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
       case _ => ()
     result
 
-  def saveFiles: Seq[Path] = saveManager.savefiles
+  def saveFileNames: Seq[String] = saveManager.saveFileNames
 
-  def deleteSaveFile(fileName: String): Option[Throwable] =
+  def deleteSaveFile(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
-    saveManager.deleteSaveFile match
-      case Failure(exception) => Some(exception)
-      case _ => Option.empty
+    saveManager.deleteSaveFile
 
 object MatchController:
+  
   def apply(view: View): MatchController =
     val controller = MatchControllerImpl()
     controller.subscribe(view)
