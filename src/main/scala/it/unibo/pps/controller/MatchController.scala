@@ -9,23 +9,24 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
-import scala.util.{Success, Failure}
-
+import scala.util.{Success, Try}
 import os.Path
 
 trait MatchController:
   def startMatch(boardShape: Shape, userColor: Color): Unit
   def handleSelection(position: Position): Unit
-  def saveMatch(fileName: String): Option[Throwable]
-  def loadMatch(fileName: String): Option[Throwable]
+  def saveMatch(fileName: String): Try[_]
+  def loadMatch(fileName: String): Try[_]
+  def saveFileNames: Seq[String]
+  def deleteSaveFile(fileName: String): Try[_]
   
 class MatchControllerImpl extends MatchController, Publisher[MatchState]:
 
-  private val saveDirectory = os.home / ".scalatello"
-  private val saveManager = MatchStateSaveManager(saveDirectory)
-
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
+
+  private val saveDirectory = os.home / ".scalatello"
+  private val saveManager = MatchStateSaveManager(saveDirectory)
 
   override def subscribe(subscriber: Subscriber[MatchState]): Unit =
     subscribers = subscribers :+ subscriber
@@ -57,31 +58,26 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     notifySubscribers(logic.state)
     handleOpponentTurn()
 
-  def saveMatch(fileName: String): Option[Throwable] =
+  def saveMatch(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
-    saveManager.save(logic.state) match
-      case Failure(exception) => Some(exception)
-      case _ => Option.empty
+    saveManager.save(logic.state)
 
-  def loadMatch(fileName: String): Option[Throwable] =
+  def loadMatch(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
-    saveManager.load match
-      case Success(matchState: MatchState) =>
-        logic = Logic(matchState)
-        notifySubscribers(logic.state)
-        Option.empty
-      case Failure(exception) => Some(exception)
+    val result = saveManager.load 
+    result match
+      case Success(matchState: MatchState) => logic = Logic(matchState)
+      case _ => ()
+    result
 
-  def saveFiles: Seq[Path] =
-    saveManager.savefiles
+  def saveFileNames: Seq[String] = saveManager.saveFileNames
 
-  def deleteSaveFile(fileName: String): Option[Throwable] =
+  def deleteSaveFile(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
-    saveManager.deleteSaveFile match
-      case Failure(exception) => Some(exception)
-      case _ => Option.empty
+    saveManager.deleteSaveFile
 
 object MatchController:
+  
   def apply(view: View): MatchController =
     val controller = MatchControllerImpl()
     controller.subscribe(view)
