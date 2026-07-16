@@ -10,6 +10,9 @@ import it.unibo.pps.view.io.BoardRenderingExtensions.render
 import it.unibo.pps.view.io.{IO, Sanitizer, SaveInterruptException, ShortcutListener, given_Monad_IO}
 import it.unibo.pps.view.io.Sanitizer.*
 import it.unibo.pps.view.io.IO.write
+
+import scala.util.{Failure, Success}
+
 import org.jline.terminal.TerminalBuilder
 import org.jline.reader.{LineReader, LineReaderBuilder}
 
@@ -284,5 +287,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       _ <- write(i18n.t("save_menu.filename_request"))
       filename <- read()
       sanitizedFilename <- IO(() => sanitize(filename))
-      _ <- IO(() => controller.saveMatch(sanitizedFilename))
+      result <- IO(() => controller.saveMatch(sanitizedFilename))
+      _ <- result match
+        case Success(_) => write(i18n.t("save_menu.save_success"))
+        case Failure(exception) => write(i18n.t("save_menu.save_failure") :+ exception.getMessage)
+      _ <- IO(() => update(lastMatchState))
     yield ()

@@ -11,7 +11,8 @@ object SaveManager:
       try
         os.makeDir.all(savePath)
         val serializedData = serializer.encode(data)
-        Success(write.over(filePath, serializedData))
+        write.over(filePath, serializedData)
+        Success(())
       catch
         case e => Failure(SaveErrorHandler.handleSaveErrors(e))
 
