@@ -2,7 +2,7 @@ package it.unibo.pps.utils
 
 import upickle.default.ReadWriter
 
-/** Enum to represent the possible colors of disks and players.
+/** Enum to represent the possible colors of a [[Disk]] and a [[Player]].
  *
  * It also contains a method to return the [[opposite]] color.
  *
