@@ -60,8 +60,8 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     given filepath: Path = saveDirectory / fileName
     val saveManager = MatchStateSaveManager(saveDirectory)
     saveManager.save(logic.state) match
-      case Success(_) => Option.empty
       case Failure(exception) => Some(exception)
+      case _ => Option.empty
 
   def loadMatch(fileName: String): Option[Throwable] =
     given filepath: Path = saveDirectory / fileName
@@ -72,6 +72,17 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
         notifySubscribers(logic.state)
         Option.empty
       case Failure(exception) => Some(exception)
+  
+  def saveFiles: Seq[Path] =
+    val saveManager = MatchStateSaveManager(saveDirectory)
+    saveManager.savefiles
+
+  def deleteSaveFile(fileName: String): Option[Throwable] =
+    given filepath: Path = saveDirectory / fileName
+    val saveManager = MatchStateSaveManager(saveDirectory)
+    saveManager.deleteSaveFile match
+      case Failure(exception) => Some(exception)
+      case _ => Option.empty
 
 object MatchController:
   def apply(view: View): MatchController =
