@@ -9,8 +9,9 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
-import os.{Path, home}
 import scala.util.{Success, Failure}
+
+import os.{Path, home}
 
 
 trait MatchController:
