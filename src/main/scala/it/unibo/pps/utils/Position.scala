@@ -29,7 +29,7 @@ case class Position(row: Int, column: Int) derives ReadWriter:
 
   /** @return the position below this. */
   def down: Position = Position(row + 1, column)
-  
+
   /** @inheritdoc */
   override def toString: String = s"($row,$column)"
 
