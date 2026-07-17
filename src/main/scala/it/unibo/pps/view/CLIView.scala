@@ -18,7 +18,7 @@ import org.jline.reader.{LineReader, LineReaderBuilder}
 
 enum Action(val code: String):
   case NewGame extends Action("1")
-  case LoadSavedGame extends Action("2")
+  case SaveFiles extends Action("2")
   case Quit extends Action("3")
 
 enum ShapeOption(val code: String):
@@ -28,6 +28,10 @@ enum ShapeOption(val code: String):
 enum ColorOption(val code: String):
   case Black extends ColorOption("1")
   case White extends ColorOption("2")
+
+enum SaveMenuOption(val code: String):
+  case Load extends SaveMenuOption("1")
+  case Delete extends SaveMenuOption("2")
 
 enum ReadResult:
   case Success(value: String)
@@ -82,7 +86,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
   ): IO[T] = result match
     case ReadResult.SaveInterruption =>
       for
-        _ <- showSaveMenu()
+        _ <- showSaveCreationMenu()
         retry <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
       yield retry
     case ReadResult.Success(input) =>
@@ -95,6 +99,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
           retry <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
         yield retry
 
+  private def isValidOptionChoice(nOptions: Int)(input: String): Boolean =
+    isConvertibleToInt(input) && isWithinBounds(1, nOptions)(input.toInt)
+
   // Main menu
 
   override def showMainMenu(): Unit =
@@ -104,24 +111,26 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     yield ()
 
   private def askForActionSelection(): IO[Unit] =
+    val options = Seq(
+      i18n.t("main_menu.actions.new_game"),
+      i18n.t("main_menu.actions.load_saved_game"),
+      i18n.t("main_menu.actions.quit")
+    )
     for
-      _ <- write(i18n.t("main_menu.actions.new_game"))
-      _ <- write(i18n.t("main_menu.actions.load_saved_game"))
-      _ <- write(i18n.t("main_menu.actions.quit"))
-      _ <- write(i18n.t("main_menu.action_request"))
-      action <- read()
+      _ <- write(options.mkString("\n", "\n", ""))
+      action <- askForValidInput(
+        i18n.t("main_menu.action_request"),
+        isValidOptionChoice(options.size),
+        identity,
+        i18n.t("generic.invalid_choice")
+      )
       _ <- handleSelectedAction(action)
     yield ()
 
   private def handleSelectedAction(option: String): IO[Unit] = option match
     case Action.NewGame.code => setupMatch()
-    case Action.LoadSavedGame.code => showSaveLoadingMenu()
+    case Action.SaveFiles.code => showSaveManagementMenu()
     case Action.Quit.code => write(i18n.t("main_menu.exit_message"))
-    case _ =>
-      for
-        _ <- write(i18n.t("generic.invalid_choice"))
-        _ <- askForActionSelection()
-      yield ()
 
   // Match setup menu
 
@@ -130,36 +139,45 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       userColor <- askForUserColor()
       shape <- askForBoardShape()
       _ <- showMatchStartMessage()
-      _ <- IO(() => enableSaveShortcut(showSaveMenu()))
+      _ <- IO(() => enableSaveShortcut(showSaveManagementMenu()))
       _ <- IO(() => controller.startMatch(shape, userColor))
     yield ()
 
   private def askForUserColor(): IO[Color] =
+    val options = Seq(
+      i18n.t("setup_menu.user.color_black"),
+      i18n.t("setup_menu.user.color_white"),
+    )
     for
       _ <- write(i18n.t("setup_menu.user.color_question"))
-      _ <- write(i18n.t("setup_menu.user.color_black"))
-      _ <- write(i18n.t("setup_menu.user.color_white"))
-      _ <- write(i18n.t("generic.choice_request"))
-      option <- read()
+      _ <- write(options.mkString("\n", "\n", ""))
+      option <- askForValidInput(
+        i18n.t("generic.choice_request"),
+        isValidOptionChoice(options.size),
+        identity,
+        i18n.t("generic.invalid_choice")
+      )
       color <- handleSelectedColor(option)
     yield color
 
   private def handleSelectedColor(option: String): IO[Color] = option match
     case ColorOption.Black.code => IO(() => Color.Black)
     case ColorOption.White.code => IO(() => Color.White)
-    case _ =>
-      for
-        _ <- write(i18n.t("generic.invalid_choice"))
-        color <- askForUserColor()
-      yield color
 
   private def askForBoardShape(): IO[Shape] =
+    val options = Seq(
+      i18n.t("setup_menu.board.square_shape"),
+      i18n.t("setup_menu.board.rectangular_shape"),
+    )
     for
       _ <- write(i18n.t("setup_menu.board.shape_question"))
-      _ <- write(i18n.t("setup_menu.board.square_shape"))
-      _ <- write(i18n.t("setup_menu.board.rectangular_shape"))
-      _ <- write(i18n.t("generic.choice_request"))
-      option <- read()
+      _ <- write(options.mkString("\n", "\n", ""))
+      option <- askForValidInput(
+        i18n.t("generic.choice_request"),
+        isValidOptionChoice(options.size),
+        identity,
+        i18n.t("generic.invalid_choice")
+      )
       shape <- handleSelectedShape(option)
     yield shape
 
@@ -189,11 +207,6 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
           i18n.t("setup_menu.board.invalid_size")
         )
         shape <- IO(() => Shape.Rectangle(height, width))
-      yield shape
-    case _ =>
-      for
-        _ <- write(i18n.t("generic.invalid_choice"))
-        shape <- askForBoardShape()
       yield shape
 
   private def isSelectedSizeValid(size: String): Boolean = size.toIntOption match
@@ -275,19 +288,19 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- IO(() => disableSaveShortcut())
       _ <- write(i18n.t(matchResultMessageKey))
-      _ <- write(i18n.t("match.back_to_menu_message"))
+      _ <- write(i18n.t("generic.back_to_menu_message"))
       _ <- IO(() => showMainMenu())
     yield ()
 
-  // Save menu
+  // Save creation menu
 
-  private def showSaveMenu(): IO[Unit] =
+  private def showSaveCreationMenu(): IO[Unit] =
     for
       input <- askForValidInput(
-        i18n.t("save_menu.save_request"),
+        i18n.t("save_creation_menu.save_request"),
         s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
         identity,
-        i18n.t("save_menu.invalid_choice")
+        i18n.t("save_creation_menu.invalid_choice")
       )
       saveMatch <- IO(() => input.toLowerCase() == "y")
       _ <- if saveMatch then handleSave() else IO(() => update(lastMatchState))
@@ -295,38 +308,59 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private def handleSave(): IO[Unit] =
     for
-      _ <- write(i18n.t("save_menu.filename_request"))
+      _ <- write(i18n.t("save_creation_menu.filename_request"))
       filename <- read()
       sanitizedFilename <- IO(() => sanitize(filename))
       result <- IO(() => controller.saveMatch(sanitizedFilename))
       _ <- result match
-        case Success(_) => write(i18n.t("save_menu.save_success"))
-        case Failure(exception) => write(i18n.t("save_menu.save_failure") :+ exception.getMessage)
+        case Success(_) => write(i18n.t("save_creation_menu.save_success"))
+        case Failure(exception) => write(i18n.t("save_creation_menu.save_failure") :+ exception.getMessage)
       _ <- IO(() => update(lastMatchState))
     yield ()
 
-  // Load save menu
+  // Save management menu (load and delete)
 
-  private def showSaveLoadingMenu(): IO[Unit] =
-    val options = controller.saveFileNames
+  private def showSaveManagementMenu(): IO[Unit] =
+    val options = Seq(
+      i18n.t("save_menu.load_action"),
+      i18n.t("save_menu.delete_action")
+    )
+    for
+      _ <- write(i18n.t("save_menu.action_request"))
+      _ <- write(options.mkString("\n", "\n", ""))
+      option <- askForValidInput(
+        i18n.t("generic.choice_request"),
+        isValidOptionChoice(options.size),
+        identity,
+        i18n.t("generic.invalid_choice")
+      )
+      _ <- handleSelectedSaveMenuOption(option)
+    yield ()
+
+  private def handleSelectedSaveMenuOption(option: String): IO[Unit] = option match
+    case SaveMenuOption.Load.code => showSaveLoadingMenu()
+    case SaveMenuOption.Delete.code => showSaveDeletionMenu()
+
+  private def saveFileOptions: String =
+    controller.saveFileNames
       .zipWithIndex
       .map((filename, index) => s"[${index + 1}] $filename")
       .mkString("\n", "\n", "")
-    val nFiles = controller.saveFileNames.size
+
+  private def saveFilesCount: Int = controller.saveFileNames.size
+
+  private def showSaveLoadingMenu(): IO[Unit] =
     for
-      _ <- write("\nSelect the save you want to load: ")
-      _ <- write(options)
+      _ <- write(i18n.t("save_loading_menu.file_choice_request"))
+      _ <- write(saveFileOptions)
       position <- askForValidInput(
         i18n.t("generic.choice_request"),
-        isValidFileChoice(nFiles),
+        isValidOptionChoice(saveFilesCount),
         _.toInt,
-        i18n.t("generic.invalid_choice", nFiles)
+        i18n.t("generic.invalid_choice", saveFilesCount)
       )
       _ <- handleFileLoading(position)
     yield ()
-
-  private def isValidFileChoice(nFiles: Int)(input: String): Boolean =
-    isConvertibleToInt(input) && isWithinBounds(1, nFiles)(input.toInt)
 
   private def handleFileLoading(position: Int): IO[Unit] =
     val fileName = controller.saveFileNames(position - 1)
@@ -340,6 +374,28 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       case Failure(_) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_failure"))
-          _ <- write(i18n.t("save_loading_menu.back_to_menu_message"))
+          _ <- write(i18n.t("generic.back_to_menu_message"))
           _ <- IO(() => showMainMenu())
         yield ()
+
+  private def showSaveDeletionMenu(): IO[Unit] =
+    for
+      _ <- write(i18n.t("save_deletion_menu.file_choice_request"))
+      _ <- write(saveFileOptions)
+      position <- askForValidInput(
+        i18n.t("generic.choice_request"),
+        isValidOptionChoice(saveFilesCount),
+        _.toInt,
+        i18n.t("generic.invalid_choice", saveFilesCount)
+      )
+      _ <- handleFileDeletion(position)
+      _ <- write(i18n.t("generic.back_to_menu_message"))
+      _ <- IO(() => showMainMenu())
+    yield ()
+
+  private def handleFileDeletion(position: Int): IO[Unit] =
+    val fileName = controller.saveFileNames(position - 1)
+    val result = controller.deleteSaveFile(fileName)
+    result match
+      case Success(_) => write(i18n.t("save_deletion_menu.loading_success"))
+      case Failure(_) => write(i18n.t("save_deletion_menu.loading_failure"))
