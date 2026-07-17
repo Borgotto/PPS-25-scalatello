@@ -26,7 +26,7 @@ private[board] trait PosComputeExtensions:
      * @param secondPos the last position to be considered on the diagonal.
      * @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
      */
-    private def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
+    def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
       /** Helper method to get the [[Position]] of all the [[Disk]] that are on the same diagonal
        * and between `source` and `destination`.
        *
