@@ -9,9 +9,8 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 /** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
  *
  * This provides methods to:
- *    - get a new board instance with the [[disks]] updated after:
- *      - placing a disk: [[placeDisk()]];
- *      - capturing disks: [[captureDisks()]].
+ *    - get a new board instance with the [[disks]] updated after placing a disk
+ *      and capturing the disks accordingly: [[placeDisk()]];
  *    - know if a placement is valid: [[isPlacementValid()]];
  *    - know all available placements for a specified disk: [[getAvailablePlacements()]];
  *    - get its [[state]].
@@ -46,21 +45,20 @@ trait Board:
    */
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean
 
-  /** Places a new disk.
+  /** Places a new disk and captures the disks on the board accordingly.
+   *
+   * Capturing a disk means that the disk will be flipped to change to the color of the one capturing it.
+   *
+   * A disk is captured if it is of the other color than the placed one and
+   * is enclosed between the placed disk and another disk of the same color of the placed disk.
+   *
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
    * @return a new instance of board with the disk placed.
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board
 
-  /** Given the position of the last placed disk at the time, captures the disks of the other color,
-   *  that are enclosed between the disk in that position and another disk of the same color.
-   * @param diskPos the position of the placed disk.
-   * @return a new instance of board with the captured disks flipped.
-   */
-  def captureDisks(diskPos: Position): Board
-
-/** Factory for [[Board]] instances
+/** Factory for [[Board]] instances.
  * 
  * Provides a factory to create a board starting from:
  * - a [[Shape]]: creates the initial board;
@@ -156,13 +154,6 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board =
     compute.placeDisk(diskColor, diskPos)
-
-  /** Implements [[Board.captureDisks()]].
-   * @param diskPos the position of the placed disk.
-   * @return a new instance of board with the captured disks flipped.
-   */
-  def captureDisks(diskPos: Position): Board =
-    compute.captureDisks(diskPos)
 
   /** @inheritdoc
    * @param obj what will be confronted with this board.

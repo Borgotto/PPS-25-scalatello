@@ -70,7 +70,7 @@ class BoardTestParams(val shape: Shape):
           ...B..
         """.toBoard.disks.keySet
 
-  val expectedBoardAfterCapture: Board =
+  val expectedBoardAfterNewDisk: Board =
     shape match
       case Shape.Square(_) =>
         """

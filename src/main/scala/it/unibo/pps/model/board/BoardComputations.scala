@@ -20,9 +20,10 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    *         the second position is the position of one of its disks neighbours with the opposite color,
    *         there is a tuple for each neighbour.
    */
-  private def getOppositeColorNeighbours(diskColor: Color): Set[(Position, Position)] =
-    for diskPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
-        possibleNeighbourPos: Position <- board.disks.filter((_, disk) => disk.color.equals(diskColor.opposite)).keySet
+  private def getOppositeColorNeighbours(diskColor: Color)
+                                        (using disks: Map[Position, Disk]): Set[(Position, Position)] =
+    for diskPos: Position <- disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
+        possibleNeighbourPos: Position <- disks.filter((_, disk) => disk.color.equals(diskColor.opposite)).keySet
         if possibleNeighbourPos.inNeighbourhood(diskPos)
     yield (diskPos, possibleNeighbourPos)
 
@@ -35,7 +36,8 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    * @return a [[scala.collection.immutable.Set]] of [[Position]] containing
    *         the position of all the disks that connects to the placed disk.
    */
-  private def getConnectingDisks(diskColor: Color, placedDiskPos: Position): Set[Position] =
+  private def getConnectingDisks(diskColor: Color, placedDiskPos: Position)
+                                (using disks: Map[Position, Disk]): Set[Position] =
     /** Helper method to find the disks that connect to the placed disk.
      * @param diskPos the position of the considered disk.
      * @param placedDisk [[scala.Tuple2]] of ([[Position]], [[Color]]) of the placed disk.
@@ -45,9 +47,9 @@ private[board] class BoardComputations(using board: Board)(using posComputations
     @tailrec
     def _getNextConnectingDisk(diskPos: Position, placedDisk: (Position, Color), direction: Position): Option[Position] =
       val neighbourPos = diskPos - direction
-      val disksWithoutPlacedDisk: Map[Position, Disk] = board.disks.filter(e => !e.equals(placedDisk))
+      val disksWithoutPlacedDisk: Map[Position, Disk] = disks.filter(e => !e.equals(placedDisk))
       neighbourPos match
-        case p if !p.inBounds(board.shape) || !board.disks.contains(p) => Option.empty
+        case p if !p.inBounds(board.shape) || !disks.contains(p) => Option.empty
         case p if disksWithoutPlacedDisk(p).color.equals(placedDisk._2.opposite) =>
           _getNextConnectingDisk(p, placedDisk, direction)
         case p => Some(p)
@@ -66,10 +68,10 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    * @param diskPos the position of the placed disk.
    * @return a [[scala.collection.immutable.Set]] of [[Position]] containing the position of all the disks to flip.
    */
-  private def getDisksToFlip(diskPos: Position): Set[Position] =
-    val diskColor: Color = board.disks(diskPos).color
+  private def getDisksToFlip(diskPos: Position)(using disks: Map[Position, Disk]): Set[Position] =
+    val diskColor: Color = disks(diskPos).color
     for connectingDiskPos: Position <- getConnectingDisks(diskColor, diskPos)
-        diskToFlip: Position <- board.disks.keySet
+        diskToFlip: Position <- disks.keySet
         if diskToFlip.inBetweenPos(diskPos, connectingDiskPos)
     yield diskToFlip
 
@@ -93,6 +95,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
         case p if board.disks.contains(p) => _getNextEmptyPosition(p, direction)
         case p => Some(p)
 
+    given disks: Map[Position, Disk] = board.disks
     for (disk, neighbour) <- getOppositeColorNeighbours(diskColor)
         diskPos: Position = Position(neighbour.row, neighbour.column)
         direction: Position = disk - neighbour
@@ -111,20 +114,19 @@ private[board] class BoardComputations(using board: Board)(using posComputations
   /** Delegate method of [[BoardImpl.placeDisk()]].
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
-   * @return a new instance of [[Board]] with the disk placed.
+   * @return a new instance of [[Board]] with the disk placed and the disks captured.
    * @throws IllegalArgumentException if `diskPos` is not valid
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board =
-    if !isPlacementValid(diskColor, diskPos) then throw IllegalArgumentException("The placement is not valid")
-    Board(board.shape, board.disks + (diskPos -> Disk(diskColor)))
+    /** Helper method to capture the correct disks after placing a new disk.
+     * @param disks the disks on the board after placing a new disk.
+     * @return the new disks on the board after capturing the correct ones.
+     */
+    def captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
+      val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
+      val disksAfterFlip = disks.map((pos, disk) => (pos, if disksToFlip.contains(pos) then disk.flip else disk))
+      disksAfterFlip
 
-  /** Delegate method of [[BoardImpl.captureDisks()]].
-   * @param diskPos the position of the placed disk.
-   * @return a new instance of [[Board]] with the captured disks flipped.
-   * @throws IllegalArgumentException if `diskPos` is not on the board.
-   */
-  def captureDisks(diskPos: Position): Board =
-    if !board.disks.contains(diskPos) then throw IllegalArgumentException("There isn't a disk in that position")
-    val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
-    val disksAfterFlip = board.disks.map((pos, disk) => (pos, if disksToFlip.contains(pos) then disk.flip else disk))
-    Board(board.shape, disksAfterFlip)
+    if !isPlacementValid(diskColor, diskPos) then throw IllegalArgumentException("The placement is not valid")
+    given newDisks: Map[Position, Disk] = board.disks + (diskPos -> Disk(diskColor))
+    Board(board.shape, captureDisks)

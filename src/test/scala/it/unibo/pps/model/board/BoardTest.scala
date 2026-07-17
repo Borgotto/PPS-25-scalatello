@@ -95,18 +95,6 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       (board, notEqualBoard) =>
         board.equals(notEqualBoard) should be(false)
 
-  private val placeDiskTestTable = Table(
-    ("boardDuringMatch", "boardShape", "validMovePos"),
-    (squareParams.boardDuringMatch, squareParams.shape, squareParams.validMovePos),
-    (rectangleParams.boardDuringMatch, rectangleParams.shape, rectangleParams.validMovePos)
-  )
-  "A Board" should "be able to place a new disk in a valid position" in:
-    forEvery(placeDiskTestTable):
-      (boardDuringMatch, boardShape, validMovePos) =>
-        val board: Board = boardDuringMatch.placeDisk(Color.Black, validMovePos)
-        val expectedBoard: Board = Board(boardShape, boardDuringMatch.disks + (validMovePos -> Disk(Color.Black)))
-        board.equals(expectedBoard) should be(true)
-
   private val notPlaceDiskTestTable = Table(
     ("boardDuringMatch", "notValidMovePos"),
     (squareParams.boardDuringMatch, squareParams.notValidMovePos),
@@ -117,27 +105,16 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       (boardDuringMatch, notValidMovePos) =>
         an [IllegalArgumentException] should be thrownBy boardDuringMatch.placeDisk(Color.Black, notValidMovePos)
 
-  private val captureDisksTestTable = Table(
-    ("boardDuringMatch", "validMovePos", "expectedBoardAfterCapture"),
-    (squareParams.boardDuringMatch, squareParams.validMovePos, squareParams.expectedBoardAfterCapture),
-    (rectangleParams.boardDuringMatch, rectangleParams.validMovePos, rectangleParams.expectedBoardAfterCapture)
+  private val placeDiskTestTable = Table(
+    ("boardDuringMatch", "validMovePos", "expectedBoardAfterNewDisk"),
+    (squareParams.boardDuringMatch, squareParams.validMovePos, squareParams.expectedBoardAfterNewDisk),
+    (rectangleParams.boardDuringMatch, rectangleParams.validMovePos, rectangleParams.expectedBoardAfterNewDisk)
   )
-  "A Board, after placing a disk" should "capture the correct disks" in:
-    forEvery(captureDisksTestTable):
-      (boardDuringMatch, validMovePos, expectedBoardAfterCapture) =>
-        val board: Board = boardDuringMatch.placeDisk(Color.Black, validMovePos).captureDisks(validMovePos)
-        board.equals(expectedBoardAfterCapture) should be(true)
-
-  private val notCaptureDisksTestTable = Table(
-    ("initialBoard", "notValidMovePos"),
-    (squareParams.initialBoard, squareParams.notValidMovePos),
-    (rectangleParams.initialBoard, rectangleParams.notValidMovePos)
-  )
-  "A Board, if the move is not valid" should "not capture any disks" in:
-    forEvery(notCaptureDisksTestTable):
-      (initialBoard, notValidMovePos) =>
-        an [IllegalArgumentException] should be thrownBy
-          initialBoard.placeDisk(Color.Black, notValidMovePos).captureDisks(notValidMovePos)
+  "A Board" should "place a disk and then capture the correct disks" in:
+    forEvery(placeDiskTestTable):
+      (boardDuringMatch, validMovePos, expectedBoardAfterNewDisk) =>
+        val board: Board = boardDuringMatch.placeDisk(Color.Black, validMovePos)
+        board.equals(expectedBoardAfterNewDisk) should be(true)
 
   private val boardStateTestTable = Table(
     ("initialBoard", "boardShape", "expectedDiskStates"),
