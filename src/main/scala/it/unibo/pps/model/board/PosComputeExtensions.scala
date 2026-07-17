@@ -4,7 +4,6 @@ import it.unibo.pps.utils.{Position, Shape}
 import it.unibo.pps.utils.IntExtensions.inBetween
 
 import scala.annotation.tailrec
-import scala.math.Ordering.Int
 
 /** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
  *
@@ -14,21 +13,6 @@ import scala.math.Ordering.Int
  */
 private[board] trait PosComputeExtensions:
   extension (p: Position)
-    /** Extension method of [[Position]].
-     *
-     * This divides two [[Position]] instances.
-     *
-     * This ignores the division with 0, if a number is divided by 0 the result is 0.
-     * @param pos the [[Position]] to divide this [[Position]] with.
-     * @return the result of the division.
-     */
-    def /(pos: Position): Position =
-      (pos.row, pos.column) match
-        case (r, c) if r.equals(0) && c.equals(0) => Position(r, c)
-        case (r, c) if r.equals(0) => Position(r, p.column / c)
-        case (r, c) if c.equals(0) => Position(p.row / r, c)
-        case (_, _) => Position(p.row / pos.row, p.column / pos.column)
-
     /** Extension method of [[Position]].
      *
      * Used to know if this [[Position]] is on the same diagonal of `firstPos` and `secondPos` and also between them.

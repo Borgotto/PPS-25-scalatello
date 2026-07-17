@@ -18,6 +18,20 @@ case class Position(row: Int, column: Int) derives ReadWriter:
    */
   def -(pos: Position): Position = Position(this.row - pos.row, this.column - pos.column)
 
+  /** This divides two [[Position]] instances.
+   *
+   * This ignores the division with 0, if a number is divided by 0 the result is 0.
+   *
+   * @param pos the [[Position]] to divide this [[Position]] with.
+   * @return the result of the division.
+   */
+  def /(pos: Position): Position =
+    (pos.row, pos.column) match
+      case (r, c) if r.equals(0) && c.equals(0) => Position(r, c)
+      case (r, c) if r.equals(0) => Position(r, column / c)
+      case (r, c) if c.equals(0) => Position(row / r, c)
+      case (_, _) => Position(row / pos.row, column / pos.column)
+
   /** @return the position to the left of this. */
   def left: Position = Position(row, column - 1)
 
