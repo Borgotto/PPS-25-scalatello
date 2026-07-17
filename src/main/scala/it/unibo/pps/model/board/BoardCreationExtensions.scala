@@ -37,9 +37,3 @@ object BoardCreationExtensions:
           case "b" => Disk(Color.Black)
         position -> disk
       ).toMap
-      
-  extension (i: Int)
-    /** Extension method of [[Int]].
-     * @return the number divided by 2.
-     */
-    def half: Int = i/2

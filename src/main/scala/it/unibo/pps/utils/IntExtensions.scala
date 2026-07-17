@@ -30,3 +30,9 @@ object IntExtensions:
      */
     def inBetween(y: Int, z: Int): Boolean =
       x.inRange(Int.min(y, z) + 1, Int.max(y, z) - 1)
+    
+    /** Extension method of [[Int]].
+     *
+     * @return the number divided by 2.
+     */
+    def half: Int = x / 2
