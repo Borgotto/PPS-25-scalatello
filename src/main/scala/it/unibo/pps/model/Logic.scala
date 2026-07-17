@@ -36,7 +36,7 @@ class LogicImpl(
     && board.getAvailablePlacements(opponentColor).isEmpty
 
   private def getUpdatedBoard(newDiskColor: Color, newDiskPosition: Position): Board =
-    board.placeDisk(newDiskColor, newDiskPosition).captureDisks(newDiskPosition)
+    board.placeDisk(newDiskColor, newDiskPosition)
 
   private def getUpdatedStatus(board: Board): MatchStatus =
     if !areBothPlayersStuck(board) then InProgress
