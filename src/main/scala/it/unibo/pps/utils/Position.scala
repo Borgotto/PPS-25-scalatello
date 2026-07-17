@@ -23,10 +23,13 @@ case class Position(row: Int, column: Int) derives ReadWriter:
 
   /** @return the position to the right of this. */
   def right: Position = Position(row, column + 1)
+
   /** @return the position on top of this. */
   def up: Position = Position(row - 1, column)
+
   /** @return the position below this. */
   def down: Position = Position(row + 1, column)
+  
   /** @inheritdoc */
   override def toString: String = s"($row,$column)"
 

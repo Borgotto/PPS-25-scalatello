@@ -31,7 +31,7 @@ trait Board:
 
   /**
    * @param diskColor the color of the disk that needs to be placed.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside all the available placements positions.
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position]
 
@@ -130,7 +130,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
 
   /** Implements [[Board.getAvailablePlacements()]].
    * @param diskColor the color of the disk that needs to be placed.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside all the available placements positions.
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     compute.getAvailablePlacements(diskColor)

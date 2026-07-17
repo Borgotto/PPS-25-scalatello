@@ -32,7 +32,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    * @param oppositeNeighboursPos the result of [[BoardComputations.getOppositeColorNeighbours(diskColor)]].
    * @param diskColor the color of the placed disk.
    * @param placedDiskPos the position where the disk will be placed.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing
    *         the position of all the disks that connects to the placed disk.
    */
   private def getConnectingDisks(oppositeNeighboursPos: Set[(Position, Position)], 
@@ -63,7 +63,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
 
   /** Helper method to find which disks needs to be flipped.
    * @param diskPos the position of the placed disk.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside the position of all the disks to flip.
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing the position of all the disks to flip.
    */
   private def getDisksToFlip(diskPos: Position): Set[Position] =
     val diskColor: Color = board.disks(diskPos).color
@@ -76,7 +76,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
 
   /** Delegate method of [[BoardImpl.getAvailablePlacements()]].
    * @param diskColor the color of the disk that needs to be placed.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] with inside all the available placements positions.
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     /** Helper method to find the empty position next to a neighbour of the opposite color.
