@@ -1,5 +1,6 @@
 package it.unibo.pps.model.board
 
+import it.unibo.pps.model.board.posComputations.PosComputeExtensions
 import it.unibo.pps.utils.{Color, Position}
 
 import scala.annotation.tailrec

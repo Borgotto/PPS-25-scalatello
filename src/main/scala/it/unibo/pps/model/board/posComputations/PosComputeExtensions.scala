@@ -1,11 +1,17 @@
-package it.unibo.pps.model.board
+package it.unibo.pps.model.board.posComputations
 
-import it.unibo.pps.utils.{Position, Shape}
 import it.unibo.pps.utils.IntExtensions.inBetween
+import it.unibo.pps.utils.{Position, Shape}
 
 import scala.annotation.tailrec
 
 /** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
+ * 
+ * Contains methods to know:
+ * - if this position is on the same diagonal and in between two positions: [[onSameDiagonal()]];
+ * - if this position is in between two positions: [[inBetweenPos()]];
+ * - if this position is in the same neighbourhood as another one: [[inNeighbourhood()]];
+ * - if this position is in the bounds of a [[Shape]]: [[inBounds()]].
  *
  * Every class that uses it must implement the [[inBounds()]] method.
  *
@@ -15,19 +21,19 @@ private[board] trait PosComputeExtensions:
   extension (p: Position)
     /** Extension method of [[Position]].
      *
-     * Used to know if this [[Position]] is on the same diagonal of `firstPos` and `secondPos` and also between them.
-     * @param firstPos the starting [[Position]] to be considered on the diagonal.
-     * @param secondPos the last [[Position]] to be considered on the diagonal.
-     * @return `true` if the [[Position]] is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
+     * Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
+     * @param firstPos the starting position to be considered on the diagonal.
+     * @param secondPos the last position to be considered on the diagonal.
+     * @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
      */
     private def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
       /** Helper method to get the [[Position]] of all the [[Disk]] that are on the same diagonal
        * and between `source` and `destination`.
        *
-       * @param source      the [[Position]] of the [[Disk]] from which the research originates.
-       * @param destination the [[Position]] of the [[Disk]] where the research stops.
+       * @param source      the position of the disk from which the research originates.
+       * @param destination the position of the disk where the research stops.
        * @param direction   the direction to follow to go towards the `destination`.
-       * @param acc         an accumulator, that at the end will contain all the [[Position]] that satisfy the conditions.
+       * @param acc         an accumulator, that at the end will contain all the position that satisfy the conditions.
        * @return the final accumulator containing all the positions on the same diagonal and between `source` and `destination`.
        */
       @tailrec
@@ -45,10 +51,10 @@ private[board] trait PosComputeExtensions:
 
     /** Extension method of [[Position]].
      *
-     * This is used to know if this [[Position]] is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
-     * @param firstPos the starting [[Position]] to consider.
-     * @param secondPos the last [[Position]] to consider.
-     * @return `true` if this [[Position]] is between `firstPos` and `secondPos`, `false` otherwise.
+     * This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
+     * @param firstPos the starting position to consider.
+     * @param secondPos the last position to consider.
+     * @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
      */
     def inBetweenPos(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
@@ -58,11 +64,11 @@ private[board] trait PosComputeExtensions:
 
     /** Extension method of [[Position]].
      *
-     * This is used to determine if this [[Position]] is in the neighbourhood of `pos`.
+     * This is used to determine if this position is in the neighbourhood of `pos`.
      *
-     * Being in the neighbourhood of a [[Position]] means that the distance between them is inside the range [-1, 1].
-     * @param pos the [[Position]] of which to consider the neighbourhood of.
-     * @return `true` if this [[Position]] is in the neighbourhood of `pos`, `false` otherwise.
+     * Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
+     * @param pos the position of which to consider the neighbourhood of.
+     * @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
      */
     def inNeighbourhood(pos: Position): Boolean =
       val maxDistance: Int = 1
@@ -71,8 +77,8 @@ private[board] trait PosComputeExtensions:
 
     /** Extension method of [[Position]].
      *
-     * Used to know if this [[Position]] is in the bounds of the [[Board]].
-     * @param shape the [[Shape]] of the [[Board]].
-     * @return `true` if the [[Position]] is in the bounds of the [[Board]], `false` otherwise.
+     * Used to know if this position is in the bounds of the [[Board]].
+     * @param shape the [[Shape]] of the board.
+     * @return `true` if the position is in the bounds of the board, `false` otherwise.
      */
     def inBounds(shape: Shape): Boolean

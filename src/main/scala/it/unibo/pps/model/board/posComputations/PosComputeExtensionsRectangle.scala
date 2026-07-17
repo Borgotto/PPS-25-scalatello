@@ -1,9 +1,10 @@
-package it.unibo.pps.model.board
+package it.unibo.pps.model.board.posComputations
 
+import it.unibo.pps.model.board.posComputations.PosComputeExtensions
 import it.unibo.pps.utils.IntExtensions.inRange
 import it.unibo.pps.utils.{Position, Shape}
 
-/** Helper class that contains extension methods of [[Int]] and [[Position]] to make computations on a
+/** Helper class that contains extension methods of [[Position]] to make computations on a
  * [[Shape.Square]] and [[Shape.Rectangle]] [[Board]].
  *
  * Extends: [[PosComputeExtensions]].
@@ -12,8 +13,8 @@ private[board] class PosComputeExtensionsRectangle extends PosComputeExtensions:
   extension (p: Position)
     /** @inheritdoc
      * Overrides: [[PosComputeExtensions.inBounds()]].
-     * @param shape the [[Shape]] of the [[Board]].
-     * @return `true` if the [[Position]] is in the bounds of the [[Board]], `false` otherwise.
+     * @param shape the [[Shape]] of the board.
+     * @return `true` if the position is in the bounds of the board, `false` otherwise.
      */
     def inBounds(shape: Shape): Boolean =
       val minPosition: Position = Position(0, 0)

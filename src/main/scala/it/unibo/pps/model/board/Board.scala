@@ -1,6 +1,7 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
+import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComputeExtensionsRectangle}
 import it.unibo.pps.utils.IntExtensions.half
 import it.unibo.pps.state.{BoardState, DiskState}
 import it.unibo.pps.utils.{Color, Position, Shape}
