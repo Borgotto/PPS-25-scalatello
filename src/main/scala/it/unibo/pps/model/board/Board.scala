@@ -1,22 +1,22 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
-import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComputeExtensionsRectangle}
 import it.unibo.pps.utils.IntExtensions.half
+import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComputeExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
 import it.unibo.pps.utils.{Color, Position, Shape}
 
 /** Defines the board where the player can place disks to play the game.
  *
  * This provides methods to:
- *    - get a new board instance with the [[disks]] updated:
+ *    - get a new board instance with the [[disks]] updated after:
  *      - placing a disk: [[placeDisk()]];
  *      - capturing disks: [[captureDisks()]].
  *    - know if a placement is valid: [[isPlacementValid()]];
  *    - know all available placements for a specified disk: [[getAvailablePlacements()]];
  *    - get its [[state]].
  *
- * All of them must be specified in classes using this.
+ * All of them must be implemented in classes using this.
  *
  * Used by: [[BoardImpl]]
  */
@@ -53,14 +53,20 @@ trait Board:
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board
 
-  /** Given the position of the last placed disk at the time,
-   * captures the correct disks already present on this board.
+  /** Given the position of the last placed disk at the time, captures the disks of the other color,
+   *  that are enclosed between the disk in that position and another disk of the same color.
    * @param diskPos the position of the placed disk.
    * @return a new instance of board with the captured disks flipped.
    */
   def captureDisks(diskPos: Position): Board
 
-/** Factory for [[Board]] instances */
+/** Factory for [[Board]] instances
+ * 
+ * Provides a factory to create a board starting from:
+ * - a [[Shape]]: creates the initial board;
+ * - a [[BoardState]]: creates a board with that state;
+ * - a [[Shape]] and a [[scala.collection.immutable.Map]] of [[Position]] -> [[Disk]]: creates a board with that attributes.
+ */
 object Board:
   /** Given a shape, creates a board with the initial disks configuration.
    *
@@ -124,7 +130,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
 
   /** Implements [[Board.state]].
    *
-   * It is the current state of this [[Board]].
+   * It is the state of this [[Board]].
    */
   val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 

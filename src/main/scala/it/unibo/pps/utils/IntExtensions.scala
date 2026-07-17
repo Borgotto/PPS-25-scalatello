@@ -2,12 +2,12 @@ package it.unibo.pps.utils
 
 import scala.math.Ordering.Int
 
-/** Helper object that contains extension methods for [[Int]]
+/** Helper object that contains extension methods for [[Int]].
  * 
  * Contains:
- * - [[inRange()]]
- * - [[inBetween()]]
- * - [[half]]
+ * - [[inRange()]];
+ * - [[inBetween()]];
+ * - [[half]].
  */
 object IntExtensions:
   extension (x: Int)
@@ -15,7 +15,7 @@ object IntExtensions:
      *
      * This is used to know if a number is inside a specified range.
      *
-     * It's not necessary to write as `y` the smaller number and the bigger one as `z`, it works either way.
+     * It's not necessary to write the smaller number as `y` and the bigger one as `z`, it works either way.
      *
      * @param y one of the two limits of the range.
      * @param z the other limit of the range.
@@ -28,7 +28,7 @@ object IntExtensions:
      *
      * This is used to know if a number is between two numbers.
      *
-     * It's not necessary to write as `y` the smaller number and the bigger one as `z`, it works either way.
+     * It's not necessary to write the smaller number as `y` and the bigger one as `z`, it works either way.
      *
      * @param y one of the two numbers.
      * @param z the other number.
@@ -38,7 +38,6 @@ object IntExtensions:
       x.inRange(Int.min(y, z) + 1, Int.max(y, z) - 1)
     
     /** Extension method of [[Int]].
-     *
      * @return the number divided by 2.
      */
     def half: Int = x / 2

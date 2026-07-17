@@ -5,8 +5,8 @@ import upickle.default.ReadWriter
 /** Enum to represent the possible shapes of a [[Board]].
  * 
  * It also provides:
- * - a method to get the [[maxRow]];
- * - a method to get the [[maxColumn]].
+ * - a method to get the [[maxRow]] of a shape;
+ * - a method to get the [[maxColumn]] of a shape.
  * 
  * Possible values: [[Square]], [[Rectangle]].
  */

@@ -12,7 +12,7 @@ import it.unibo.pps.utils.{Position, Shape}
 private[board] class PosComputeExtensionsRectangle extends PosComputeExtensions:
   extension (p: Position)
     /** @inheritdoc
-     * Overrides: [[PosComputeExtensions.inBounds()]].
+     * Implements: [[PosComputeExtensions.inBounds()]].
      * @param shape the [[Shape]] of the board.
      * @return `true` if the position is in the bounds of the board, `false` otherwise.
      */

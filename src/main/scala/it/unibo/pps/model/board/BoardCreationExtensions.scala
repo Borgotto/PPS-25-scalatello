@@ -2,7 +2,7 @@ package it.unibo.pps.model.board
 
 import it.unibo.pps.utils.{Color, Position}
 
-/** This object contains helper `extension methods` to create a [[Board]]
+/** This object contains helper `extension methods` to create a [[Board]].
  * 
  * Contains:
  * - [[toPosDiskMap]].
