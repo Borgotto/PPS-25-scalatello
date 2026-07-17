@@ -14,7 +14,8 @@ import scala.annotation.tailrec
  */
 private[board] class BoardComputations(using board: Board)(using posComputations: PosComputeExtensions):
   /** Helper method to get all the neighbour disks with the opposite color of a disk.
-   * @param diskColor the color of a disk
+   * @param diskColor the color of a disk.
+   * @param disks disks context, used to operate on the right disks.
    * @return a [[scala.collection.immutable.Set]] of a [[scala.Tuple2]] of ([[Position]], [[Position]]),
    *         the first position is the position of a disk that has the color equal to `diskColor`,
    *         the second position is the position of one of its disks neighbours with the opposite color,
@@ -33,6 +34,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    *      of the opposite color.
    * @param diskColor the color of the placed disk.
    * @param placedDiskPos the position where the disk will be placed.
+   * @param disks disks context, used to operate on the right disks.
    * @return a [[scala.collection.immutable.Set]] of [[Position]] containing
    *         the position of all the disks that connects to the placed disk.
    */
@@ -66,6 +68,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
 
   /** Helper method to find which disks needs to be flipped.
    * @param diskPos the position of the placed disk.
+   * @param disks disks context, used to operate on the right disks.
    * @return a [[scala.collection.immutable.Set]] of [[Position]] containing the position of all the disks to flip.
    */
   private def getDisksToFlip(diskPos: Position)(using disks: Map[Position, Disk]): Set[Position] =
@@ -119,7 +122,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board =
     /** Helper method to capture the correct disks after placing a new disk.
-     * @param disks the disks on the board after placing a new disk.
+     * @param disks disks context, used to operate on the right disks.
      * @return the new disks on the board after capturing the correct ones.
      */
     def captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
