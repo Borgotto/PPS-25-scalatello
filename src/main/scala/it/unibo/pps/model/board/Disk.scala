@@ -2,5 +2,12 @@ package it.unibo.pps.model.board
 
 import it.unibo.pps.utils.Color
 
+/** Represents a generic disk.
+ * 
+ * It provides a method to [[flip]] the disk.
+ * 
+ * @param color the color of the disk to create.
+ */
 case class Disk(color: Color):
-  def flip(): Disk = Disk(color.opposite)
+  /** @return a disk with the other [[Color]] value. */
+  def flip: Disk = Disk(color.opposite)
