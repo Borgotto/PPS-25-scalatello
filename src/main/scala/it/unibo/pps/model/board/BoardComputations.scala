@@ -7,8 +7,8 @@ import scala.annotation.tailrec
 
 /** The delegate class of [[BoardImpl]].
  *
- * This helper class computes all the methods of [[BoardImpl]].
- * @param board the [[Board]] context, to make this class operate on the correct instance of [[BoardImpl]].
+ * This helper class computes all the methods of its delegator.
+ * @param board the [[Board]] context, to make this class operate on the correct instance of board.
  * @param posComputations the [[PosComputeExtensions]] context,
  *                        to make this class use the appropriate methods on different Boards.
  */
@@ -16,8 +16,8 @@ private[board] class BoardComputations(using board: Board)(using posComputations
   /** Helper method to get all the neighbour disks with the opposite color of a disk.
    * @param diskColor the color of a disk
    * @return a [[scala.collection.immutable.Set]] of a [[scala.Tuple2]] of ([[Position]], [[Position]]),
-   *         the first [[Position]] is the position of a disk that has the color equal to `diskColor`,
-   *         the second [[Position]] is the position of one of its disks neighbours with the opposite color,
+   *         the first position is the position of a disk that has the color equal to `diskColor`,
+   *         the second position is the position of one of its disks neighbours with the opposite color,
    *         there is a tuple for each neighbour.
    */
   private def getOppositeColorNeighbours(diskColor: Color): Set[(Position, Position)] =
@@ -30,14 +30,12 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    *
    * Two disks connects if they are the same color and between them there are only disks (at least one)
    *      of the opposite color.
-   * @param oppositeNeighboursPos the result of [[BoardComputations.getOppositeColorNeighbours(diskColor)]].
    * @param diskColor the color of the placed disk.
    * @param placedDiskPos the position where the disk will be placed.
    * @return a [[scala.collection.immutable.Set]] of [[Position]] containing
    *         the position of all the disks that connects to the placed disk.
    */
-  private def getConnectingDisks(oppositeNeighboursPos: Set[(Position, Position)], 
-                                 diskColor: Color, placedDiskPos: Position): Set[Position] =
+  private def getConnectingDisks(diskColor: Color, placedDiskPos: Position): Set[Position] =
     /** Helper method to find the disks that connect to the placed disk.
      * @param diskPos the position of the considered disk.
      * @param placedDisk [[scala.Tuple2]] of ([[Position]], [[Color]]) of the placed disk.
@@ -54,6 +52,8 @@ private[board] class BoardComputations(using board: Board)(using posComputations
           _getNextConnectingDisk(p, placedDisk, direction)
         case p => Some(p)
 
+    val oppositeNeighboursPos: Set[(Position, Position)] =
+      getOppositeColorNeighbours(diskColor).filter((disk, neighbour) => disk.equals(placedDiskPos))
     for (disk, neighbour) <- oppositeNeighboursPos
         diskPosition: Position = Position(neighbour.row, neighbour.column)
         direction: Position = disk - neighbour
@@ -68,9 +68,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    */
   private def getDisksToFlip(diskPos: Position): Set[Position] =
     val diskColor: Color = board.disks(diskPos).color
-    val oppositeNeighboursPos: Set[(Position, Position)] =
-      getOppositeColorNeighbours(diskColor).filter((disk, neighbour) => disk.equals(diskPos))
-    for connectingDiskPos: Position <- getConnectingDisks(oppositeNeighboursPos, diskColor, diskPos)
+    for connectingDiskPos: Position <- getConnectingDisks(diskColor, diskPos)
         diskToFlip: Position <- board.disks.keySet
         if diskToFlip.inBetweenPos(diskPos, connectingDiskPos)
     yield diskToFlip

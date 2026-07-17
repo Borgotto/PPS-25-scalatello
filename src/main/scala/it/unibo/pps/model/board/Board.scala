@@ -9,9 +9,11 @@ import it.unibo.pps.utils.{Color, Position, Shape}
 /** Defines the board where the player can place disks to play the game.
  *
  * This provides methods to:
- *    - get a new [[Board]] instance with the [[disks]] updated;
- *    - know if a placement is valid;
- *    - know all available placements for a specified disk and;
+ *    - get a new board instance with the [[disks]] updated:
+ *      - placing a disk: [[placeDisk()]];
+ *      - capturing disks: [[captureDisks()]].
+ *    - know if a placement is valid: [[isPlacementValid()]];
+ *    - know all available placements for a specified disk: [[getAvailablePlacements()]];
  *    - get its [[state]].
  *
  * All of them must be specified in classes using this.
@@ -19,16 +21,16 @@ import it.unibo.pps.utils.{Color, Position, Shape}
  * Used by: [[BoardImpl]]
  */
 trait Board:
-  /** @return the [[Shape]] of this [[Board]] */
+  /** @return the [[Shape]] of this board */
   private[board] def shape: Shape
 
   /**
-   * @return the [[scala.collection.immutable.Map]] of the disks on this [[Board]],
+   * @return the [[scala.collection.immutable.Map]] of the disks on this board,
    *         with [[Position]] as `keys` and [[Disk]] as `values`.
    */
   private[board] def disks: Map[Position, Disk]
 
-  /** @return the [[BoardState]] of this [[Board]]. */
+  /** @return the [[BoardState]] of this board. */
   def state: BoardState
 
   /**
@@ -47,23 +49,22 @@ trait Board:
   /** Places a new disk.
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
-   * @return a new instance of [[Board]] with the disk placed.
+   * @return a new instance of board with the disk placed.
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board
 
   /** Given the position of the last placed disk at the time,
-   * captures the correct disks already present on the [[Board]].
+   * captures the correct disks already present on this board.
    * @param diskPos the position of the placed disk.
-   * @return a new instance of [[Board]] with the captured disks flipped.
+   * @return a new instance of board with the captured disks flipped.
    */
   def captureDisks(diskPos: Position): Board
 
-/** Factory for [[it.unibo.pps.model.board.Board]] instances */
+/** Factory for [[Board]] instances */
 object Board:
-  /** Given a shape, creates a [[Board]] with the initial disks configuration.
+  /** Given a shape, creates a board with the initial disks configuration.
    *
-   * Uses [[BoardCreationExtensions]] methods to easily create a [[Board]]
-   * @param shape the shape of the [[Board]] that will be created.
+   * @param shape the [[Shape]] of the board that will be created.
    */
   def apply(shape: Shape): Board =
     val bottomRightCenterPos: Position =
@@ -81,16 +82,16 @@ object Board:
     
     apply(shape, initialDisks)
 
-  /** Given a state, creates a [[Board]] with that configuration.
-   * @param state the state from where the [[Board]] will be created.
+  /** Given a state, creates a board with that configuration.
+   * @param state the [[BoardState]] from where the board will be created.
    */
   def apply(state: BoardState): Board =
     val disks = state.disks.map(disk => disk.position -> Disk(disk.color)).toMap
     apply(state.shape, disks)
 
-  /** Given a shape and some disks, creates a [[Board]].
-   * @param shape the shape of the [[Board]] that will be created.
-   * @param disks the disks that will be on the [[Board]].
+  /** Given a shape and some disks, creates a board.
+   * @param shape the [[Shape]] of the board that will be created.
+   * @param disks the disks that will be on the board.
    */
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
@@ -98,18 +99,18 @@ object Board:
         given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
         BoardImpl(shape, disks)
 
-/** Implements a generic [[Board]].
- * This uses a [[given]] of type: [[PosComputeExtensions]] to use the correct computations on the different Boards.
+/** Implements a generic board.
+ * This uses a `given` of type: [[PosComputeExtensions]] to use the correct computations on different boards.
  *
  * Delegates the computations of its methods to an instance of the class [[BoardComputations]].
  *
  * Extends the trait: [[Board]].
- * @param shape implements [[Board.shape]], the shape of this [[Board]].
+ * @param shape implements [[Board.shape]], the shape of this board.
  *
- * @param disks implements [[Board.disks]], it represents the disks on this [[Board]].
+ * @param disks implements [[Board.disks]], it represents the disks on this board.
  *
  * @param posComputations the context of [[PosComputeExtensions]],
- *                        it contains the different computations that may need to change for different types of Boards.
+ *                        it contains the different computations that may need to change for different types of boards.
  */
 private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
                            (using posComputations: PosComputeExtensions) extends Board:
@@ -128,8 +129,8 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
   /** Implements [[Board.getAvailablePlacements()]].
-   * @param diskColor the color of the disk that needs to be placed.
-   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
+   * @param diskColor the [[Color]] of the disk that needs to be placed.
+   * @return a [[scala.collection.immutable.Set]] of [[Position]] containing the position of all the available placements.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     compute.getAvailablePlacements(diskColor)
@@ -145,21 +146,21 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   /** Implements [[Board.placeDisk()]].
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
-   * @return a new instance of [[Board]] with the disk placed.
+   * @return a new instance of board with the disk placed.
    */
   def placeDisk(diskColor: Color, diskPos: Position): Board =
     compute.placeDisk(diskColor, diskPos)
 
   /** Implements [[Board.captureDisks()]].
    * @param diskPos the position of the placed disk.
-   * @return a new instance of [[Board]] with the captured disks flipped.
+   * @return a new instance of board with the captured disks flipped.
    */
   def captureDisks(diskPos: Position): Board =
     compute.captureDisks(diskPos)
 
   /** @inheritdoc
-   * @param obj what will be confronted with this [[Board]].
-   * @return `true` if this [[Board]] is equal to another [[Board]], `false` otherwise.
+   * @param obj what will be confronted with this board.
+   * @return `true` if this board is equal to another board, `false` otherwise.
    */
   override def equals(obj: Any): Boolean =
     obj match

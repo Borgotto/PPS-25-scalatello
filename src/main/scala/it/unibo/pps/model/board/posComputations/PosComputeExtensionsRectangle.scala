@@ -7,7 +7,7 @@ import it.unibo.pps.utils.{Position, Shape}
 /** Helper class that contains extension methods of [[Position]] to make computations on a
  * [[Shape.Square]] and [[Shape.Rectangle]] [[Board]].
  *
- * Extends: [[PosComputeExtensions]].
+ * Extends the trait: [[PosComputeExtensions]].
  */
 private[board] class PosComputeExtensionsRectangle extends PosComputeExtensions:
   extension (p: Position)

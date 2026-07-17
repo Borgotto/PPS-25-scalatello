@@ -4,7 +4,7 @@ import upickle.default.ReadWriter
 
 /** Enum to represent the possible colors of a [[Disk]] and a [[Player]].
  *
- * It also contains a method that given a color returns the other ([[Color.opposite]]).
+ * This provides a method that given a color returns the other: [[Color.opposite]].
  *
  * Possible values: [[Black]], [[White]].
  */

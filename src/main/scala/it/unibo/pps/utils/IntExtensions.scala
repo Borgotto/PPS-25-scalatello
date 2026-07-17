@@ -2,7 +2,13 @@ package it.unibo.pps.utils
 
 import scala.math.Ordering.Int
 
-/** Helper object that contains extension methods for [[Int]] */
+/** Helper object that contains extension methods for [[Int]]
+ * 
+ * Contains:
+ * - [[inRange()]]
+ * - [[inBetween()]]
+ * - [[half]]
+ */
 object IntExtensions:
   extension (x: Int)
     /** Extension method of [[Int]].

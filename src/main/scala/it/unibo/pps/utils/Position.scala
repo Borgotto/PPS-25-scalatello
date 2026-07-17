@@ -5,8 +5,9 @@ import upickle.default.ReadWriter
 /** Represents a two-dimensional position.
  *
  * It has methods to:
- * - subtract a position from another [[-]];
- * - get the position on the: [[left]], [[right]] or [[up]] and [[down]].
+ * - subtract another position from this position: [[-]];
+ * - divide this position by another: [[/]];
+ * - get the position on the: [[left]], [[right]] or [[up]] and [[down]] of this one.
  *
  * @param row the row of a [[Board]].
  * @param column the column of a [[Board]].
@@ -18,11 +19,11 @@ case class Position(row: Int, column: Int) derives ReadWriter:
    */
   def -(pos: Position): Position = Position(this.row - pos.row, this.column - pos.column)
 
-  /** This divides two [[Position]] instances.
+  /** This divides two position instances.
    *
    * This ignores the division with 0, if a number is divided by 0 the result is 0.
    *
-   * @param pos the [[Position]] to divide this [[Position]] with.
+   * @param pos the position to divide this position with.
    * @return the result of the division.
    */
   def /(pos: Position): Position =
