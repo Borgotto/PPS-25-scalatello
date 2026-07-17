@@ -6,7 +6,7 @@ import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComput
 import it.unibo.pps.state.{BoardState, DiskState}
 import it.unibo.pps.utils.{Color, Position, Shape}
 
-/** Defines the board where the player can place disks to play the game.
+/** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
  *
  * This provides methods to:
  *    - get a new board instance with the [[disks]] updated after:
