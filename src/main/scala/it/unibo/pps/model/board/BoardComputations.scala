@@ -71,7 +71,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
       getOppositeColorNeighbours(diskColor).filter((disk, neighbour) => disk.equals(diskPos))
     for connectingDiskPos: Position <- getConnectingDisks(oppositeNeighboursPos, diskColor, diskPos)
         diskToFlip: Position <- board.disks.keySet
-        if diskToFlip.inBetween(diskPos, connectingDiskPos)
+        if diskToFlip.inBetweenPos(diskPos, connectingDiskPos)
     yield diskToFlip
 
   /** Delegate method of [[BoardImpl.getAvailablePlacements()]].

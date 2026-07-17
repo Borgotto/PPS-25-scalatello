@@ -1,53 +1,18 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.utils.{Position, Shape}
+import it.unibo.pps.utils.IntExtensions.inBetween
 
 import scala.annotation.tailrec
 import scala.math.Ordering.Int
 
-/** Helper class that contains extension methods of [[Int]] and [[Position]] to make computations on a [[Board]]. */
-private[board] class PosComputeExtensions:
-  /** Helper method to get the [[Position]] of all the [[Disk]] that are on the same diagonal
-   * and between `source` and `destination`.
-   * @param source the [[Position]] of the [[Disk]] from which the research originates.
-   * @param destination the [[Position]] of the [[Disk]] where the research stops.
-   * @param direction the direction to follow to go towards the `destination`.
-   * @param acc an accumulator, that at the end will contain all the [[Position]] that satisfy the conditions.
-   * @return the final accumulator containing all the positions on the same diagonal and between `source` and `destination`.
-   */
-  @tailrec
-  private def getPosOnSameDiagonal(source: Position, destination: Position,
-                                   direction: Position, acc: Set[Position] = Set()): Set[Position] =
-    val nextPos: Position = source - direction
-    (nextPos, destination) match
-      case (f, s) if f.equals(s) => acc
-      case (f, s) => getPosOnSameDiagonal(f, s, direction, acc + f)
-      
-  extension (x: Int)
-    /** Extension method of [[Int]].
-     *
-     * This is used to know if a number is inside a specified range.
-     *
-     * It's not necessary to write as `y` the smaller number and the bigger one as `z`, it works either way.
-     * @param y one of the two limits of the range.
-     * @param z the other limit of the range.
-     * @return `true` if the number is inside the range, limits included, `false` otherwise.
-     */
-    private def inRange(y: Int, z: Int): Boolean =
-      x <= Int.max(y, z) && x >= Int.min(y, z)
-
-    /** Extension method of [[Int]].
-     *
-     * This is used to know if a number is between two numbers.
-     *
-     * It's not necessary to write as `y` the smaller number and the bigger one as `z`, it works either way.
-     * @param y one of the two numbers.
-     * @param z the other number.
-     * @return `true` if the number is between `y` and `z`, `y` and `z` excluded, `false` otherwise.
-     */
-    private def inBetween(y: Int, z: Int): Boolean =
-      x.inRange(Int.min(y, z) + 1, Int.max(y, z) - 1)
-
+/** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
+ *
+ * Every class that uses it must implement the [[inBounds()]] method.
+ *
+ * Used by: [[PosComputeExtensionsRectangle]].
+ */
+private[board] trait PosComputeExtensions:
   extension (p: Position)
     /** Extension method of [[Position]].
      *
@@ -57,7 +22,7 @@ private[board] class PosComputeExtensions:
      * @param pos the [[Position]] to divide this [[Position]] with.
      * @return the result of the division.
      */
-    private def /(pos: Position): Position =
+    def /(pos: Position): Position =
       (pos.row, pos.column) match
         case (r, c) if r.equals(0) && c.equals(0) => Position(r, c)
         case (r, c) if r.equals(0) => Position(r, p.column / c)
@@ -72,20 +37,27 @@ private[board] class PosComputeExtensions:
      * @return `true` if the [[Position]] is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
      */
     private def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
+      /** Helper method to get the [[Position]] of all the [[Disk]] that are on the same diagonal
+       * and between `source` and `destination`.
+       *
+       * @param source      the [[Position]] of the [[Disk]] from which the research originates.
+       * @param destination the [[Position]] of the [[Disk]] where the research stops.
+       * @param direction   the direction to follow to go towards the `destination`.
+       * @param acc         an accumulator, that at the end will contain all the [[Position]] that satisfy the conditions.
+       * @return the final accumulator containing all the positions on the same diagonal and between `source` and `destination`.
+       */
+      @tailrec
+      def _getPosOnSameDiagonal(source: Position, destination: Position,
+                                       direction: Position, acc: Set[Position] = Set()): Set[Position] =
+        val nextPos: Position = source - direction
+        (nextPos, destination) match
+          case (f, s) if f.equals(s) => acc
+          case (f, s) => _getPosOnSameDiagonal(f, s, direction, acc + f)
+
       val distance: Position = firstPos - secondPos
       val direction: Position = distance / Position(distance.row.abs, distance.column.abs)
-      getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
+      _getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
         distance.row.abs.equals(distance.column.abs)
-
-    /** Extension method of [[Position]].
-     *
-     * Used to know if this [[Position]] is in the bounds of the [[Board]].
-     * @param shape the [[Shape]] of the [[Board]].
-     * @return `true` if the [[Position]] is in the bounds of the [[Board]], `false` otherwise.
-     */
-    def inBounds(shape: Shape): Boolean =
-      val minPosition: Position = Position(0, 0)
-      p.row.inRange(minPosition.row, shape.maxRow) && p.column.inRange(minPosition.column, shape.maxColumn)
 
     /** Extension method of [[Position]].
      *
@@ -94,7 +66,7 @@ private[board] class PosComputeExtensions:
      * @param secondPos the last [[Position]] to consider.
      * @return `true` if this [[Position]] is between `firstPos` and `secondPos`, `false` otherwise.
      */
-    def inBetween(firstPos: Position, secondPos: Position): Boolean =
+    def inBetweenPos(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
         case (f, s) if f.row.equals(s.row) => p.column.inBetween(f.column, s.column) && p.row.equals(f.row)
         case (f, s) if f.column.equals(s.column) => p.row.inBetween(f.row, s.row) && p.column.equals(f.column)
@@ -112,3 +84,11 @@ private[board] class PosComputeExtensions:
       val maxDistance: Int = 1
       val distance: Position = p - pos
       distance.row.abs <= maxDistance && distance.column.abs <= maxDistance
+
+    /** Extension method of [[Position]].
+     *
+     * Used to know if this [[Position]] is in the bounds of the [[Board]].
+     * @param shape the [[Shape]] of the [[Board]].
+     * @return `true` if the [[Position]] is in the bounds of the [[Board]], `false` otherwise.
+     */
+    def inBounds(shape: Shape): Boolean

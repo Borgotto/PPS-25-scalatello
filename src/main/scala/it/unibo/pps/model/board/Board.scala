@@ -92,10 +92,7 @@ object Board:
    */
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
-      case Shape.Square(_) =>
-        given contextComputations: PosComputeExtensions = PosComputeExtensions()
-        BoardImpl(shape, disks)
-      case Shape.Rectangle(_,_) =>
+      case _ =>
         given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
         BoardImpl(shape, disks)
 
