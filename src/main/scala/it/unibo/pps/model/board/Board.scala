@@ -139,7 +139,8 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     compute.getAvailablePlacements(diskColor)
 
-  /** Implements [[Board.isPlacementValid()]].
+  /** @inheritdoc
+   * Implements [[Board.isPlacementValid()]].
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
    * @return `true` if the placement is valid, `false` otherwise.
@@ -147,7 +148,8 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
     compute.isPlacementValid(diskColor, diskPos)
 
-  /** Implements [[Board.placeDisk()]].
+  /** @inheritdoc
+   * Implements [[Board.placeDisk()]].
    * @param diskColor the color of the disk that wants to be placed.
    * @param diskPos the position where the player wants to place the disk.
    * @return a new instance of board with the disk placed.
