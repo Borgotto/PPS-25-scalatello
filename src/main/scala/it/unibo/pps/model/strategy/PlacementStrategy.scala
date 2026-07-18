@@ -21,3 +21,7 @@ case class RandomPlacementStrategy(color: Color) extends OpponentPlacementStrate
     if availablePlacements.isEmpty then throw IllegalStateException("Opponent has no available placements")
     val randomIndex = Random.nextInt(availablePlacements.size)
     availablePlacements.toSeq(randomIndex)
+
+case class SmartPlacementStrategy(color: Color, depth: Int) extends OpponentPlacementStrategy:
+  def computePlacement(using board: Board): Position =
+    StrategyComputations.calculateBestPlacement(color, depth)
