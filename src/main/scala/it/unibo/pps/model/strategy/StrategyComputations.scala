@@ -41,28 +41,16 @@ object StrategyComputations:
         diskScore + positionScore
       ).sum
 
-    private def placementValue(color: Color, position: Position)
-                              (using currentScore: Int = board.score(color)): Int =
-      val nextBoard = board.unsafePlaceDisk(color, position)
-      nextBoard.score(color) - currentScore
-
-    private def getOrderedPlacements(color: Color): Seq[Position] =
-      given currentScore: Int = board.score(color)
-      board.getAvailablePlacements(color)
-        .toSeq
-        .sortBy(board.placementValue(color, _))
-        .reverse
-
   private def negamax(board: Board, depth: Int, color: Color)
                      (using alpha: Int = Int.MinValue + 1, beta: Int = Int.MaxValue): Int =
-    val nodeIsTerminal = board.getAvailablePlacements(color).isEmpty
+    val availablePlacements = board.getAvailablePlacements(color)
+    val nodeIsTerminal = availablePlacements.isEmpty
     
     if depth == 0 || nodeIsTerminal then
       board.score(color)
     else
-      val orderedPlacements = board.getOrderedPlacements(color)
       boundary: // boundary for pruning
-        orderedPlacements.foldLeft(alpha): (currentAlpha, position) =>
+        availablePlacements.foldLeft(alpha): (currentAlpha, position) =>
           val newBoard = board.unsafePlaceDisk(color, position)
           val value = -negamax(newBoard, depth - 1, color.opposite)(using -beta, -currentAlpha)
           if value >= beta then
@@ -71,8 +59,8 @@ object StrategyComputations:
 
   def calculateBestPlacement(color: Color, depth: Int = 1)
                             (using board: Board): Position =
-    val orderedPlacements = board.getOrderedPlacements(color).par
-    val bestPlacement = orderedPlacements.minBy: position =>
+    val availablePlacements = board.getAvailablePlacements(color).par
+    val bestPlacement = availablePlacements.minBy: position =>
       val newBoard = board.unsafePlaceDisk(color, position)
       negamax(newBoard, depth - 1, color.opposite)
     bestPlacement
