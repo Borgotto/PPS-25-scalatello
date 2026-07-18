@@ -1,6 +1,6 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.utils.Color
+import it.unibo.pps.domain.Color
 
 /** Represents a generic disk.
  * 

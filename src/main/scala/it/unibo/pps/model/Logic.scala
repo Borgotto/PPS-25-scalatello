@@ -1,39 +1,36 @@
 package it.unibo.pps.model
 
+import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, OpponentType, Position, Shape}
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.model.player.{Opponent, Player, User}
+import it.unibo.pps.model.player.{Opponent, User}
 import it.unibo.pps.model.player.Opponent.RandomOpponent
-import it.unibo.pps.state.{BoardState, MatchState, PlayerState}
-import it.unibo.pps.utils.{Color, MatchStatus, Position, Shape}
-import it.unibo.pps.utils.Color.*
-import it.unibo.pps.utils.MatchStatus.*
+import it.unibo.pps.state.{BoardState, MatchState}
+import it.unibo.pps.domain.Color.*
+import it.unibo.pps.domain.MatchStatus.*
+import it.unibo.pps.domain.OpponentType.Random
 
 trait Logic:
   def state: MatchState
   def placeUserDisk(position: Position): Logic
   def placeOpponentDisk(): Logic
 
-class LogicImpl(
+class StandardLogic(
   private val status: MatchStatus,
-  private val activePlayer: Player,
+  private val user: User,
+  private val opponent: Opponent,
+  private val activePlayer: ActivePlayer,
   private val board: Board
 ) extends Logic:
 
   private val boardState: BoardState = activePlayer match
-    case User(color) => board.state.copy(userAvailablePlacements = board.getAvailablePlacements(color))
-    case Opponent(_) => board.state
+    case ActivePlayer.User => board.state.copy(userAvailablePlacements = board.getAvailablePlacements(user.color))
+    case ActivePlayer.Opponent => board.state
 
-  val state: MatchState = MatchState(status, activePlayer.state, boardState)
-
-  private val userColor: Color = activePlayer match
-    case User(color) => color
-    case Opponent(color) => color.opposite
-
-  private val opponentColor: Color = userColor.opposite
+  val state: MatchState = MatchState(status, user, opponent, activePlayer, boardState)
 
   private def areBothPlayersStuck(board: Board): Boolean =
-    board.getAvailablePlacements(userColor).isEmpty
-    && board.getAvailablePlacements(opponentColor).isEmpty
+    board.getAvailablePlacements(user.color).isEmpty
+    && board.getAvailablePlacements(opponent.color).isEmpty
 
   private def getUpdatedBoard(newDiskColor: Color, newDiskPosition: Position): Board =
     board.placeDisk(newDiskColor, newDiskPosition).captureDisks(newDiskPosition)
@@ -41,54 +38,73 @@ class LogicImpl(
   private def getUpdatedStatus(board: Board): MatchStatus =
     if !areBothPlayersStuck(board) then InProgress
     else
-      val userDisks = board.state.disks.count(disk => disk.color == userColor)
-      val opponentDisks = board.state.disks.count(disk => disk.color == opponentColor)
+      val userDisks = board.state.disks.count(disk => disk.color == user.color)
+      val opponentDisks = board.state.disks.count(disk => disk.color == opponent.color)
       (userDisks, opponentDisks) match
         case (a, b) if a > b => UserWon
         case (a, b) if a < b => OpponentWon
         case _ => Tie
 
-  private val nextPlayer: Player = activePlayer match
-    case User(color) => RandomOpponent(color.opposite)
-    case Opponent(color) => User(color.opposite)
+  private val nextPlayer: ActivePlayer = activePlayer match
+    case ActivePlayer.User => ActivePlayer.Opponent
+    case ActivePlayer.Opponent => ActivePlayer.User
 
-  private def getUpdatedActivePlayer(board: Board): Player =
-    val availablePlacements = board.getAvailablePlacements(activePlayer.color.opposite)
+  private def activePlayerColor: Color = activePlayer match
+    case ActivePlayer.User => user.color
+    case ActivePlayer.Opponent => opponent.color
+  
+  private def getUpdatedActivePlayer(board: Board): ActivePlayer =
+    val availablePlacements = board.getAvailablePlacements(activePlayerColor.opposite)
     if availablePlacements.isEmpty then activePlayer else nextPlayer
 
   private def getUpdatedLogic(newDiskColor: Color, newDiskPosition: Position): Logic =
     val updatedBoard = getUpdatedBoard(newDiskColor, newDiskPosition)
     val updatedStatus = getUpdatedStatus(updatedBoard)
     val updatedActivePlayer = getUpdatedActivePlayer(updatedBoard)
-    new LogicImpl(updatedStatus, updatedActivePlayer, updatedBoard)
+    new StandardLogic(updatedStatus, user, opponent, updatedActivePlayer, updatedBoard)
 
   def placeUserDisk(position: Position): Logic = activePlayer match
-    case Opponent(_) => throw IllegalStateException("It is opponent's turn now")
-    case user: User =>
-      if !board.isPlacementValid(userColor, position) then this
-      else getUpdatedLogic(userColor, position)
+    case ActivePlayer.Opponent => throw IllegalStateException("It is opponent's turn now")
+    case ActivePlayer.User =>
+      if !board.isPlacementValid(user.color, position) then this
+      else getUpdatedLogic(user.color, position)
 
   def placeOpponentDisk(): Logic = activePlayer match
-    case User(_) => throw IllegalStateException("It is user's turn now")
-    case opponent: Opponent =>
+    case ActivePlayer.User => throw IllegalStateException("It is user's turn now")
+    case ActivePlayer.Opponent =>
       val position = opponent.strategy.computePlacement(using board)
-      getUpdatedLogic(opponentColor, position)
+      getUpdatedLogic(opponent.color, position)
 
 object Logic:
+  
+  private def getUser(color: Color): User = User(color)
+  
+  private def getOpponent(color: Color, opponentType: OpponentType): Opponent =
+    opponentType match
+      case Random => RandomOpponent(color)
 
-  private def getInitialActivePlayer(userColor: Color): Player = userColor match
-    case Black => User(Black)
-    case White => RandomOpponent(Black)
+  private def getInitialActivePlayer(userColor: Color): ActivePlayer = userColor match
+    case Black => ActivePlayer.User
+    case White => ActivePlayer.Opponent
 
-  def apply(boardShape: Shape, userColor: Color): LogicImpl =
-    new LogicImpl(InProgress, getInitialActivePlayer(userColor), Board(boardShape))
+  def apply(boardShape: Shape, userColor: Color, opponentType: OpponentType): StandardLogic =
+    new StandardLogic(
+      InProgress, 
+      getUser(userColor),
+      getOpponent(userColor.opposite, opponentType),
+      getInitialActivePlayer(userColor),
+      Board(boardShape)
+    )
 
-  def apply(userColor: Color, board: Board) =
-    new LogicImpl(InProgress, getInitialActivePlayer(userColor), board)
+  def apply(userColor: Color, opponentType: OpponentType, board: Board) =
+    new StandardLogic(
+      InProgress,
+      getUser(userColor),
+      getOpponent(userColor.opposite, opponentType),
+      getInitialActivePlayer(userColor),
+      board
+    )
 
-  def apply(state: MatchState): LogicImpl =
+  def apply(state: MatchState): StandardLogic =
     val board = Board(state.board)
-    val activePlayer = state.activePlayer match
-      case PlayerState.User(color, _) => User(color)
-      case PlayerState.Opponent(color, _) => RandomOpponent(color)
-    new LogicImpl(InProgress, activePlayer, board)
+    new StandardLogic(state.status, state.user, state.opponent, state.activePlayer, board)

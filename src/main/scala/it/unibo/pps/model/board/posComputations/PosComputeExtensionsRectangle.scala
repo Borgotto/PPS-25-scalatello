@@ -1,8 +1,8 @@
 package it.unibo.pps.model.board.posComputations
 
+import it.unibo.pps.domain.{Position, Shape}
 import it.unibo.pps.model.board.posComputations.PosComputeExtensions
 import it.unibo.pps.utils.IntExtensions.inRange
-import it.unibo.pps.utils.{Position, Shape}
 
 /** Helper class that contains extension methods of [[Position]] to make computations on a
  * [[Shape.Square]] and [[Shape.Rectangle]] [[Board]].

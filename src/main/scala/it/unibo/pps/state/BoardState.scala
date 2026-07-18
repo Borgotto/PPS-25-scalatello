@@ -1,6 +1,6 @@
 package it.unibo.pps.state
 
-import it.unibo.pps.utils.{Position, Shape}
+import it.unibo.pps.domain.{Position, Shape}
 
 import upickle.default.ReadWriter
 

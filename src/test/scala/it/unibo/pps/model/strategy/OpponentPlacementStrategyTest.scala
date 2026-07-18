@@ -1,8 +1,8 @@
 package it.unibo.pps.model.strategy
 
+import it.unibo.pps.domain.{Color, Position}
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.player.Opponent
-import it.unibo.pps.utils.{Color, Position}
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{contain, should}

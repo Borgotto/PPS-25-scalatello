@@ -1,6 +1,6 @@
 package it.unibo.pps.state
 
-import it.unibo.pps.utils.{Color, Position}
+import it.unibo.pps.domain.{Color, Position}
 
 import upickle.default.ReadWriter
 

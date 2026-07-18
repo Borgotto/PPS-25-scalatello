@@ -1,7 +1,7 @@
 package it.unibo.pps.model.board.posComputations
 
+import it.unibo.pps.domain.{Position, Shape}
 import it.unibo.pps.utils.IntExtensions.inBetween
-import it.unibo.pps.utils.{Position, Shape}
 
 import scala.annotation.tailrec
 

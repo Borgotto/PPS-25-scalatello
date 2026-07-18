@@ -1,25 +1,21 @@
 package it.unibo.pps.model.player
 
-import it.unibo.pps.utils.Color
+import it.unibo.pps.domain.Color
 import it.unibo.pps.model.strategy.*
-import it.unibo.pps.state.PlayerState
+
+import upickle.ReadWriter
 
 trait Player:
   def color: Color
   def strategy: UserPlacementStrategy | OpponentPlacementStrategy
-  def state: PlayerState
 
-case class User(color: Color) extends Player:
+case class User(color: Color) extends Player derives ReadWriter:
   val strategy: UserPlacementStrategy = UserPlacementStrategy()
-  val state = PlayerState.User(color, strategy)
 
-enum Opponent extends Player:
+enum Opponent extends Player derives ReadWriter:
   case RandomOpponent(color: Color)
-  
   val strategy: OpponentPlacementStrategy = this match
     case RandomOpponent(_) => RandomPlacementStrategy(color)
-    
-  val state = PlayerState.Opponent(color, strategy)
 
 object Opponent:
   def unapply(opponent: Opponent): Option[Color] = Some(opponent.color)
