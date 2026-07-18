@@ -22,9 +22,12 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    */
   private def getOppositeColorNeighbours(diskColor: Color)
                                         (using disks: Map[Position, Disk]): Set[(Position, Position)] =
-    for diskPos: Position <- disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
-        possibleNeighbourPos: Position <- disks.filter((_, disk) => disk.color.equals(diskColor.opposite)).keySet
-        if possibleNeighbourPos.inNeighbourhood(diskPos)
+    val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
+    val oppositeColorDisks = disks.keySet -- sameColorDisks
+
+    for diskPos <- sameColorDisks
+      possibleNeighbourPos <- oppositeColorDisks
+      if possibleNeighbourPos.inNeighbourhood(diskPos)
     yield (diskPos, possibleNeighbourPos)
 
   /** Helper method to get all the disks that connects to the placed disk.
@@ -117,16 +120,17 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    * @return a new instance of [[Board]] with the disk placed and the disks captured.
    * @throws IllegalArgumentException if `diskPos` is not valid
    */
-  def placeDisk(diskColor: Color, diskPos: Position): Board =
+  def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =
     /** Helper method to capture the correct disks after placing a new disk.
      * @param disks the disks on the board after placing a new disk.
      * @return the new disks on the board after capturing the correct ones.
      */
     def captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
       val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
-      val disksAfterFlip = disks.map((pos, disk) => (pos, if disksToFlip.contains(pos) then disk.flip else disk))
-      disksAfterFlip
+      val disksAfterFlip = disksToFlip.map(pos => (pos, disks(pos).flip)).toMap
+      disks ++ disksAfterFlip
 
-    if !isPlacementValid(diskColor, diskPos) then throw IllegalArgumentException("The placement is not valid")
+    if validatePosition && !isPlacementValid(diskColor, diskPos)
+      then throw IllegalArgumentException("The placement is not valid")
     given newDisks: Map[Position, Disk] = board.disks + (diskPos -> Disk(diskColor))
     Board(board.shape, captureDisks)

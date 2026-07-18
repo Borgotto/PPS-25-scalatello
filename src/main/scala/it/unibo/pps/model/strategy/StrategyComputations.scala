@@ -5,9 +5,13 @@ import it.unibo.pps.utils.{Color, Position}
 
 import scala.util.boundary, boundary.break
 import scala.math.max
+import scala.collection.parallel.CollectionConverters.*
 
 object StrategyComputations:
   extension (board: Board)
+    private def unsafePlaceDisk(color: Color, position: Position): Board =
+      board.placeDisk(color, position, validatePosition = false)
+
     private def weight(position: Position): Int =
       val maxRow = board.state.shape.maxRow
       val maxCol = board.state.shape.maxColumn
@@ -31,15 +35,15 @@ object StrategyComputations:
       else 1
 
     private def score(color: Color): Int =
-      board.state.disks.foldLeft(0): (accumulator, disk) =>
+      board.state.disks.map(disk =>
         val diskScore = if disk.color.equals(color) then 1 else -1
         val positionScore = board.weight(disk.position)
-        accumulator + diskScore + positionScore
-        
+        diskScore + positionScore
+      ).sum
 
     private def placementValue(color: Color, position: Position)
                               (using currentScore: Int = board.score(color)): Int =
-      val nextBoard = board.placeDisk(color, position)
+      val nextBoard = board.unsafePlaceDisk(color, position)
       nextBoard.score(color) - currentScore
 
     private def getOrderedPlacements(color: Color): Seq[Position] =
@@ -59,7 +63,7 @@ object StrategyComputations:
       val orderedPlacements = board.getOrderedPlacements(color)
       boundary: // boundary for pruning
         orderedPlacements.foldLeft(alpha): (currentAlpha, position) =>
-          val newBoard = board.placeDisk(color, position)
+          val newBoard = board.unsafePlaceDisk(color, position)
           val value = -negamax(newBoard, depth - 1, color.opposite)(using -beta, -currentAlpha)
           if value >= beta then
             break(value) // stop searching this branch
@@ -67,8 +71,8 @@ object StrategyComputations:
 
   def calculateBestPlacement(color: Color, depth: Int = 1)
                             (using board: Board): Position =
-    val orderedPlacements = board.getOrderedPlacements(color)
+    val orderedPlacements = board.getOrderedPlacements(color).par
     val bestPlacement = orderedPlacements.minBy: position =>
-      val newBoard = board.placeDisk(color, position)
+      val newBoard = board.unsafePlaceDisk(color, position)
       negamax(newBoard, depth - 1, color.opposite)
     bestPlacement

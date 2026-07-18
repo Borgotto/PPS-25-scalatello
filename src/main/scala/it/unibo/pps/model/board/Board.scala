@@ -56,7 +56,7 @@ trait Board:
    * @param diskPos the position where the player wants to place the disk.
    * @return a new instance of board with the disk placed.
    */
-  def placeDisk(diskColor: Color, diskPos: Position): Board
+  def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean = true): Board
 
 /** Factory for [[Board]] instances.
  * 
@@ -130,7 +130,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    *
    * It is the state of this [[Board]].
    */
-  val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
+  lazy val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
   /** Implements [[Board.getAvailablePlacements()]].
    * @param diskColor the [[Color]] of the disk that needs to be placed.
@@ -152,8 +152,8 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    * @param diskPos the position where the player wants to place the disk.
    * @return a new instance of board with the disk placed.
    */
-  def placeDisk(diskColor: Color, diskPos: Position): Board =
-    compute.placeDisk(diskColor, diskPos)
+  def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean = true): Board =
+    compute.placeDisk(diskColor, diskPos, validatePosition)
 
   /** @inheritdoc
    * @param obj what will be confronted with this board.
@@ -161,4 +161,4 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
    */
   override def equals(obj: Any): Boolean =
     obj match
-      case b: Board => state.disks.equals(b.state.disks) && shape.equals(b.state.shape)
+      case b: Board => disks.equals(b.disks) && shape.equals(b.shape)
