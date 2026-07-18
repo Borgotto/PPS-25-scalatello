@@ -1,19 +1,20 @@
-package it.unibo.pps.view
+package it.unibo.pps.view.cli
 
 import it.unibo.pps.controller.Controller
-import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.domain.ActivePlayer.*
 import it.unibo.pps.domain.MatchStatus.*
+import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.state.{BoardState, MatchState}
+import it.unibo.pps.view.View
+import it.unibo.pps.view.cli.io.BoardRenderingExtensions.render
+import it.unibo.pps.view.cli.io.{CLIInputComponent, IO, ShortcutListener, Sanitizer, given_Monad_IO}
+import it.unibo.pps.view.cli.io.IO.write
+import it.unibo.pps.view.cli.io.Sanitizer.*
 import it.unibo.pps.view.i18n.I18n
-import it.unibo.pps.view.io.BoardRenderingExtensions.render
-import it.unibo.pps.view.io.{IO, Sanitizer, SaveInterruptException, ShortcutListener, given_Monad_IO}
-import it.unibo.pps.view.io.Sanitizer.*
-import it.unibo.pps.view.io.IO.write
 
 import scala.util.{Failure, Success}
-import org.jline.terminal.TerminalBuilder
 import org.jline.reader.{LineReader, LineReaderBuilder}
+import org.jline.terminal.TerminalBuilder
 
 enum Action(val code: String):
   case NewGame extends Action("1")
@@ -32,10 +33,6 @@ enum SaveMenuOption(val code: String):
   case Load extends SaveMenuOption("1")
   case Delete extends SaveMenuOption("2")
 
-enum ReadResult:
-  case Success(value: String)
-  case SaveInterruption
-
 class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private val minBoardSize = 4
@@ -46,60 +43,33 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private val terminal = TerminalBuilder.builder().system(true).build()
   protected val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
+  
+  private val inputComponent = CLIInputComponent(reader)
+  
+  // Input
 
-  private def read(): IO[String] = IO(() => reader.readLine())
-
-  private def interruptableRead(): IO[ReadResult] = IO(() => {
-    try
-      ReadResult.Success(reader.readLine())
-    catch
-      case _: SaveInterruptException => ReadResult.SaveInterruption
-  })
-
-  // Input utils
-
-  private def askForValidInput[T](
+  private def askForInput[T](
     request: String,
     isInputValid: String => Boolean,
     convert: String => T,
     invalidInputMessage: String
   ): IO[T] =
-    for
-      _ <- write(request)
-      result <- interruptableRead()
-      convertedInput <- handleReadResult(
-        result,
-        request,
-        isInputValid,
-        convert,
-        invalidInputMessage
-      )
-    yield convertedInput
-
-  private def handleReadResult[T](
-    result: ReadResult,
-    request: String,
-    isInputValid: String => Boolean,
-    convert: String => T,
-    invalidInputMessage: String
-  ): IO[T] = result match
-    case ReadResult.SaveInterruption =>
+    given localInterrupt: IO[T] =
       for
         _ <- showSaveCreationMenu()
-        retry <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+        retry <- inputComponent.askForValidInput(
+          request, 
+          isInputValid, 
+          convert, 
+          invalidInputMessage
+        )
       yield retry
-    case ReadResult.Success(input) =>
-      val isValid = isInputValid(input)
-      if isValid then
-        IO(() => convert(input))
-      else
-        for
-          _ <- write(invalidInputMessage)
-          retry <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
-        yield retry
-
-  private def isValidOptionChoice(nOptions: Int)(input: String): Boolean =
-    isConvertibleToInt(input) && isWithinBounds(1, nOptions)(input.toInt)
+    inputComponent.askForValidInput(
+      request,
+      isInputValid,
+      convert,
+      invalidInputMessage
+    )(using localInterrupt)
 
   // Main menu
 
@@ -117,9 +87,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     )
     for
       _ <- write(options.mkString("\n", "\n", ""))
-      action <- askForValidInput(
+      action <- askForInput(
         i18n.t("main_menu.action_request"),
-        isValidOptionChoice(options.size),
+        inputComponent.isValidOptionChoice(options.size),
         identity,
         i18n.t("generic.invalid_choice")
       )
@@ -150,9 +120,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("setup_menu.user.color_question"))
       _ <- write(options.mkString("\n", "\n", ""))
-      option <- askForValidInput(
+      option <- askForInput(
         i18n.t("generic.choice_request"),
-        isValidOptionChoice(options.size),
+        inputComponent.isValidOptionChoice(options.size),
         identity,
         i18n.t("generic.invalid_choice")
       )
@@ -171,9 +141,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("setup_menu.board.shape_question"))
       _ <- write(options.mkString("\n", "\n", ""))
-      option <- askForValidInput(
+      option <- askForInput(
         i18n.t("generic.choice_request"),
-        isValidOptionChoice(options.size),
+        inputComponent.isValidOptionChoice(options.size),
         identity,
         i18n.t("generic.invalid_choice")
       )
@@ -183,7 +153,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
   private def handleSelectedShape(option: String): IO[Shape] = option match
     case ShapeOption.Square.code =>
       for
-        size <- askForValidInput(
+        size <- askForInput(
           i18n.t("setup_menu.board.square_size_question"),
           isSelectedSizeValid,
           _.toInt,
@@ -193,13 +163,13 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
       yield shape
     case ShapeOption.Rectangular.code =>
       for
-        height <- askForValidInput(
+        height <- askForInput(
           i18n.t("setup_menu.board.rectangle_height_question"),
           isSelectedSizeValid,
           _.toInt,
           i18n.t("setup_menu.board.invalid_size")
         )
-        width <- askForValidInput(
+        width <- askForInput(
           i18n.t("setup_menu.board.rectangle_width_question"),
           isSelectedSizeValid,
           _.toInt,
@@ -249,13 +219,13 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private def askForValidPlacement(state: BoardState): IO[Position] =
     for
-      row <- askForValidInput(
+      row <- askForInput(
         i18n.t("match.placement_request_row"),
         isValidRowForPlacement(state),
         _.toInt,
         i18n.t("match.invalid_row")
       )
-      column <- askForValidInput(
+      column <- askForInput(
         i18n.t("match.placement_request_column"),
         isValidColumnForPlacement(state, row),
         _.toInt,
@@ -265,20 +235,14 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     yield position
 
   private def isValidRowForPlacement(state: BoardState)(s: String): Boolean =
-    isConvertibleToInt(s)
-      && isWithinBounds(0, state.shape.maxRow)(s.toInt)
+    inputComponent.isConvertibleToInt(s)
+      && inputComponent.isWithinBounds(0, state.shape.maxRow)(s.toInt)
       && isRowAmongAvailablePlacements(state.userAvailablePlacements)(s.toInt)
 
   private def isValidColumnForPlacement(state: BoardState, selectedRow: Int)(s: String): Boolean =
-    isConvertibleToInt(s)
-      && isWithinBounds(0, state.shape.maxColumn)(s.toInt)
+    inputComponent.isConvertibleToInt(s)
+      && inputComponent.isWithinBounds(0, state.shape.maxColumn)(s.toInt)
       && state.userAvailablePlacements.contains(Position(selectedRow, s.toInt))
-
-  private def isConvertibleToInt(s: String): Boolean = s.toIntOption match
-    case Some(_) => true
-    case _ => false
-
-  private def isWithinBounds(min: Int, max: Int)(n: Int): Boolean = n >= min && n <= max
 
   private def isRowAmongAvailablePlacements(availablePlacements: Set[Position])(row: Int): Boolean =
     availablePlacements.map(position => position.row).contains(row)
@@ -295,7 +259,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private def showSaveCreationMenu(): IO[Unit] =
     for
-      input <- askForValidInput(
+      input <- askForInput(
         i18n.t("save_creation_menu.save_request"),
         s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
         identity,
@@ -308,7 +272,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
   private def handleSave(): IO[Unit] =
     for
       _ <- write(i18n.t("save_creation_menu.filename_request"))
-      filename <- read()
+      filename <- inputComponent.read()
       sanitizedFilename <- IO(() => sanitize(filename))
       result <- IO(() => controller.saveMatch(sanitizedFilename))
       _ <- result match
@@ -327,9 +291,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("save_menu.action_request"))
       _ <- write(options.mkString("\n", "\n", ""))
-      option <- askForValidInput(
+      option <- askForInput(
         i18n.t("generic.choice_request"),
-        isValidOptionChoice(options.size),
+        inputComponent.isValidOptionChoice(options.size),
         identity,
         i18n.t("generic.invalid_choice")
       )
@@ -352,9 +316,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("save_loading_menu.file_choice_request"))
       _ <- write(saveFileOptions)
-      position <- askForValidInput(
+      position <- askForInput(
         i18n.t("generic.choice_request"),
-        isValidOptionChoice(saveFilesCount),
+        inputComponent.isValidOptionChoice(saveFilesCount),
         _.toInt,
         i18n.t("generic.invalid_choice", saveFilesCount)
       )
@@ -381,9 +345,9 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
     for
       _ <- write(i18n.t("save_deletion_menu.file_choice_request"))
       _ <- write(saveFileOptions)
-      position <- askForValidInput(
+      position <- askForInput(
         i18n.t("generic.choice_request"),
-        isValidOptionChoice(saveFilesCount),
+        inputComponent.isValidOptionChoice(saveFilesCount),
         _.toInt,
         i18n.t("generic.invalid_choice", saveFilesCount)
       )

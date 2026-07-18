@@ -1,6 +1,6 @@
 package it.unibo.pps
 
-import it.unibo.pps.view.CLIView
+import it.unibo.pps.view.cli.CLIView
 import it.unibo.pps.view.i18n.I18n
 
 import java.util.Locale

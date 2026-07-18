@@ -1,4 +1,4 @@
-package it.unibo.pps.view.io
+package it.unibo.pps.view.cli.io
 
 import org.jline.reader.{LineReader, Reference, Widget}
 import org.jline.terminal.Terminal.Signal

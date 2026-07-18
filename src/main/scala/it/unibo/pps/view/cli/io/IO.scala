@@ -1,4 +1,4 @@
-package it.unibo.pps.view.io
+package it.unibo.pps.view.cli.io
 
 import it.unibo.pps.utils.Monad
 
