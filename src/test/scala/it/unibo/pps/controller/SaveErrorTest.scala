@@ -5,6 +5,9 @@ import it.unibo.pps.utils.*
 import it.unibo.pps.model.strategy.*
 import it.unibo.pps.controller.save.SaveManager.SaveManagers.*
 import it.unibo.pps.controller.save.SaveError.*
+import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, Shape}
+import it.unibo.pps.model.player.Opponent.RandomOpponent
+import it.unibo.pps.model.player.User
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{a, shouldBe}
@@ -26,7 +29,9 @@ class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
   private val saveManager = MatchStateSaveManager(tmpDir)
   private val exampleMatchState = MatchState(
     MatchStatus.InProgress,
-    PlayerState.User(Color.Black, UserPlacementStrategy()),
+    User(Color.Black),
+    RandomOpponent(Color.White),
+    ActivePlayer.User,
     BoardState(Shape.Square(4), Set.empty, Set.empty)
   )
 

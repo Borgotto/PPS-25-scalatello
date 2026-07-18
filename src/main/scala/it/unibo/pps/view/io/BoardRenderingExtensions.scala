@@ -1,8 +1,8 @@
 package it.unibo.pps.view.io
 
 import it.unibo.pps.state.BoardState
-import it.unibo.pps.utils.Color.{Black, White}
-import it.unibo.pps.utils.Position
+import it.unibo.pps.domain.Color.{Black, White}
+import it.unibo.pps.domain.Position
 
 object BoardRenderingExtensions:
 

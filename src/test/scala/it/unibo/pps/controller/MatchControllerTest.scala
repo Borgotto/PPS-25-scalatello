@@ -1,7 +1,7 @@
 package it.unibo.pps.controller
 
+import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.state.MatchState
-import it.unibo.pps.utils.{Color, Position, Shape}
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito

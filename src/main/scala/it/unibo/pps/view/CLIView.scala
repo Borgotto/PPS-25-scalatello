@@ -1,10 +1,10 @@
 package it.unibo.pps.view
 
-import it.unibo.pps.controller.MatchController
+import it.unibo.pps.controller.Controller
+import it.unibo.pps.domain.{Color, Position, Shape}
+import it.unibo.pps.domain.ActivePlayer.*
+import it.unibo.pps.domain.MatchStatus.*
 import it.unibo.pps.state.{BoardState, MatchState}
-import it.unibo.pps.state.PlayerState.{Opponent, User}
-import it.unibo.pps.utils.MatchStatus.*
-import it.unibo.pps.utils.{Color, Position, Shape}
 import it.unibo.pps.view.i18n.I18n
 import it.unibo.pps.view.io.BoardRenderingExtensions.render
 import it.unibo.pps.view.io.{IO, Sanitizer, SaveInterruptException, ShortcutListener, given_Monad_IO}
@@ -12,7 +12,6 @@ import it.unibo.pps.view.io.Sanitizer.*
 import it.unibo.pps.view.io.IO.write
 
 import scala.util.{Failure, Success}
-
 import org.jline.terminal.TerminalBuilder
 import org.jline.reader.{LineReader, LineReaderBuilder}
 
@@ -41,7 +40,7 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private val minBoardSize = 4
 
-  private val controller = MatchController(this)
+  private val controller = Controller(this)
 
   private var lastMatchState: MatchState = _
 
@@ -230,8 +229,8 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
   private def handleState(state: MatchState): Unit =
     state.status match
       case InProgress => state.activePlayer match
-        case User(_, _) => onUserTurn(state.board)
-        case Opponent(_, _) => onOpponentTurn()
+        case User => onUserTurn(state.board)
+        case Opponent => onOpponentTurn()
       case UserWon => onMatchEnd("match.result.user_won")
       case OpponentWon => onMatchEnd("match.result.opponent_won")
       case Tie => onMatchEnd("match.result.tie")

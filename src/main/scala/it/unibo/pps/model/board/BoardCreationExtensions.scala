@@ -1,6 +1,6 @@
 package it.unibo.pps.model.board
 
-import it.unibo.pps.utils.{Color, Position}
+import it.unibo.pps.domain.{Color, Position}
 
 /** This object contains helper `extension methods` to create a [[Board]].
  * 

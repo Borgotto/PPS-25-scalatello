@@ -1,8 +1,8 @@
 package it.unibo.pps.model.strategy
 
 import it.unibo.pps.model.player.User
-import it.unibo.pps.utils.Color.Black
-import it.unibo.pps.utils.Position
+import it.unibo.pps.domain.Color.Black
+import it.unibo.pps.domain.Position
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.shouldEqual

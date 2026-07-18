@@ -1,4 +1,4 @@
-package it.unibo.pps.utils
+package it.unibo.pps.domain
 
 import upickle.default.ReadWriter
 

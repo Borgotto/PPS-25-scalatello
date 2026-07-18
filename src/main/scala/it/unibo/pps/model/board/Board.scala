@@ -1,10 +1,10 @@
 package it.unibo.pps.model.board
 
+import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
 import it.unibo.pps.utils.IntExtensions.half
 import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComputeExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
-import it.unibo.pps.utils.{Color, Position, Shape}
 
 /** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
  *

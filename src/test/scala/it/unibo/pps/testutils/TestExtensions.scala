@@ -1,9 +1,9 @@
 package it.unibo.pps.testutils
 
 import it.unibo.pps.model.board.{Board, Disk}
-import it.unibo.pps.utils.{Position, Shape}
-import it.unibo.pps.utils.Color.*
-import it.unibo.pps.utils.Shape.*
+import it.unibo.pps.domain.Color.*
+import it.unibo.pps.domain.{Position, Shape}
+import Shape.*
 
 object TestExtensions:
 

@@ -1,8 +1,9 @@
 package it.unibo.pps.model.strategy
 
+import it.unibo.pps.domain.{Color, Position}
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.player.Opponent
-import it.unibo.pps.utils.{Color, Position}
+
 import it.unibo.pps.testutils.TestExtensions.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{contain, should, shouldBe}
@@ -12,11 +13,11 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
 
   "RandomOpponentPlacementStrategy" should "return a valid placement" in:
     given board: Board = """
-      ....
-      .WB.
-      .BW.
-      ....
-      """.toBoard
+       ....
+       .WB.
+       .BW.
+       ....
+     """.toBoard
     val opponent = Opponent.RandomOpponent(Color.White)
     val availablePlacements = board.getAvailablePlacements(opponent.color)
     val position: Position = opponent.strategy.computePlacement

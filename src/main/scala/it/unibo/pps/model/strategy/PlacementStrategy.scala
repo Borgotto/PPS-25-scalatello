@@ -1,7 +1,7 @@
 package it.unibo.pps.model.strategy
 
+import it.unibo.pps.domain.{Color, Position}
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.utils.{Color, Position}
 
 import upickle.default.ReadWriter
 

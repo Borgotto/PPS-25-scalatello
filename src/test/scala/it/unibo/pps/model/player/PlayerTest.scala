@@ -1,8 +1,8 @@
 package it.unibo.pps.model.player
 
+import it.unibo.pps.domain.Color
 import it.unibo.pps.model.strategy.{OpponentPlacementStrategy, UserPlacementStrategy}
 import it.unibo.pps.model.player.{Opponent, Player, User}
-import it.unibo.pps.utils.Color
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{a, shouldBe}
