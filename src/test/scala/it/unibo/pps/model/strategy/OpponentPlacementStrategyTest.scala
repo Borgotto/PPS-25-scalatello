@@ -26,11 +26,11 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
     ("board", "depth", "expected time in ms", "expected position"),
     (
       """
+      ..W.
+      .WWB
+      .BBB
       ....
-      .WB.
-      .BW.
-      ....
-      """.toBoard, 3, 100L, Position(2, 0)
+      """.toBoard, 3, 100L, Position(3, 1)
     ),
     (
       """
