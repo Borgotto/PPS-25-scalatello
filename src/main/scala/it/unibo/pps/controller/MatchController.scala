@@ -141,7 +141,7 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
     logic = Logic(boardShape, userColor)
     notifySubscribers(logic.state)
     logic.state.activePlayer match
-      case PlayerState.Opponent(_, _) => handleOpponentTurn()
+      case PlayerState.Opponent(_, _) => if !isMatchOver then handleOpponentTurn()
       case _ => ()
 
   /** @inheritdoc
@@ -151,9 +151,10 @@ class MatchControllerImpl extends MatchController, Publisher[MatchState]:
    * @param position the [[Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit =
-    logic = logic.placeUserDisk(position)
-    notifySubscribers(logic.state)
-    if !isMatchOver then handleOpponentTurn()
+    if !isMatchOver then
+      logic = logic.placeUserDisk(position)
+      notifySubscribers(logic.state)
+      if !isMatchOver then handleOpponentTurn()
 
   /** @inheritdoc
    * Implements [[MatchController.saveMatch()]].
