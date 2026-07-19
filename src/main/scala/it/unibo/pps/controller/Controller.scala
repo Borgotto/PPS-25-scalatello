@@ -70,7 +70,7 @@ object Controller:
 
 /** Implements the controller of the application.
  *
- *  This controller is also a [[Publisher]] in this application.
+ *  This controller is also a [[Publisher]] in this application, after every action notifies its subscribers.
  */
 private[controller] class MatchController extends Controller:
   private var logic: Logic = _
