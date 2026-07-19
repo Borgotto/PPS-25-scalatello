@@ -6,25 +6,19 @@ import it.unibo.pps.utils.IntExtensions.inBetween
 import scala.annotation.tailrec
 
 /** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
- * 
- * Contains methods to know:
- * - if this position is on the same diagonal and in between two positions: [[onSameDiagonal()]];
- * - if this position is in between two positions: [[inBetweenPos()]];
- * - if this position is in the same neighbourhood as another one: [[inNeighbourhood()]];
- * - if this position is in the bounds of a [[Shape]]: [[inBounds()]].
  *
- * Every class that uses it must implement the [[inBounds()]] method.
+ *  Every class that uses it must implement the [[inBounds()]] method.
  *
- * Used by: [[ComputationsExtensionsRectangle]].
+ *  Used by: [[ComputationsExtensionsRectangle]].
  */
 private[board] trait ComputationsExtensions:
   extension (p: Position)
-    /** Extension method of [[Position]].
-     *
-     * Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
-     * @param firstPos the starting position to be considered on the diagonal.
-     * @param secondPos the last position to be considered on the diagonal.
-     * @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
+    /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
+     * 
+     *  This is an extension method of [[Position]].
+     *  @param firstPos the starting position to be considered on the diagonal.
+     *  @param secondPos the last position to be considered on the diagonal.
+     *  @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
      */
     def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
       @tailrec
@@ -40,12 +34,12 @@ private[board] trait ComputationsExtensions:
       _getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
         distance.row.abs.equals(distance.column.abs)
 
-    /** Extension method of [[Position]].
-     *
-     * This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
-     * @param firstPos the starting position to consider.
-     * @param secondPos the last position to consider.
-     * @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
+    /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
+     * 
+     *  This is an extension method of [[Position]].
+     *  @param firstPos the starting position to consider.
+     *  @param secondPos the last position to consider.
+     *  @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
      */
     def inBetweenPos(firstPos: Position, secondPos: Position): Boolean =
       (firstPos, secondPos) match
@@ -53,23 +47,23 @@ private[board] trait ComputationsExtensions:
         case (f, s) if f.column.equals(s.column) => p.row.inBetween(f.row, s.row) && p.column.equals(f.column)
         case (f, s) => p.onSameDiagonal(f, s)
 
-    /** Extension method of [[Position]].
+    /** This is used to determine if this position is in the neighbourhood of `pos`.
      *
-     * This is used to determine if this position is in the neighbourhood of `pos`.
-     *
-     * Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
-     * @param pos the position of which to consider the neighbourhood of.
-     * @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
+     *  Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
+     * 
+     *  This is an extension method of [[Position]].
+     *  @param pos the position of which to consider the neighbourhood of.
+     *  @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
      */
     def inNeighbourhood(pos: Position): Boolean =
       val maxDistance: Int = 1
       val distance: Position = p - pos
       distance.row.abs <= maxDistance && distance.column.abs <= maxDistance
 
-    /** Extension method of [[Position]].
-     *
-     * Used to know if this position is in the bounds of the [[Board]].
-     * @param shape the [[Shape]] of the board.
-     * @return `true` if the position is in the bounds of the board, `false` otherwise.
+    /** Used to know if this position is in the bounds of the [[Board]].
+     * 
+     *  This is an extension method of [[Position]].
+     *  @param shape the [[Shape]] of the board.
+     *  @return `true` if the position is in the bounds of the board, `false` otherwise.
      */
     def inBounds(shape: Shape): Boolean

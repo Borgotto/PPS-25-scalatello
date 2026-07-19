@@ -2,14 +2,7 @@ package it.unibo.pps.domain
 
 import upickle.default.ReadWriter
 
-/** Enum to represent the possible shapes of a [[Board]].
- * 
- * It also provides:
- * - a method to get the [[maxRow]] of a shape;
- * - a method to get the [[maxColumn]] of a shape.
- * 
- * Possible values: [[Square]], [[Rectangle]].
- */
+/** Enum to represent the possible shapes of a [[Board]]. */
 enum Shape derives ReadWriter:
   case Square(size: Int)
   case Rectangle(height: Int, width: Int)
