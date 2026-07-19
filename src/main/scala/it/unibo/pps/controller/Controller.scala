@@ -13,67 +13,66 @@ import scala.annotation.tailrec
 import scala.util.{Success, Try}
 import os.Path
 
-/** 
- * Defines the main controller of the application.
+/** Defines the main controller of the application.
+ *
+ *  The following methods must be implemented by every class using it:
+ *    - [[startMatch()]]
+ *    - [[handleSelection()]]
+ *    - [[saveMatch()]]
+ *    - [[loadMatch()]]
+ *    - [[saveFileNames]]
+ *    - [[deleteSaveFile()]]
+ *
+ *  See the documentation of each method for further specifications.
+ *
+ *  Used by: [[MatchController]]
  */
 trait Controller extends Publisher[MatchState]:
-  
-  /** 
-   * Starts and configures a match according to the passed settings.
-   * @param boardShape the [[Shape]] the [[Board]] must have.
-   * @param userColor  the [[Color]] assigned to the user.
+  /** Starts and configures a match with the provided settings.
+   *  @param boardShape the [[Shape]] the [[Board]] must have.
+   *  @param userColor  the [[Color]] assigned to the user.
    */
   def startMatch(boardShape: Shape, userColor: Color): Unit
 
-  /** 
-   * Handles the current turn of the user, according to the position selected by them for their next placement.
-   * @param position the position selected by the user.
+  /** According to the position selected by the user, handles their turn. After that, handles the available opponent turns.
+   *  @param position the [[Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit
 
-  /** 
-   * Saves the current state of the match.
-   * @param fileName the name of the save file to create.
-   * @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
+  /** Saves the current state of the match.
+   *  @param fileName the name of the save file to create.
+   *  @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
    */
   def saveMatch(fileName: String): Try[_]
 
-  /** 
-   * Loads a match from a save file.
-   * @param fileName the name of the save file from which the match must be loaded.
-   * @return [[scala.util.Success]] if the match is loaded correctly, [[scala.util.Failure]] otherwise.
+  /** Loads a match from a save file.
+   *  @param fileName the name of the save file from which the match must be loaded.
+   *  @return [[scala.util.Success]] if the match is loaded correctly, [[scala.util.Failure]] otherwise.
    */
   def loadMatch(fileName: String): Try[_]
 
-  /**
-   * @return the names of the save files.
-   */
+  /** @return the names of the save files. */
   def saveFileNames: Seq[String]
 
-  /** 
-   * Deletes a save file.
-   * @param fileName the name of the save file to delete.
-   * @return [[scala.util.Success]] if the file is deleted successfully, [[scala.util.Failure]] otherwise.
+  /** Deletes a save file.
+   *  @param fileName the name of the save file to delete.
+   *  @return [[scala.util.Success]] if the file is deleted successfully, [[scala.util.Failure]] otherwise.
    */
   def deleteSaveFile(fileName: String): Try[_]
 
-/** 
- * Defines factories for [[Controller]] instances.
- */
+/** Factory for [[Controller]] instances. */
 object Controller:
-  
-  /** 
-   * Instantiates a [[Controller]] and then subscribes the [[View]] to the updates
-   * published by the [[Controller]].
-   * @param view the view of the application.
+  /** Instantiates a controller and then subscribes the `view` to the updates published by it.
+   *  @param view the [[View]] of the application.
    */
   def apply(view: View): Controller =
     val controller = MatchController()
     controller.subscribe(view)
     controller
 
-/** 
- * Implements the controller of the application.
+/** Implements the controller of the application.
+ *
+ *  This controller is also a [[Publisher]] in this application.
  */
 class MatchController extends Controller:
   private var logic: Logic = _
