@@ -88,13 +88,6 @@ private[controller] class MatchController extends Controller:
   def notifySubscribers(state: MatchState): Unit =
     subscribers.foreach(s => s.update(state))
 
-  def startMatch(boardShape: Shape, userColor: Color): Unit =
-    logic = Logic(boardShape, userColor, OpponentType.Random)
-    notifySubscribers(logic.state)
-    logic.state.activePlayer match
-      case ActivePlayer.Opponent => if !isMatchOver then handleOpponentTurn()
-      case _ => ()
-
   private def isMatchOver: Boolean = logic.state.status != MatchStatus.InProgress
 
   @tailrec
@@ -104,6 +97,13 @@ private[controller] class MatchController extends Controller:
         logic = logic.placeOpponentDisk()
         notifySubscribers(logic.state)
         if !isMatchOver then handleOpponentTurn()
+      case _ => ()
+
+  def startMatch(boardShape: Shape, userColor: Color): Unit =
+    logic = Logic(boardShape, userColor, OpponentType.Random)
+    notifySubscribers(logic.state)
+    logic.state.activePlayer match
+      case ActivePlayer.Opponent => if !isMatchOver then handleOpponentTurn()
       case _ => ()
 
   /** According to the position selected by the user, handles their turn. Then handles the available opponent's turns.
