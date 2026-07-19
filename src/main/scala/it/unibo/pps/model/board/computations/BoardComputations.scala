@@ -13,13 +13,11 @@ import scala.annotation.tailrec
  *                        to make this class use the appropriate methods on different Boards.
  */
 private[board] class BoardComputations(using board: Board)(using posComputations: ComputationsExtensions):
-  private def getOppositeColorNeighbours(diskColor: Color)
-                                        (using disks: Map[Position, Disk]): Set[(Position, Position)] =
+  private def getCapturableNeighbours(diskColor: Color)(using disks: Map[Position, Disk]): Set[(Position, Position)] =
     val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
-    val oppositeColorDisks = disks.keySet -- sameColorDisks
-
+    val capturableDisks = disks.keySet -- sameColorDisks
     for diskPos <- sameColorDisks
-      possibleNeighbourPos <- oppositeColorDisks
+      possibleNeighbourPos <- capturableDisks
       if possibleNeighbourPos.inNeighbourhood(diskPos)
     yield (diskPos, possibleNeighbourPos)
 
@@ -35,14 +33,14 @@ private[board] class BoardComputations(using board: Board)(using posComputations
           _getNextConnectingDisk(p, placedDisk, direction)
         case p => Some(p)
 
-    val oppositeNeighboursPos: Set[(Position, Position)] =
-      getOppositeColorNeighbours(diskColor).filter((disk, neighbour) => disk.equals(placedDiskPos))
-    for (disk, neighbour) <- oppositeNeighboursPos
-        diskPosition: Position = Position(neighbour.row, neighbour.column)
-        direction: Position = disk - neighbour
-        connectingDiskPosition: Option[Position] =
-          _getNextConnectingDisk(diskPosition, (placedDiskPos, diskColor), direction)
-        if connectingDiskPosition.isDefined
+    val capturableNeighboursPos: Set[(Position, Position)] =
+      getCapturableNeighbours(diskColor).filter((disk, neighbour) => disk.equals(placedDiskPos))
+    for (disk, neighbour) <- capturableNeighboursPos
+      diskPosition: Position = Position(neighbour.row, neighbour.column)
+      direction: Position = disk - neighbour
+      connectingDiskPosition: Option[Position] =
+        _getNextConnectingDisk(diskPosition, (placedDiskPos, diskColor), direction)
+      if connectingDiskPosition.isDefined
     yield connectingDiskPosition.get
   
   private def getDisksToFlip(diskPos: Position)(using disks: Map[Position, Disk]): Set[Position] =
@@ -68,11 +66,12 @@ private[board] class BoardComputations(using board: Board)(using posComputations
         case p => Some(p)
 
     given disks: Map[Position, Disk] = board.disks
-    for (disk, neighbour) <- getOppositeColorNeighbours(diskColor)
-        diskPos: Position = Position(neighbour.row, neighbour.column)
-        direction: Position = disk - neighbour
-        availableMove: Option[Position] = _getNextEmptyPosition(diskPos, direction)
-        if availableMove.isDefined
+    val capturableDisks = getCapturableNeighbours(diskColor)
+    for (disk, neighbour) <- capturableDisks
+      diskPos: Position = Position(neighbour.row, neighbour.column)
+      direction: Position = disk - neighbour
+      availableMove: Option[Position] = _getNextEmptyPosition(diskPos, direction)
+      if availableMove.isDefined
     yield availableMove.get
 
   /** Delegate method of [[BoardImpl.isPlacementValid()]].
