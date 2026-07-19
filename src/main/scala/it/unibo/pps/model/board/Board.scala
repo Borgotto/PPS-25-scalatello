@@ -1,8 +1,8 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.utils.IntExtensions.half
-import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
+import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.computations.{BoardComputations, ComputationsExtensions, ComputationsExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
 
@@ -112,37 +112,18 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   private given contextBoard: Board = this
   private val compute: BoardComputations = BoardComputations()
 
-  /** It is the state of this [[Board]]. */
+  /** The [[BoardState]] of this board. */
   lazy val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
-  /**
-   *  @param diskColor the [[Color]] of the disk that needs to be placed.
-   *  @return a [[scala.collection.immutable.Set]] of [[Position]] containing the position of all the available placements.
-   */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     compute.getAvailablePlacements(diskColor)
 
-  /** @inheritdoc
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk.
-   *  @return `true` if the placement is valid, `false` otherwise.
-   */
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
     compute.isPlacementValid(diskColor, diskPos)
 
-  /** @inheritdoc
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk. 
-   *  @param validatePosition if `diskPos` needs to be validated or not, default = `true`.
-   *  @return a new instance of board with the disk placed and the disks captured.
-   */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean = true): Board =
     compute.placeDisk(diskColor, diskPos, validatePosition)
 
-  /** @inheritdoc
-   *  @param obj what will be confronted with this board.
-   *  @return `true` if this board is equal to another board, `false` otherwise.
-   */
   override def equals(obj: Any): Boolean =
     obj match
       case b: Board => disks.equals(b.disks) && shape.equals(b.shape)
