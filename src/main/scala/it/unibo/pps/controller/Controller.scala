@@ -82,13 +82,13 @@ class MatchController extends Controller:
   private val saveDirectory = os.home / ".scalatello"
   private val saveManager = MatchStateSaveManager(saveDirectory)
   
-  override def subscribe(subscriber: Subscriber[MatchState]): Unit =
+  def subscribe(subscriber: Subscriber[MatchState]): Unit =
     subscribers = subscribers :+ subscriber
   
-  override def unsubscribe(subscriber: Subscriber[MatchState]): Unit =
+  def unsubscribe(subscriber: Subscriber[MatchState]): Unit =
     subscribers = subscribers.filter(s => s != subscriber)
   
-  override def notifySubscribers(state: MatchState): Unit =
+  def notifySubscribers(state: MatchState): Unit =
     subscribers.foreach(s => s.update(state))
 
   def startMatch(boardShape: Shape, userColor: Color): Unit =
