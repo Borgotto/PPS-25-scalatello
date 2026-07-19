@@ -68,15 +68,14 @@ object Controller:
    * @param view the view of the application.
    */
   def apply(view: View): Controller =
-    val controller = MatchControllerImpl()
+    val controller = MatchController()
     controller.subscribe(view)
     controller
 
 /** 
  * Implements the controller of the application.
  */
-class MatchControllerImpl extends Controller:
-  
+class MatchController extends Controller:
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
 
