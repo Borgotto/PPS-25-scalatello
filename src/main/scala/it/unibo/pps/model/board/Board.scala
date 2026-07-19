@@ -1,9 +1,9 @@
 package it.unibo.pps.model.board
 
+import it.unibo.pps.utils.IntExtensions.half
 import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
-import it.unibo.pps.utils.IntExtensions.half
-import it.unibo.pps.model.board.posComputations.{PosComputeExtensions, PosComputeExtensionsRectangle}
+import it.unibo.pps.model.board.computations.{BoardComputations, ComputationsExtensions, ComputationsExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
 
 /** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
@@ -53,8 +53,9 @@ trait Board:
    * is enclosed between the placed disk and another disk of the same color of the placed disk.
    *
    * @param diskColor the color of the disk that wants to be placed.
-   * @param diskPos the position where the player wants to place the disk.
-   * @return a new instance of board with the disk placed.
+   * @param diskPos the position where the player wants to place the disk. 
+   * @param validatePosition if `diskPos` needs to be validated or not, default = `true`.
+   * @return a new instance of board with the disk placed and the disks captured.
    */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean = true): Board
 
@@ -100,30 +101,24 @@ object Board:
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
       case _ =>
-        given contextComputations: PosComputeExtensions = PosComputeExtensionsRectangle()
+        given contextComputations: ComputationsExtensions = ComputationsExtensionsRectangle()
         BoardImpl(shape, disks)
 
 /** Implements a generic board.
- * This uses a `given` of type: [[PosComputeExtensions]] to use the correct computations on different boards.
+ * This uses a `given` of type: [[ComputationsExtensions]] to use the correct computations on different boards.
  *
  * Delegates the computations of its methods to an instance of the class [[BoardComputations]].
  *
  * Extends the trait: [[Board]].
- * @param shape implements [[Board.shape]], the shape of this board.
  *
- * @param disks implements [[Board.disks]], it represents the disks on this board.
- *
- * @param posComputations the context of [[PosComputeExtensions]],
+ * @param shape           implements [[Board.shape]], the shape of this board.
+ * @param disks           implements [[Board.disks]], it represents the disks on this board.
+ * @param posComputations the context of [[ComputationsExtensions]],
  *                        it contains the different computations that may need to change for different types of boards.
  */
 private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
-                           (using posComputations: PosComputeExtensions) extends Board:
-  /** Used by: [[compute]].
-   * @return the `given` of this [[Board]].
-   */
+                           (using posComputations: ComputationsExtensions) extends Board:
   private given contextBoard: Board = this
-
-  /** The delegate of [[BoardImpl]]. */
   private val compute: BoardComputations = BoardComputations()
 
   /** Implements [[Board.state]].
@@ -151,8 +146,9 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   /** @inheritdoc
    * Implements [[Board.placeDisk()]].
    * @param diskColor the color of the disk that wants to be placed.
-   * @param diskPos the position where the player wants to place the disk.
-   * @return a new instance of board with the disk placed.
+   * @param diskPos the position where the player wants to place the disk. 
+   * @param validatePosition if `diskPos` needs to be validated or not, default = `true`.
+   * @return a new instance of board with the disk placed and the disks captured.
    */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean = true): Board =
     compute.placeDisk(diskColor, diskPos, validatePosition)

@@ -1,18 +1,17 @@
-package it.unibo.pps.model.board.posComputations
+package it.unibo.pps.model.board.computations
 
 import it.unibo.pps.domain.{Position, Shape}
-import it.unibo.pps.model.board.posComputations.PosComputeExtensions
 import it.unibo.pps.utils.IntExtensions.inRange
 
 /** Helper class that contains extension methods of [[Position]] to make computations on a
  * [[Shape.Square]] and [[Shape.Rectangle]] [[Board]].
  *
- * Extends the trait: [[PosComputeExtensions]].
+ * Extends the trait: [[ComputationsExtensions]].
  */
-private[board] class PosComputeExtensionsRectangle extends PosComputeExtensions:
+private[board] class ComputationsExtensionsRectangle extends ComputationsExtensions:
   extension (p: Position)
     /** @inheritdoc
-     * Implements: [[PosComputeExtensions.inBounds()]].
+     * Implements: [[ComputationsExtensions.inBounds()]].
      * @param shape the [[Shape]] of the board.
      * @return `true` if the position is in the bounds of the board, `false` otherwise.
      */

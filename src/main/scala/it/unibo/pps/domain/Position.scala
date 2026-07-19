@@ -1,6 +1,5 @@
 package it.unibo.pps.domain
 
-import it.unibo.pps.domain.Position
 import upickle.default.ReadWriter
 
 /** Represents a two-dimensional position.

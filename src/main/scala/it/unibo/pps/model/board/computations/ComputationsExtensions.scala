@@ -1,4 +1,4 @@
-package it.unibo.pps.model.board.posComputations
+package it.unibo.pps.model.board.computations
 
 import it.unibo.pps.domain.{Position, Shape}
 import it.unibo.pps.utils.IntExtensions.inBetween
@@ -15,9 +15,9 @@ import scala.annotation.tailrec
  *
  * Every class that uses it must implement the [[inBounds()]] method.
  *
- * Used by: [[PosComputeExtensionsRectangle]].
+ * Used by: [[ComputationsExtensionsRectangle]].
  */
-private[board] trait PosComputeExtensions:
+private[board] trait ComputationsExtensions:
   extension (p: Position)
     /** Extension method of [[Position]].
      *
@@ -27,15 +27,6 @@ private[board] trait PosComputeExtensions:
      * @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
      */
     def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
-      /** Helper method to get the [[Position]] of all the [[Disk]] that are on the same diagonal
-       * and between `source` and `destination`.
-       *
-       * @param source      the position of the disk from which the research originates.
-       * @param destination the position of the disk where the research stops.
-       * @param direction   the direction to follow to go towards the `destination`.
-       * @param acc         an accumulator, that at the end will contain all the position that satisfy the conditions.
-       * @return the final accumulator containing all the positions on the same diagonal and between `source` and `destination`.
-       */
       @tailrec
       def _getPosOnSameDiagonal(source: Position, destination: Position,
                                        direction: Position, acc: Set[Position] = Set()): Set[Position] =
