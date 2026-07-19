@@ -1,12 +1,10 @@
 package it.unibo.pps.controller
 
 import it.unibo.pps.controller.save.SaveManager.SaveManagers.MatchStateSaveManager
-import it.unibo.pps.domain.{Color, OpponentType, Position, Shape}
+import it.unibo.pps.domain.{Color, OpponentType, Position, Shape, MatchStatus, ActivePlayer}
 import it.unibo.pps.model.Logic
-import it.unibo.pps.domain.ActivePlayer.{Opponent, User}
 import it.unibo.pps.observer.{Publisher, Subscriber}
 import it.unibo.pps.state.MatchState
-import it.unibo.pps.domain.MatchStatus.InProgress
 import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
@@ -74,7 +72,7 @@ object Controller:
  *
  *  This controller is also a [[Publisher]] in this application.
  */
-class MatchController extends Controller:
+private[controller] class MatchController extends Controller:
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
 
@@ -94,15 +92,15 @@ class MatchController extends Controller:
     logic = Logic(boardShape, userColor, OpponentType.Random)
     notifySubscribers(logic.state)
     logic.state.activePlayer match
-      case Opponent => if !isMatchOver then handleOpponentTurn()
+      case ActivePlayer.Opponent => if !isMatchOver then handleOpponentTurn()
       case _ => ()
 
-  private def isMatchOver: Boolean = logic.state.status != InProgress
+  private def isMatchOver: Boolean = logic.state.status != MatchStatus.InProgress
 
   @tailrec
   private def handleOpponentTurn(): Unit =
     logic.state.activePlayer match
-      case Opponent =>
+      case ActivePlayer.Opponent =>
         logic = logic.placeOpponentDisk()
         notifySubscribers(logic.state)
         if !isMatchOver then handleOpponentTurn()
