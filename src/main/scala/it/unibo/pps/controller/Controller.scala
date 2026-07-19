@@ -34,7 +34,7 @@ trait Controller extends Publisher[MatchState]:
    */
   def startMatch(boardShape: Shape, userColor: Color): Unit
 
-  /** According to the position selected by the user, handles their turn. After that, handles the available opponent turns.
+  /** According to the position selected by the user, handles their turn.
    *  @param position the [[Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit
@@ -107,7 +107,10 @@ class MatchController extends Controller:
         notifySubscribers(logic.state)
         if !isMatchOver then handleOpponentTurn()
       case _ => ()
-  
+
+  /** According to the position selected by the user, handles their turn. And then handles the available opponent turns.
+   *  @param position the [[Position]] selected by the user.
+   */
   def handleSelection(position: Position): Unit =
     if !isMatchOver then
       logic = logic.placeUserDisk(position)
