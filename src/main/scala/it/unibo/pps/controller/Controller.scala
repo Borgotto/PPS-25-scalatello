@@ -108,7 +108,7 @@ class MatchController extends Controller:
         if !isMatchOver then handleOpponentTurn()
       case _ => ()
 
-  /** According to the position selected by the user, handles their turn. And then handles the available opponent turns.
+  /** According to the position selected by the user, handles their turn. Then handles the available opponent turns.
    *  @param position the [[Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit =
