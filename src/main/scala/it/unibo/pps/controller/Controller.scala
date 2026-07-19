@@ -95,19 +95,19 @@ class MatchController extends Controller:
     logic = Logic(boardShape, userColor, OpponentType.Random)
     notifySubscribers(logic.state)
     logic.state.activePlayer match
-      case User => ()
       case Opponent => handleOpponentTurn()
+      case _ => ()
 
   private def isMatchOver: Boolean = logic.state.status != InProgress
 
   @tailrec
   private def handleOpponentTurn(): Unit =
     logic.state.activePlayer match
-      case User => ()
       case Opponent =>
         logic = logic.placeOpponentDisk()
         notifySubscribers(logic.state)
         if !isMatchOver then handleOpponentTurn()
+      case _ => ()
   
   def handleSelection(position: Position): Unit =
     if !isMatchOver then
