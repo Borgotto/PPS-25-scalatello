@@ -51,7 +51,6 @@ trait Board:
    *
    *  A disk is captured if it is of the other color than the placed one and is enclosed between the placed disk 
    *  and another disk of the same color of the placed disk.
-   *
    *  @param diskColor the color of the disk that wants to be placed.
    *  @param diskPos the position where the player wants to place the disk. 
    *  @param validatePosition if `diskPos` needs to be validated or not, default = `true`.
@@ -62,7 +61,6 @@ trait Board:
 /** Factory for [[Board]] instances. */
 object Board:
   /** Given a shape, creates a board with the initial disks configuration.
-   *
    *  @param shape the [[Shape]] of the board that will be created.
    */
   def apply(shape: Shape): Board =
@@ -101,7 +99,6 @@ object Board:
 /** Implements a generic board.
  * 
  *  Delegates the computations of its methods to an instance of the class [[BoardComputations]].
- *
  *  @param shape the shape of this board.
  *  @param disks the disks on this board.
  *  @param posComputations the context of [[ComputationsExtensions]], it contains the different computations 
