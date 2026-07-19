@@ -92,28 +92,25 @@ private[controller] class MatchController extends Controller:
 
   @tailrec
   private def handleOpponentTurn(): Unit =
+    notifySubscribers(logic.state)
     logic.state.activePlayer match
-      case ActivePlayer.Opponent =>
+      case ActivePlayer.Opponent if !isMatchOver =>
         logic = logic.placeOpponentDisk()
-        notifySubscribers(logic.state)
-        if !isMatchOver then handleOpponentTurn()
+        handleOpponentTurn()
       case _ => ()
 
   def startMatch(boardShape: Shape, userColor: Color): Unit =
     logic = Logic(boardShape, userColor, OpponentType.Random)
-    notifySubscribers(logic.state)
     logic.state.activePlayer match
-      case ActivePlayer.Opponent => if !isMatchOver then handleOpponentTurn()
-      case _ => ()
+      case ActivePlayer.Opponent => handleOpponentTurn()
+      case _ => notifySubscribers(logic.state)
 
   /** According to the position selected by the user, handles their turn. Then handles the available opponent's turns.
    *  @param position the [[Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit =
-    if !isMatchOver then
       logic = logic.placeUserDisk(position)
-      notifySubscribers(logic.state)
-      if !isMatchOver then handleOpponentTurn()
+      handleOpponentTurn()
 
   def saveMatch(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
