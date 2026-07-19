@@ -8,7 +8,7 @@ enum ReadResult:
   case Success(value: String)
   case SaveInterrupt
 
-class CLIInputComponent(private val reader: LineReader):
+class InputComponent(private val reader: LineReader):
 
   def read(): IO[String] = IO(() => reader.readLine())
 
@@ -24,7 +24,7 @@ class CLIInputComponent(private val reader: LineReader):
     isInputValid: String => Boolean,
     convert: String => T,
     invalidInputMessage: String
-  )(using onSaveInterrupt: => IO[T]): IO[T] =
+  )(using onSaveInterrupt: => IO[Unit]): IO[T] =
     for
       _ <- write(request)
       result <- interruptableRead()
@@ -43,8 +43,12 @@ class CLIInputComponent(private val reader: LineReader):
     isInputValid: String => Boolean,
     convert: String => T,
     invalidInputMessage: String
-  )(using onSaveInterrupt: => IO[T]): IO[T] = result match
-    case ReadResult.SaveInterrupt => onSaveInterrupt
+  )(using onSaveInterrupt: => IO[Unit]): IO[T] = result match
+    case ReadResult.SaveInterrupt => 
+      for
+        _ <- onSaveInterrupt
+        input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+      yield input
     case ReadResult.Success(input) =>
       val isValid = isInputValid(input)
       if isValid then
@@ -52,8 +56,8 @@ class CLIInputComponent(private val reader: LineReader):
       else
         for
           _ <- write(invalidInputMessage)
-          retry <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
-        yield retry
+          input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+        yield input
   
   def isValidOptionChoice(nOptions: Int)(input: String): Boolean =
     isConvertibleToInt(input) && isWithinBounds(1, nOptions)(input.toInt)
