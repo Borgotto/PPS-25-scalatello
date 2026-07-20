@@ -63,7 +63,7 @@ object Controller:
 
 /** Implements the controller of the application. */
 private[controller] class ControllerImpl extends Controller:
-  private var logic: Logic = _
+  private var logic: Option[Logic] = Option.empty
   private var subscribers = Seq[Subscriber[MatchState]]()
 
   private val saveDirectory = os.home / ".scalatello"
@@ -78,39 +78,50 @@ private[controller] class ControllerImpl extends Controller:
   def notifySubscribers(state: MatchState): Unit =
     subscribers.foreach(s => s.update(state))
 
-  private def isMatchOver: Boolean = logic.state.status != MatchStatus.InProgress
+  private def isMatchOver: Boolean = logic.get.state.status != MatchStatus.InProgress
 
   @tailrec
   private def handleOpponentTurn(): Unit =
-    notifySubscribers(logic.state)
-    logic.state.activePlayer match
+    notifySubscribers(logic.get.state)
+    logic.get.state.activePlayer match
       case ActivePlayer.Opponent if !isMatchOver =>
-        logic = logic.placeOpponentDisk()
+        logic = Some(logic.get.placeOpponentDisk())
         handleOpponentTurn()
       case _ => ()
 
   def startMatch(boardShape: Shape, userColor: Color, opponentType: OpponentType): Unit =
-    logic = Logic(boardShape, userColor, opponentType)
-    logic.state.activePlayer match
+    logic = Some(Logic(boardShape, userColor, opponentType))
+    logic.get.state.activePlayer match
       case ActivePlayer.Opponent => handleOpponentTurn()
-      case _ => notifySubscribers(logic.state)
+      case _ => notifySubscribers(logic.get.state)
 
   /** Given the position selected by the user, handles their turn. Then handles the available opponent's turns.
    *  @param position the position selected by the user.
    */
   def handleSelection(position: Position): Unit =
-    logic = logic.placeUserDisk(position)
-    handleOpponentTurn()
+    logic match
+      case Some(currentLogic) =>
+        logic = Some(currentLogic.placeUserDisk(position))
+        handleOpponentTurn()
+      case None => ()
 
+  /** @inheritdoc
+   * @param fileName the name of the save file.
+   * @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
+   * @throws IllegalStateException if there is no match to save.
+   */
   def saveMatch(fileName: String): Try[_] =
-    given filepath: Path = saveDirectory / fileName
-    saveManager.save(logic.state)
+    logic match
+      case Some(currentLogic) =>
+        given filepath: Path = saveDirectory / fileName
+        saveManager.save(logic.get.state)
+      case None => throw IllegalStateException("There is no match to save")
 
   def loadMatch(fileName: String): Try[_] =
     given filepath: Path = saveDirectory / fileName
     val result = saveManager.load 
     result match
-      case Success(matchState: MatchState) => logic = Logic(matchState)
+      case Success(matchState: MatchState) => logic = Some(Logic(matchState))
       case _ => ()
     result
 
