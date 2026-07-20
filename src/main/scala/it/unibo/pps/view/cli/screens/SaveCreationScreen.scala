@@ -14,8 +14,6 @@ class SaveCreationScreen(
   controller: Controller,
 ) extends CLIScreen:
 
-  given onSaveInterrupt: IO[Unit] = IO(() => ())
-
   override def render(): IO[Unit] =
     for
       input <- inputComponent.askForValidInput(
