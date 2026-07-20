@@ -8,15 +8,7 @@ import it.unibo.pps.state.{BoardState, DiskState}
 
 /** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
  *
- *  The following methods must be implemented by every class using it:
- *    - [[shape]];
- *    - [[disks]];
- *    - [[state]];
- *    - [[getAvailablePlacements()]];
- *    - [[isPlacementValid()]];
- *    - [[placeDisk()]].
- *
- *  See the documentation of each method for further specifications.
+ *  All methods must be specified by every class using it.
  *
  *  Used by: [[BoardImpl]]
  */
