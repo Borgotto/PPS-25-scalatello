@@ -54,7 +54,7 @@ trait Controller extends Publisher[MatchState]:
 /** Factory for [[Controller]] instances. */
 object Controller:
   /** Instantiates a controller and then subscribes the `view` to the updates published by it.
-   *  @param view the view of the application.
+   *  @param view the [[View]] of the application.
    */
   def apply(view: View): Controller =
     val controller = ControllerImpl()
