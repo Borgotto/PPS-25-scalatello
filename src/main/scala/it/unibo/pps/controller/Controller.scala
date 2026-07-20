@@ -23,6 +23,8 @@ import os.Path
  *
  *  See the documentation of each method for further specifications.
  *
+ *  This controller is also a [[Publisher]], after every action must notify its subscribers.
+ *
  *  Used by: [[MatchController]]
  */
 trait Controller extends Publisher[MatchState]:
@@ -68,10 +70,7 @@ object Controller:
     controller.subscribe(view)
     controller
 
-/** Implements the controller of the application.
- *
- *  This controller is also a [[Publisher]] in this application, after every action notifies its subscribers.
- */
+/** Implements the controller of the application. */
 private[controller] class MatchController extends Controller:
   private var logic: Logic = _
   private var subscribers = Seq[Subscriber[MatchState]]()
