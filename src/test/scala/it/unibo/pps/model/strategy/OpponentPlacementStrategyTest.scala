@@ -1,13 +1,17 @@
 package it.unibo.pps.model.strategy
 
-import it.unibo.pps.domain.{Color, Position}
+import it.unibo.pps.domain.{ActivePlayer, Color, OpponentType, Position}
+import it.unibo.pps.domain.MatchStatus.*
+import it.unibo.pps.domain.OpponentType.*
+import it.unibo.pps.domain.Shape.*
+import it.unibo.pps.model.Logic
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.model.player.Opponent
-
+import it.unibo.pps.utils.IntExtensions.*
+import it.unibo.pps.model.player.*
 import it.unibo.pps.testutils.TestExtensions.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{contain, should, shouldBe}
-import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor4}
+import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
 
 class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
@@ -23,25 +27,25 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
     val position: Position = opponent.strategy.computePlacement
     availablePlacements should contain (position)
 
-  private val inputs: TableFor4[Board, Int, Long, Position] = Table(
-    ("board", "depth", "expected time in ms", "expected position"),
+  private val inputs: TableFor3[Board, Int, Long] = Table(
+    ("board", "depth", "expected time in ms"),
     (
       """
-      ..W.
+      ..BW
       .WWB
       .BBB
       ....
-      """.toBoard, 3, 100L, Position(3, 1)
+      """.toBoard, 3, 100L
     ),
     (
       """
       ......
       ..BB..
-      .BWB..
+      .BWBB.
       ..B...
       ......
       ......
-      """.toBoard, 4, 350L, Position(0, 2)
+      """.toBoard, 4, 350L
     ),
     (
       """
@@ -53,29 +57,24 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
       ..W.W...
       ....W...
       ........
-      """.toBoard, 5, 2000L, Position(2, 1)
+      """.toBoard, 5, 2000L
     )
   )
 
   behave like smartOpponentPerformance (using inputs)
 
   // Shared tests for SmartOpponentPlacementStrategy performance
-  def smartOpponentPerformance(using inputs: TableFor4[Board, Int, Long, Position]): Unit =
-    forEvery(inputs): (b, depth, expectedTime, expectedMove) =>
+  def smartOpponentPerformance(using inputs: TableFor3[Board, Int, Long]): Unit =
+    forEvery(inputs): (b, depth, expectedTime) =>
       given Board = b
       val availablePlacements = b.getAvailablePlacements(Color.White)
       val opponent = Opponent.SmartOpponent(Color.White, depth)
       val testSubject = s"SmartOpponentPlacementStrategy" +
-                        " (input #" + inputs.indexOf((b, depth, expectedTime, expectedMove)) + ")"
+                        " (input #" + inputs.indexOf((b, depth, expectedTime)) + ")"
 
       testSubject should s"return a valid placement" in:
         val position: Position = opponent.strategy.computePlacement
         availablePlacements should contain (position)
-
-      // todo(borghini): replace this test with a simulation of a game between two SmartOpponent where the smartest should win
-      it should "return an advantageous position" in:
-        val position: Position = opponent.strategy.computePlacement
-        position shouldBe expectedMove
 
       // todo(borghini): find a hardware independent way to test performance
       it should s"finish within ${expectedTime}ms for ${availablePlacements.size} available moves at depth $depth" in:
@@ -89,3 +88,32 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
         val averageTime = totalTime.sum.toDouble / numberOfRuns
         println(s"Average time taken: ${averageTime} ms")
         assert(averageTime < expectedTime, s"SmartOpponentPlacementStrategy took too long on average: ${averageTime} ms")
+      def playWholeMatch(player: Player)(using difficulty: OpponentType): Logic =
+        val boardShape = Square(8)
+        val logic = Logic(boardShape, opponent.color, difficulty)
+        Iterator.iterate(logic)((turn: Logic) =>
+          turn.state.activePlayer match
+            case ActivePlayer.Opponent => turn.placeOpponentDisk()
+            case ActivePlayer.User =>
+              given Board = Board(turn.state.board)
+              val position = opponent.strategy.computePlacement
+              turn.placeUserDisk(position)
+        ).dropWhile(_.state.status == InProgress)
+        .next()
+
+      it should "win against an easier opponent" in:
+        given difficulty: OpponentType = opponent.strategy match
+          case SmartPlacementStrategy(_, depth) if depth.inRange(2, 3) => Easy
+          case SmartPlacementStrategy(_, depth) if depth >= 4 => Medium
+          case _ => Random
+        val matchEnd = playWholeMatch(opponent)
+        matchEnd.state.status shouldBe UserWon
+
+      it should "lose against a harder opponent" in:
+        given difficulty: OpponentType = opponent.strategy match
+          case RandomPlacementStrategy(_) => Easy
+          case SmartPlacementStrategy(_, depth) if depth <= 2 => Medium
+          case _ => Hard
+        val cappedOpponent = Opponent.SmartOpponent(opponent.color, math.max(depth, 4))
+        val matchEnd = playWholeMatch(cappedOpponent)
+        matchEnd.state.status shouldBe OpponentWon
