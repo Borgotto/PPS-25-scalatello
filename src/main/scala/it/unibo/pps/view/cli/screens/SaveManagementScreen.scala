@@ -29,7 +29,7 @@ class SaveManagementScreen(
     )
     for
       _ <- write(i18n.t("save_menu.action_request"))
-      _ <- write(options.mkString("\n", "\n", ""))
+      _ <- inputComponent.displayOptions(options)
       option <- inputComponent.askForValidInput(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(options.size),
@@ -43,18 +43,12 @@ class SaveManagementScreen(
     case SaveMenuOption.Load.code => showSaveLoadingMenu()
     case SaveMenuOption.Delete.code => showSaveDeletionMenu()
 
-  private def saveFileOptions: String =
-    controller.saveFileNames
-      .zipWithIndex
-      .map((filename, index) => s"[${index + 1}] $filename")
-      .mkString("\n", "\n", "")
-
   private def saveFilesCount: Int = controller.saveFileNames.size
 
   private def showSaveLoadingMenu(): IO[Unit] =
     for
       _ <- write(i18n.t("save_loading_menu.file_choice_request"))
-      _ <- write(saveFileOptions)
+      _ <- inputComponent.displayOptions(controller.saveFileNames)
       position <- inputComponent.askForValidInput(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(saveFilesCount),
@@ -83,7 +77,7 @@ class SaveManagementScreen(
   private def showSaveDeletionMenu(): IO[Unit] =
     for
       _ <- write(i18n.t("save_deletion_menu.file_choice_request"))
-      _ <- write(saveFileOptions)
+      _ <- inputComponent.displayOptions(controller.saveFileNames)
       position <- inputComponent.askForValidInput(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(saveFilesCount),

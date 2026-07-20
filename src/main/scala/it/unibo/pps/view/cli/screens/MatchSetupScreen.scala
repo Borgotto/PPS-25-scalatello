@@ -1,9 +1,9 @@
 package it.unibo.pps.view.cli.screens
 
 import it.unibo.pps.controller.Controller
-import it.unibo.pps.domain.{Color, Shape}
+import it.unibo.pps.domain.{Color, OpponentType, Shape}
 import it.unibo.pps.view.cli.io.IO.write
-import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
+import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.i18n.I18n
 
 enum ColorOption(val code: String):
@@ -13,6 +13,12 @@ enum ColorOption(val code: String):
 enum ShapeOption(val code: String):
   case Square extends ShapeOption("1")
   case Rectangular extends ShapeOption("2")
+
+enum OpponentOption(val code: String):
+  case Random extends OpponentOption("1")
+  case Easy extends OpponentOption("2")
+  case Medium extends OpponentOption("3")
+  case Hard extends OpponentOption("4")
 
 class MatchSetupMenu(
   i18n: I18n,
@@ -29,9 +35,10 @@ class MatchSetupMenu(
     for
       userColor <- askForUserColor()
       shape <- askForBoardShape()
+      opponentType <- askForOpponentType()
       _ <- showMatchStartMessage()
       _ <- IO(() => enableSaveShortcut())
-      _ <- IO(() => controller.startMatch(shape, userColor))
+      _ <- IO(() => controller.startMatch(shape, userColor, opponentType))
     yield ()
 
   private def askForUserColor(): IO[Color] =
@@ -41,7 +48,7 @@ class MatchSetupMenu(
     )
     for
       _ <- write(i18n.t("setup_menu.user.color_question"))
-      _ <- write(options.mkString("\n", "\n", ""))
+      _ <- inputComponent.displayOptions(options)
       option <- inputComponent.askForValidInput(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(options.size),
@@ -62,7 +69,7 @@ class MatchSetupMenu(
     )
     for
       _ <- write(i18n.t("setup_menu.board.shape_question"))
-      _ <- write(options.mkString("\n", "\n", ""))
+      _ <- inputComponent.displayOptions(options)
       option <- inputComponent.askForValidInput(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(options.size),
@@ -103,6 +110,31 @@ class MatchSetupMenu(
   private def isSelectedSizeValid(size: String): Boolean = size.toIntOption match
     case Some(n) if n % 2 == 0 && n >= minBoardSize => true
     case _ => false
+
+  private def askForOpponentType(): IO[OpponentType] =
+    val options = Seq(
+      i18n.t("setup_menu.opponent.type_random"),
+      i18n.t("setup_menu.opponent.type_easy"),
+      i18n.t("setup_menu.opponent.type_medium"),
+      i18n.t("setup_menu.opponent.type_hard"),
+    )
+    for 
+      _ <- write(i18n.t("setup_menu.opponent.type_question"))
+      _ <- inputComponent.displayOptions(options)
+      option <- inputComponent.askForValidInput(
+        i18n.t("generic.choice_request"),
+        inputComponent.isValidOptionChoice(options.size),
+        identity,
+        i18n.t("generic.invalid_choice")
+      )
+      opponentType <- handleSelectedOpponentType(option)
+    yield opponentType
+  
+  private def handleSelectedOpponentType(option: String): IO[OpponentType] = option match
+    case OpponentOption.Random.code => IO(() => OpponentType.Random)
+    case OpponentOption.Easy.code => IO(() => OpponentType.Easy)
+    case OpponentOption.Medium.code => IO(() => OpponentType.Medium)
+    case OpponentOption.Hard.code => IO(() => OpponentType.Hard)
 
   private def showMatchStartMessage(): IO[Unit] =
     for

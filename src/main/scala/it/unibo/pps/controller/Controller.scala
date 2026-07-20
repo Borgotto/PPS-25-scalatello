@@ -21,9 +21,10 @@ trait Controller extends Publisher[MatchState]:
   /** 
    * Starts and configures a match according to the passed settings.
    * @param boardShape the [[Shape]] the [[Board]] must have.
-   * @param userColor  the [[Color]] assigned to the user.
+   * @param userColor the [[Color]] assigned to the user.
+   * @param opponentType the type of opponent.
    */
-  def startMatch(boardShape: Shape, userColor: Color): Unit
+  def startMatch(boardShape: Shape, userColor: Color, opponentType: OpponentType): Unit
 
   /** 
    * Handles the current turn of the user, according to the position selected by them for their next placement.
@@ -92,8 +93,8 @@ class MatchControllerImpl extends Controller:
   override def notifySubscribers(state: MatchState): Unit =
     subscribers.foreach(s => s.update(state))
 
-  def startMatch(boardShape: Shape, userColor: Color): Unit =
-    logic = Logic(boardShape, userColor, OpponentType.Random)
+  def startMatch(boardShape: Shape, userColor: Color, opponentType: OpponentType): Unit =
+    logic = Logic(boardShape, userColor, opponentType)
     notifySubscribers(logic.state)
     logic.state.activePlayer match
       case User => ()

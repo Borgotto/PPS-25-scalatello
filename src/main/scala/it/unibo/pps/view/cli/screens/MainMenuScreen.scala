@@ -31,7 +31,7 @@ class MainMenuScreen(
       i18n.t("main_menu.actions.quit")
     )
     for
-      _ <- write(options.mkString("\n", "\n", ""))
+      _ <- inputComponent.displayOptions(options)
       action <- inputComponent.askForValidInput(
         i18n.t("main_menu.action_request"),
         inputComponent.isValidOptionChoice(options.size),

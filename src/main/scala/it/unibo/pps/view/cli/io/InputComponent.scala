@@ -18,6 +18,13 @@ class InputComponent(private val reader: LineReader):
     catch
       case _: SaveInterruptException => ReadResult.SaveInterrupt
   )
+  
+  def displayOptions(options: Seq[String]): IO[Unit] =
+    val indexedOptions = options
+      .zipWithIndex
+      .map((option, index) => s"[${index + 1}] $option")
+      .mkString("\n", "\n", "")
+    write(indexedOptions)
 
   def askForValidInput[T](
     request: String,

@@ -1,7 +1,6 @@
 package it.unibo.pps.view.cli.screens
 
 import it.unibo.pps.controller.Controller
-import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.Sanitizer.sanitize
 import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
