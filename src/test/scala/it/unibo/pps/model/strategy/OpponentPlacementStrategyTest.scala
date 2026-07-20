@@ -17,11 +17,11 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
 
   "RandomOpponentPlacementStrategy" should "return a valid placement" in:
     given board: Board = """
-       ....
-       .WB.
-       .BW.
-       ....
-     """.toBoard
+      ....
+      .WB.
+      .BW.
+      ....
+      """.toBoard
     val opponent = Opponent.RandomOpponent(Color.White)
     val availablePlacements = board.getAvailablePlacements(opponent.color)
     val position: Position = opponent.strategy.computePlacement
@@ -86,8 +86,8 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
           timeTaken
         )
         val averageTime = totalTime.sum.toDouble / numberOfRuns
-        println(s"Average time taken: ${averageTime} ms")
         assert(averageTime < expectedTime, s"SmartOpponentPlacementStrategy took too long on average: ${averageTime} ms")
+
       def playWholeMatch(player: Player)(using difficulty: OpponentType): Logic =
         val boardShape = Square(8)
         val logic = Logic(boardShape, opponent.color, difficulty)
