@@ -3,10 +3,10 @@ package it.unibo.pps.view.cli
 import it.unibo.pps.controller.Controller
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.View
-import it.unibo.pps.view.cli.io.{InputComponent, IO, ShortcutListener, given_Monad_IO}
+import it.unibo.pps.view.cli.io.{ExitInterruptException, IO, InputComponent, ShortcutListener, given_Monad_IO}
+import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.screens.{MainMenuScreen, MatchScreen, MatchSetupMenu, SaveCreationScreen, SaveManagementScreen}
 import it.unibo.pps.view.i18n.I18n
-
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.TerminalBuilder
 
@@ -25,7 +25,21 @@ class CLIView(private val i18n: I18n) extends View(i18n) with ShortcutListener:
 
   private var currentMatchState: MatchState = _
 
-  override def show(): Unit = showMainMenu()
+  Runtime.getRuntime.addShutdownHook(new Thread(() => terminal.close()))
+
+  private def shutdown(): Unit =
+    terminal.close()
+    for
+      _ <- write(i18n.t("generic.exit_shortcut_detected"))
+      _ <- write(i18n.t("main_menu.exit_message"))
+    yield ()
+    sys.exit(0)
+
+  override def show(): Unit =
+    try
+      enableExitShortcut()
+      showMainMenu()
+    catch case _: ExitInterruptException => shutdown()
 
   private def showMainMenu(): IO[Unit] = mainMenuScreen.render()
 
