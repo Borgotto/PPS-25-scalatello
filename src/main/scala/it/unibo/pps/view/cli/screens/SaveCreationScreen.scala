@@ -15,10 +15,9 @@ class SaveCreationScreen(
   override def render(): IO[Unit] =
     for
       input <- inputComponent.askForValidInput(
-        i18n.t("save_creation_menu.save_request"),
-        s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
-        identity,
-        i18n.t("save_creation_menu.invalid_choice")
+        requestKey = "save_creation_menu.save_request",
+        isInputValid = s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
+        invalidInputMessageKey = "save_creation_menu.invalid_choice"
       )
       saveMatch <- IO(() => input.toLowerCase() == "y")
       _ <- if saveMatch then handleSave() else IO(() => ())

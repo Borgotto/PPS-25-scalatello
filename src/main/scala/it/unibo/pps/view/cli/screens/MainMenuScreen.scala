@@ -1,8 +1,8 @@
 package it.unibo.pps.view.cli.screens
 
-import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
+import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.cli.io.IO.write
-import it.unibo.pps.view.i18n.I18n
+import it.unibo.pps.view.i18n.{I18n, localize}
 
 enum Action(val code: String):
   case NewGame extends Action("1")
@@ -21,21 +21,14 @@ class MainMenuScreen(
     yield ()
 
   private def askForActionSelection(): IO[Unit] =
-    val options = Seq(
-      i18n.t("main_menu.actions.new_game"),
-      i18n.t("main_menu.actions.load_saved_game"),
-      i18n.t("main_menu.actions.quit")
+    inputComponent.askForOption(
+      options = Seq(
+        "main_menu.actions.new_game",
+        "main_menu.actions.load_saved_game",
+        "main_menu.actions.quit"
+      ).localize, 
+      handleSelectedOption = handleSelectedAction
     )
-    for
-      _ <- inputComponent.displayOptions(options)
-      action <- inputComponent.askForValidInput(
-        i18n.t("main_menu.action_request"),
-        inputComponent.isValidOptionChoice(options.size),
-        identity,
-        i18n.t("generic.invalid_choice")
-      )
-      _ <- handleSelectedAction(action)
-    yield ()
 
   private def handleSelectedAction(option: String): IO[Unit] = option match
     case Action.NewGame.code => onNewGameAction()

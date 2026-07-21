@@ -4,7 +4,7 @@ import it.unibo.pps.controller.Controller
 import it.unibo.pps.domain.{Color, OpponentType, Shape}
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
-import it.unibo.pps.view.i18n.I18n
+import it.unibo.pps.view.i18n.{I18n, localize}
 
 enum ColorOption(val code: String):
   case Black extends ColorOption("1")
@@ -38,67 +38,53 @@ class MatchSetupScreen(
     yield ()
 
   private def askForUserColor(): IO[Color] =
-    val options = Seq(
-      i18n.t("setup_menu.user.color_black"),
-      i18n.t("setup_menu.user.color_white"),
+    inputComponent.askForOption(
+      requestKey = Some("setup_menu.user.color_question"),
+      options = Seq(
+        "setup_menu.user.color_black",
+        "setup_menu.user.color_white",
+      ).localize,
+      handleSelectedOption = handleSelectedColor
     )
-    for
-      _ <- write(i18n.t("setup_menu.user.color_question"))
-      _ <- inputComponent.displayOptions(options)
-      option <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(options.size),
-        identity,
-        i18n.t("generic.invalid_choice")
-      )
-      color <- handleSelectedColor(option)
-    yield color
 
   private def handleSelectedColor(option: String): IO[Color] = option match
     case ColorOption.Black.code => IO(() => Color.Black)
     case ColorOption.White.code => IO(() => Color.White)
 
   private def askForBoardShape(): IO[Shape] =
-    val options = Seq(
-      i18n.t("setup_menu.board.square_shape"),
-      i18n.t("setup_menu.board.rectangular_shape"),
+    inputComponent.askForOption(
+      requestKey = Some("setup_menu.board.shape_question"),
+      options = Seq(
+        "setup_menu.board.square_shape",
+        "setup_menu.board.rectangular_shape",
+      ).localize,
+      handleSelectedOption = handleSelectedShape
     )
-    for
-      _ <- write(i18n.t("setup_menu.board.shape_question"))
-      _ <- inputComponent.displayOptions(options)
-      option <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(options.size),
-        identity,
-        i18n.t("generic.invalid_choice")
-      )
-      shape <- handleSelectedShape(option)
-    yield shape
 
   private def handleSelectedShape(option: String): IO[Shape] = option match
     case ShapeOption.Square.code =>
       for
         size <- inputComponent.askForValidInput(
-          i18n.t("setup_menu.board.square_size_question"),
-          isSelectedSizeValid,
-          _.toInt,
-          i18n.t("setup_menu.board.invalid_size")
+          requestKey = "setup_menu.board.square_size_question",
+          isInputValid = isSelectedSizeValid,
+          convert = _.toInt,
+          invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
         shape <- IO(() => Shape.Square(size))
       yield shape
     case ShapeOption.Rectangular.code =>
       for
         height <- inputComponent.askForValidInput(
-          i18n.t("setup_menu.board.rectangle_height_question"),
-          isSelectedSizeValid,
-          _.toInt,
-          i18n.t("setup_menu.board.invalid_size")
+          requestKey = "setup_menu.board.rectangle_height_question",
+          isInputValid = isSelectedSizeValid,
+          convert = _.toInt,
+          invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
         width <- inputComponent.askForValidInput(
-          i18n.t("setup_menu.board.rectangle_width_question"),
-          isSelectedSizeValid,
-          _.toInt,
-          i18n.t("setup_menu.board.invalid_size")
+          requestKey = "setup_menu.board.rectangle_width_question",
+          isInputValid = isSelectedSizeValid,
+          convert = _.toInt,
+          invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
         shape <- IO(() => Shape.Rectangle(height, width))
       yield shape
@@ -108,23 +94,16 @@ class MatchSetupScreen(
     case _ => false
 
   private def askForOpponentType(): IO[OpponentType] =
-    val options = Seq(
-      i18n.t("setup_menu.opponent.type_random"),
-      i18n.t("setup_menu.opponent.type_easy"),
-      i18n.t("setup_menu.opponent.type_medium"),
-      i18n.t("setup_menu.opponent.type_hard"),
+    inputComponent.askForOption(
+      requestKey = Some("setup_menu.opponent.type_question"),
+      options = Seq(
+        "setup_menu.opponent.type_random",
+        "setup_menu.opponent.type_easy",
+        "setup_menu.opponent.type_medium",
+        "setup_menu.opponent.type_hard"
+      ).localize,
+      handleSelectedOption = handleSelectedOpponentType
     )
-    for 
-      _ <- write(i18n.t("setup_menu.opponent.type_question"))
-      _ <- inputComponent.displayOptions(options)
-      option <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(options.size),
-        identity,
-        i18n.t("generic.invalid_choice")
-      )
-      opponentType <- handleSelectedOpponentType(option)
-    yield opponentType
   
   private def handleSelectedOpponentType(option: String): IO[OpponentType] = option match
     case OpponentOption.Random.code => IO(() => OpponentType.Random)

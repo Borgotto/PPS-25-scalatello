@@ -1,80 +1,86 @@
 package it.unibo.pps.view.cli.io
 
-import it.unibo.pps.view.cli.io.InputComponent.defaultSaveCallback
 import it.unibo.pps.view.cli.io.IO.write
-
+import it.unibo.pps.view.i18n.I18n
 import org.jline.reader.LineReader
 
 enum ReadResult:
   case Success(value: String)
   case SaveInterrupt
 
-class InputComponent(private val reader: LineReader):
+class InputComponent(private val reader: LineReader)(using i18n: I18n):
+
+  private def pass: IO[Unit] = IO(() => ())
 
   def read(): IO[String] = IO(() => reader.readLine())
 
   private def interruptableRead(): IO[ReadResult] = IO(() =>
-    try
-      ReadResult.Success(reader.readLine())
-    catch
-      case _: SaveInterruptException => ReadResult.SaveInterrupt
+    try ReadResult.Success(reader.readLine())
+    catch case _: SaveInterruptException => ReadResult.SaveInterrupt
   )
+
+  def askForOption[T](
+    requestKey: Option[String] = None,
+    options: Seq[String],
+    handleSelectedOption: String => IO[T]
+  ): IO[T] =
+    for
+      _ <- requestKey.map(key => write(i18n.t(key))).getOrElse(pass)
+      _ <- displayOptions(options)
+      option <- askForValidInput(
+        requestKey = "generic.choice_request",
+        isInputValid = isValidOptionChoice(options.size),
+        invalidInputMessageKey = "generic.invalid_choice"
+      )
+      output <- handleSelectedOption(option)
+    yield output
   
-  def displayOptions(options: Seq[String]): IO[Unit] =
-    val indexedOptions = options
+  private def displayOptions(optionsKeys: Seq[String]): IO[Unit] =
+    val indexedOptions = optionsKeys
       .zipWithIndex
       .map((option, index) => s"[${index + 1}] $option")
       .mkString("\n", "\n", "")
     write(indexedOptions)
 
   def askForValidInput[T](
-    request: String,
+    requestKey: String,
     isInputValid: String => Boolean,
-    convert: String => T,
-    invalidInputMessage: String
-  )(using onSaveInterrupt: => IO[Unit] = defaultSaveCallback): IO[T] =
+    convert: String => T = identity,
+    invalidInputMessageKey: String
+  )(using onSaveInterrupt: => IO[Unit] = pass): IO[T] =
     for
-      _ <- write(request)
+      _ <- write(i18n.t(requestKey))
       result <- interruptableRead()
       convertedInput <- handleReadResult(
         result,
-        request,
+        requestKey,
         isInputValid,
         convert,
-        invalidInputMessage
+        invalidInputMessageKey
       )
     yield convertedInput
 
   private def handleReadResult[T](
     result: ReadResult,
-    request: String,
+    requestKey: String,
     isInputValid: String => Boolean,
     convert: String => T,
-    invalidInputMessage: String
+    invalidInputMessageKey: String
   )(using onSaveInterrupt: => IO[Unit]): IO[T] = result match
     case ReadResult.SaveInterrupt => 
       for
         _ <- onSaveInterrupt
-        input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+        input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
       yield input
     case ReadResult.Success(input) =>
-      val isValid = isInputValid(input)
-      if isValid then
-        IO(() => convert(input))
+      if isInputValid(input) then IO(() => convert(input))
       else
         for
-          _ <- write(invalidInputMessage)
-          input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+          _ <- write(i18n.t(invalidInputMessageKey))
+          input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
         yield input
   
-  def isValidOptionChoice(nOptions: Int)(input: String): Boolean =
-    isConvertibleToInt(input) && isWithinBounds(1, nOptions)(input.toInt)
+  private def isValidOptionChoice(numOptions: Int)(input: String): Boolean =
+    isConvertibleToInt(input) && (1 to numOptions).contains(input.toInt)
 
-  def isConvertibleToInt(s: String): Boolean = s.toIntOption match
-    case Some(_) => true
-    case _ => false
-
-  def isWithinBounds(min: Int, max: Int)(n: Int): Boolean = n >= min && n <= max
-
-object InputComponent:
-  given defaultSaveCallback: IO[Unit] = IO(() => ())
+  def isConvertibleToInt(s: String): Boolean = s.toIntOption.isDefined

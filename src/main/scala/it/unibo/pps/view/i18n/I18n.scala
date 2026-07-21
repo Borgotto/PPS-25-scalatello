@@ -9,3 +9,7 @@ class I18n(locale: Locale):
   def t(key: String): String =
     try bundle.getString(key)
     catch case _: Exception => s"[$key]"
+
+extension (keys: Seq[String])
+  def localize(using i18n: I18n): Seq[String] = keys.map(key => i18n.t(key))
+  

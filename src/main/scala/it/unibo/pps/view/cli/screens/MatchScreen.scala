@@ -17,7 +17,7 @@ class MatchScreen(
   onMatchExit: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
-  given onSaveInterrupt: IO[Unit] = onSaveTrigger()
+  private given onSaveInterrupt: IO[Unit] = onSaveTrigger()
 
   override def render(): IO[Unit] =
     println(state.board.render())
@@ -44,28 +44,28 @@ class MatchScreen(
   private def askForValidPlacement(state: BoardState): IO[Position] =
     for
       row <- inputComponent.askForValidInput(
-        i18n.t("match.placement_request_row"),
-        isValidRowForPlacement(state),
-        _.toInt,
-        i18n.t("match.invalid_row")
+        requestKey = "match.placement_request_row",
+        isInputValid = isValidRowForPlacement(state),
+        convert = _.toInt,
+        invalidInputMessageKey = "match.invalid_row"
       )
       column <- inputComponent.askForValidInput(
-        i18n.t("match.placement_request_column"),
-        isValidColumnForPlacement(state, row),
-        _.toInt,
-        i18n.t("match.invalid_column")
+        requestKey = "match.placement_request_column",
+        isInputValid = isValidColumnForPlacement(state, row),
+        convert = _.toInt,
+        invalidInputMessageKey = "match.invalid_column"
       )
       position <- IO(() => Position(row, column))
     yield position
 
   private def isValidRowForPlacement(state: BoardState)(s: String): Boolean =
     inputComponent.isConvertibleToInt(s)
-      && inputComponent.isWithinBounds(0, state.shape.maxRow)(s.toInt)
+      && (0 to state.shape.maxRow).contains(s.toInt)
       && isRowAmongAvailablePlacements(state.userAvailablePlacements)(s.toInt)
 
   private def isValidColumnForPlacement(state: BoardState, selectedRow: Int)(s: String): Boolean =
     inputComponent.isConvertibleToInt(s)
-      && inputComponent.isWithinBounds(0, state.shape.maxColumn)(s.toInt)
+      && (0 to state.shape.maxColumn).contains(s.toInt)
       && state.userAvailablePlacements.contains(Position(selectedRow, s.toInt))
 
   private def isRowAmongAvailablePlacements(availablePlacements: Set[Position])(row: Int): Boolean =
