@@ -11,15 +11,13 @@ import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
 import it.unibo.pps.view.i18n.I18n
 
 class MatchScreen(
-  i18n: I18n,
-  inputComponent: InputComponent,
   controller: Controller,
   state: MatchState,
-  showSaveCreationMenu: () => IO[Unit],
-  onMatchEnd: () => IO[Unit]
-) extends CLIScreen:
+  onSaveTrigger: () => IO[Unit],
+  onMatchExit: () => IO[Unit]
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
-  given onSaveInterrupt: IO[Unit] = showSaveCreationMenu()
+  given onSaveInterrupt: IO[Unit] = onSaveTrigger()
 
   override def render(): IO[Unit] =
     println(state.board.render())
@@ -76,7 +74,6 @@ class MatchScreen(
   private def onMatchEnd(matchResultMessageKey: String): IO[Unit] =
     for
       _ <- write(i18n.t(matchResultMessageKey))
-      _ <- write(i18n.t("generic.back_to_menu_message"))
-      _ <- onMatchEnd()
+      _ <- onMatchExit()
     yield ()
     

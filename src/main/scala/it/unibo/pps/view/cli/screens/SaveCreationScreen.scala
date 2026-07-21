@@ -9,10 +9,8 @@ import it.unibo.pps.view.i18n.I18n
 import scala.util.{Failure, Success}
 
 class SaveCreationScreen(
-  i18n: I18n,
-  inputComponent: InputComponent,
   controller: Controller,
-) extends CLIScreen:
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   override def render(): IO[Unit] =
     for

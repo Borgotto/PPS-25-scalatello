@@ -13,12 +13,10 @@ enum SaveMenuOption(val code: String):
   case Delete extends SaveMenuOption("2")
 
 class SaveManagementScreen(
-  i18n: I18n,
-  inputComponent: InputComponent,
   controller: Controller,
   renderMatch: (state: MatchState) => Unit,
-  showMainMenu: () => IO[Unit]
-) extends CLIScreen:
+  onScreenExit: () => IO[Unit]
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   override def render(): IO[Unit] =
     val options = Seq(
@@ -51,7 +49,7 @@ class SaveManagementScreen(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(saveFilesCount),
         _.toInt,
-        i18n.t("generic.invalid_choice", saveFilesCount)
+        i18n.t("generic.invalid_choice")
       )
       _ <- handleFileLoading(position)
     yield ()
@@ -68,8 +66,7 @@ class SaveManagementScreen(
       case Failure(_) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_failure"))
-          _ <- write(i18n.t("generic.back_to_menu_message"))
-          _ <- showMainMenu()
+          _ <- onScreenExit()
         yield ()
 
   private def showSaveDeletionMenu(): IO[Unit] =
@@ -80,11 +77,10 @@ class SaveManagementScreen(
         i18n.t("generic.choice_request"),
         inputComponent.isValidOptionChoice(saveFilesCount),
         _.toInt,
-        i18n.t("generic.invalid_choice", saveFilesCount)
+        i18n.t("generic.invalid_choice")
       )
       _ <- handleFileDeletion(position)
-      _ <- write(i18n.t("generic.back_to_menu_message"))
-      _ <- showMainMenu()
+      _ <- onScreenExit()
     yield ()
 
   private def handleFileDeletion(position: Int): IO[Unit] =

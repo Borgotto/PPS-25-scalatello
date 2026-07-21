@@ -8,5 +8,5 @@ import java.util.Locale
 object Scalatello:
 
   @main def main(): Unit = 
-    val i18n = I18n(Locale.ENGLISH)
-    CLIView(i18n).show()
+    given i18n: I18n = I18n(Locale.ENGLISH)
+    CLIView().show()

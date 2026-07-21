@@ -10,11 +10,9 @@ enum Action(val code: String):
   case Quit extends Action("3")
 
 class MainMenuScreen(
-  i18n: I18n,
-  inputComponent: InputComponent,
   onNewGameAction: () => IO[Unit],
   onSaveManagementAction: () => IO[Unit]
-) extends CLIScreen:
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   override def render(): IO[Unit] =
     for
@@ -42,4 +40,4 @@ class MainMenuScreen(
   private def handleSelectedAction(option: String): IO[Unit] = option match
     case Action.NewGame.code => onNewGameAction()
     case Action.SaveFiles.code => onSaveManagementAction()
-    case Action.Quit.code => write(i18n.t("main_menu.exit_message"))
+    case Action.Quit.code => write(i18n.t("generic.exit_message"))

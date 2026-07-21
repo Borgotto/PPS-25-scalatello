@@ -20,12 +20,10 @@ enum OpponentOption(val code: String):
   case Medium extends OpponentOption("3")
   case Hard extends OpponentOption("4")
 
-class MatchSetupMenu(
-  i18n: I18n,
-  inputComponent: InputComponent,
+class MatchSetupScreen(
   controller: Controller,
   enableSaveShortcut: () => Unit
-) extends CLIScreen:
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   private val minBoardSize = 4
 
