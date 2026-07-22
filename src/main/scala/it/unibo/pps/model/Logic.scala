@@ -3,7 +3,7 @@ package it.unibo.pps.model
 import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, OpponentType, Position, Shape}
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.player.{Opponent, User}
-import it.unibo.pps.model.player.Opponent.{EasyOpponent, HardOpponent, MediumOpponent, RandomOpponent, SmartOpponent}
+import it.unibo.pps.model.player.Opponent.{EasyOpponent, HardOpponent, MediumOpponent, RandomOpponent}
 import it.unibo.pps.state.{BoardState, MatchState}
 import it.unibo.pps.domain.Color.*
 import it.unibo.pps.domain.MatchStatus.*
