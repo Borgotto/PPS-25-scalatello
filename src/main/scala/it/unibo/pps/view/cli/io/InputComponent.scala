@@ -21,17 +21,18 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
   def askForOption[T](
     requestKey: Option[String] = None,
     options: Seq[String],
-    handleSelectedOption: String => IO[T]
+    handleSelectedOption: Int => IO[T]
   ): IO[T] =
     for
       _ <- requestKey.map(key => write(i18n.t(key))).getOrElse(pass)
       _ <- displayOptions(options)
-      option <- askForValidInput(
+      option <- askForInteger(
         requestKey = "generic.choice_request",
-        isInputValid = isValidOptionChoice(options.size),
+        isNumberValid = isValidOption(options.size),
         invalidInputMessageKey = "generic.invalid_choice"
       )
-      output <- handleSelectedOption(option)
+      ordinal <- IO(() => option - 1)
+      output <- handleSelectedOption(ordinal)
     yield output
 
   def askForInteger(
@@ -62,8 +63,8 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
   def askForFilename(requestKey: String, sanitize: String => String): IO[String] =
     askForValidInput(
       requestKey = requestKey,
-      isInputValid = _ => true, 
-      convert = sanitize, 
+      isInputValid = _ => true,
+      convert = sanitize,
       invalidInputMessageKey = ""
     )
 
@@ -112,7 +113,6 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
           input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
         yield input
   
-  private def isValidOptionChoice(numOptions: Int)(input: String): Boolean =
-    isConvertibleToInt(input) && (1 to numOptions).contains(input.toInt)
+  private def isValidOption(numOptions: Int)(option: Int): Boolean = (1 to numOptions).contains(option)
 
   private def isConvertibleToInt(s: String): Boolean = s.toIntOption.isDefined

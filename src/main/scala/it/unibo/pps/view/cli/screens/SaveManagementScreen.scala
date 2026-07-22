@@ -4,13 +4,13 @@ import it.unibo.pps.controller.Controller
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
+import it.unibo.pps.view.cli.screens.SaveMenuAction.*
 import it.unibo.pps.view.i18n.{I18n, localize}
 
 import scala.util.{Failure, Success}
 
-enum SaveMenuOption(val code: String):
-  case Load extends SaveMenuOption("1")
-  case Delete extends SaveMenuOption("2")
+enum SaveMenuAction:
+  case Load, Delete
 
 class SaveManagementScreen(
   controller: Controller,
@@ -25,9 +25,10 @@ class SaveManagementScreen(
       handleSelectedOption = handleSelectedSaveMenuOption
     )
 
-  private def handleSelectedSaveMenuOption(option: String): IO[Unit] = option match
-    case SaveMenuOption.Load.code => showSaveLoadingMenu()
-    case SaveMenuOption.Delete.code => showSaveDeletionMenu()
+  private def handleSelectedSaveMenuOption(ordinal: Int): IO[Unit] =
+    SaveMenuAction.fromOrdinal(ordinal) match
+      case Load => showSaveLoadingMenu()
+      case Delete => showSaveDeletionMenu()
 
   private def saveFilesCount: Int = controller.saveFileNames.size
 
@@ -38,8 +39,8 @@ class SaveManagementScreen(
       handleSelectedOption = handleFileLoading
     )
 
-  private def handleFileLoading(position: String): IO[Unit] =
-    val fileName = controller.saveFileNames(position.toInt - 1)
+  private def handleFileLoading(ordinal: Int): IO[Unit] =
+    val fileName = controller.saveFileNames(ordinal)
     val result = controller.loadMatch(fileName)
     result match
       case Success(state: MatchState) =>
@@ -63,8 +64,8 @@ class SaveManagementScreen(
       _ <- onScreenExit()
     yield ()
 
-  private def handleFileDeletion(position: String): IO[Unit] =
-    val fileName = controller.saveFileNames(position.toInt - 1)
+  private def handleFileDeletion(ordinal: Int): IO[Unit] =
+    val fileName = controller.saveFileNames(ordinal)
     val result = controller.deleteSaveFile(fileName)
     result match
       case Success(_) => write(i18n.t("save_deletion_menu.loading_success"))

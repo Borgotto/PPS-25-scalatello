@@ -6,19 +6,14 @@ import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.i18n.{I18n, localize}
 
-enum ColorOption(val code: String):
-  case Black extends ColorOption("1")
-  case White extends ColorOption("2")
+enum ColorOption:
+  case Black, White
 
-enum ShapeOption(val code: String):
-  case Square extends ShapeOption("1")
-  case Rectangular extends ShapeOption("2")
+enum ShapeOption:
+  case Square, Rectangular
 
-enum OpponentOption(val code: String):
-  case Random extends OpponentOption("1")
-  case Easy extends OpponentOption("2")
-  case Medium extends OpponentOption("3")
-  case Hard extends OpponentOption("4")
+enum OpponentOption:
+  case Random, Easy, Medium, Hard
 
 class MatchSetupScreen(
   controller: Controller,
@@ -47,9 +42,10 @@ class MatchSetupScreen(
       handleSelectedOption = handleSelectedColor
     )
 
-  private def handleSelectedColor(option: String): IO[Color] = option match
-    case ColorOption.Black.code => IO(() => Color.Black)
-    case ColorOption.White.code => IO(() => Color.White)
+  private def handleSelectedColor(ordinal: Int): IO[Color] = 
+    ColorOption.fromOrdinal(ordinal) match
+      case ColorOption.Black => IO(() => Color.Black)
+      case ColorOption.White => IO(() => Color.White)
 
   private def askForBoardShape(): IO[Shape] =
     inputComponent.askForOption(
@@ -61,30 +57,31 @@ class MatchSetupScreen(
       handleSelectedOption = handleSelectedShape
     )
 
-  private def handleSelectedShape(option: String): IO[Shape] = option match
-    case ShapeOption.Square.code =>
-      for
-        size <- inputComponent.askForInteger(
-          requestKey = "setup_menu.board.square_size_question",
-          isNumberValid = isSelectedSizeValid,
-          invalidInputMessageKey = "setup_menu.board.invalid_size"
-        )
-        shape <- IO(() => Shape.Square(size))
-      yield shape
-    case ShapeOption.Rectangular.code =>
-      for
-        height <- inputComponent.askForInteger(
-          requestKey = "setup_menu.board.rectangle_height_question",
-          isNumberValid = isSelectedSizeValid,
-          invalidInputMessageKey = "setup_menu.board.invalid_size"
-        )
-        width <- inputComponent.askForInteger(
-          requestKey = "setup_menu.board.rectangle_width_question",
-          isNumberValid = isSelectedSizeValid,
-          invalidInputMessageKey = "setup_menu.board.invalid_size"
-        )
-        shape <- IO(() => Shape.Rectangle(height, width))
-      yield shape
+  private def handleSelectedShape(ordinal: Int): IO[Shape] = 
+    ShapeOption.fromOrdinal(ordinal) match
+      case ShapeOption.Square =>
+        for
+          size <- inputComponent.askForInteger(
+            requestKey = "setup_menu.board.square_size_question",
+            isNumberValid = isSelectedSizeValid,
+            invalidInputMessageKey = "setup_menu.board.invalid_size"
+          )
+          shape <- IO(() => Shape.Square(size))
+        yield shape
+      case ShapeOption.Rectangular =>
+        for
+          height <- inputComponent.askForInteger(
+            requestKey = "setup_menu.board.rectangle_height_question",
+            isNumberValid = isSelectedSizeValid,
+            invalidInputMessageKey = "setup_menu.board.invalid_size"
+          )
+          width <- inputComponent.askForInteger(
+            requestKey = "setup_menu.board.rectangle_width_question",
+            isNumberValid = isSelectedSizeValid,
+            invalidInputMessageKey = "setup_menu.board.invalid_size"
+          )
+          shape <- IO(() => Shape.Rectangle(height, width))
+        yield shape
 
   private def isSelectedSizeValid(size: Int): Boolean = size % 2 == 0 && size >= minBoardSize
 
@@ -100,11 +97,12 @@ class MatchSetupScreen(
       handleSelectedOption = handleSelectedOpponentType
     )
   
-  private def handleSelectedOpponentType(option: String): IO[OpponentType] = option match
-    case OpponentOption.Random.code => IO(() => OpponentType.Random)
-    case OpponentOption.Easy.code => IO(() => OpponentType.Easy)
-    case OpponentOption.Medium.code => IO(() => OpponentType.Medium)
-    case OpponentOption.Hard.code => IO(() => OpponentType.Hard)
+  private def handleSelectedOpponentType(ordinal: Int): IO[OpponentType] = 
+    OpponentOption.fromOrdinal(ordinal) match
+      case OpponentOption.Random => IO(() => OpponentType.Random)
+      case OpponentOption.Easy => IO(() => OpponentType.Easy)
+      case OpponentOption.Medium => IO(() => OpponentType.Medium)
+      case OpponentOption.Hard => IO(() => OpponentType.Hard)
 
   private def showMatchStartMessage(): IO[Unit] =
     for
