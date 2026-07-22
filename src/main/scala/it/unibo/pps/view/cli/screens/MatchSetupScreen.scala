@@ -17,7 +17,7 @@ enum OpponentOption:
 
 class MatchSetupScreen(
   controller: Controller,
-  enableSaveShortcut: () => Unit
+  onMatchStart: () => Unit
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   private val minBoardSize = 4
@@ -28,7 +28,7 @@ class MatchSetupScreen(
       shape <- askForBoardShape()
       opponentType <- askForOpponentType()
       _ <- showMatchStartMessage()
-      _ <- IO(() => enableSaveShortcut())
+      _ <- IO(() => onMatchStart())
       _ <- IO(() => controller.startMatch(shape, userColor, opponentType))
     yield ()
 

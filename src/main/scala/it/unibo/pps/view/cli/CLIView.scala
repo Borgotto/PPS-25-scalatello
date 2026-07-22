@@ -13,7 +13,7 @@ import org.jline.terminal.TerminalBuilder
 
 class CLIView(using i18n: I18n) extends View:
 
-  private val controller = Controller(this)
+  private val controller = Controller()
 
   private val terminal = TerminalBuilder.builder().system(true).build()
   private val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
@@ -27,15 +27,13 @@ class CLIView(using i18n: I18n) extends View:
     onSaveManagementAction = showSaveManagementScreen
   )
   
-  private val matchSetupScreen = MatchSetupScreen(
-    controller,
-    enableSaveShortcut = shortcutManager.enableSaveShortcut
-  )
+  private val matchSetupScreen = MatchSetupScreen(controller, onMatchStart)
   
   private val saveCreationScreen = SaveCreationScreen(controller)
   
   private val saveManagementScreen = SaveManagementScreen(
     controller,
+    onMatchStart,
     renderMatch = update,
     onScreenExit = goBackToMainMenu
   )
@@ -63,8 +61,13 @@ class CLIView(using i18n: I18n) extends View:
       _ <- write(i18n.t("generic.back_to_menu_message"))
       _ <- showMainMenu()
     yield ()
-
+  
+  private def onMatchStart(): Unit =
+    controller.subscribe(this)
+    shortcutManager.enableSaveShortcut()
+  
   private def onMatchExit(): IO[Unit] =
+    controller.unsubscribe(this)
     shortcutManager.disableSaveShortcut()
     goBackToMainMenu()
 

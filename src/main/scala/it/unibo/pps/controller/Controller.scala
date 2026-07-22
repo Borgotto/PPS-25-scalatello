@@ -5,7 +5,6 @@ import it.unibo.pps.domain.{Color, OpponentType, Position, Shape, ActivePlayer, 
 import it.unibo.pps.model.Logic
 import it.unibo.pps.observer.{Publisher, Subscriber}
 import it.unibo.pps.state.MatchState
-import it.unibo.pps.view.View
 
 import scala.annotation.tailrec
 import scala.util.{Success, Try}
@@ -53,13 +52,7 @@ trait Controller extends Publisher[MatchState]:
 
 /** Factory for [[Controller]] instances. */
 object Controller:
-  /** Instantiates a controller and then subscribes the `view` to the updates published by it.
-   *  @param view the [[View]] of the application.
-   */
-  def apply(view: View): Controller =
-    val controller = ControllerImpl()
-    controller.subscribe(view)
-    controller
+  def apply(): Controller = ControllerImpl()
 
 /** Implements the controller of the application. */
 private[controller] class ControllerImpl extends Controller:

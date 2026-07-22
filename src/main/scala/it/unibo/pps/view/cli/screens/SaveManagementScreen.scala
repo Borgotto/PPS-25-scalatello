@@ -14,6 +14,7 @@ enum SaveMenuAction:
 
 class SaveManagementScreen(
   controller: Controller,
+  onMatchStart: () => Unit,
   renderMatch: (state: MatchState) => Unit,
   onScreenExit: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
@@ -46,6 +47,7 @@ class SaveManagementScreen(
       case Success(state: MatchState) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_success"))
+          _ <- IO(() => onMatchStart())
           _ <- IO(() => renderMatch(state))
         yield ()
       case Failure(_) =>
