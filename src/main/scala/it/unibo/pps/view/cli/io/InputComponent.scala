@@ -39,7 +39,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     requestKey: String,
     isNumberValid: Int => Boolean,
     invalidInputMessageKey: String
-  ): IO[Int] =
+  )(using onSaveInterrupt: => IO[Unit] = pass): IO[Int] =
     askForValidInput(
       requestKey = requestKey,
       isInputValid = input => isConvertibleToInt(input) && isNumberValid(input.toInt),
