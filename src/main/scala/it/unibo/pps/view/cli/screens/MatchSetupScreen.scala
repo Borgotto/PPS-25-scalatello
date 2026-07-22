@@ -64,34 +64,29 @@ class MatchSetupScreen(
   private def handleSelectedShape(option: String): IO[Shape] = option match
     case ShapeOption.Square.code =>
       for
-        size <- inputComponent.askForValidInput(
+        size <- inputComponent.askForInteger(
           requestKey = "setup_menu.board.square_size_question",
-          isInputValid = isSelectedSizeValid,
-          convert = _.toInt,
+          isNumberValid = isSelectedSizeValid,
           invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
         shape <- IO(() => Shape.Square(size))
       yield shape
     case ShapeOption.Rectangular.code =>
       for
-        height <- inputComponent.askForValidInput(
+        height <- inputComponent.askForInteger(
           requestKey = "setup_menu.board.rectangle_height_question",
-          isInputValid = isSelectedSizeValid,
-          convert = _.toInt,
+          isNumberValid = isSelectedSizeValid,
           invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
-        width <- inputComponent.askForValidInput(
+        width <- inputComponent.askForInteger(
           requestKey = "setup_menu.board.rectangle_width_question",
-          isInputValid = isSelectedSizeValid,
-          convert = _.toInt,
+          isNumberValid = isSelectedSizeValid,
           invalidInputMessageKey = "setup_menu.board.invalid_size"
         )
         shape <- IO(() => Shape.Rectangle(height, width))
       yield shape
 
-  private def isSelectedSizeValid(size: String): Boolean = size.toIntOption match
-    case Some(n) if n % 2 == 0 && n >= minBoardSize => true
-    case _ => false
+  private def isSelectedSizeValid(size: Int): Boolean = size % 2 == 0 && size >= minBoardSize
 
   private def askForOpponentType(): IO[OpponentType] =
     inputComponent.askForOption(
@@ -117,3 +112,4 @@ class MatchSetupScreen(
       _ <- write(i18n.t("match.legend"))
       _ <- write(i18n.t("match.save_shortcut"))
     yield ()
+    

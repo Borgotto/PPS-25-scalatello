@@ -52,8 +52,10 @@ class CLIView(using i18n: I18n) extends View:
 
   private def showSaveCreationScreen(currentMatchState: MatchState): IO[Unit] =
     for
+      _ <- IO(() => shortcutManager.disableSaveShortcut())
       _ <- saveCreationScreen.render()
       _ <- IO(() => update(currentMatchState))
+      _ <- IO(() => shortcutManager.enableSaveShortcut())
     yield ()
   
   private def goBackToMainMenu(): IO[Unit] =

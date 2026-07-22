@@ -14,24 +14,22 @@ class SaveCreationScreen(
 
   override def render(): IO[Unit] =
     for
-      input <- inputComponent.askForValidInput(
+      saveMatch <- inputComponent.askForConfirmation(
         requestKey = "save_creation_menu.save_request",
-        isInputValid = s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
         invalidInputMessageKey = "save_creation_menu.invalid_choice"
       )
-      saveMatch <- IO(() => input.toLowerCase() == "y")
-      _ <- if saveMatch then handleSave() else IO(() => ())
+      _ <- if saveMatch then handleSave() else inputComponent.pass
     yield ()
 
   private def handleSave(): IO[Unit] =
     for
-      _ <- write(i18n.t("save_creation_menu.filename_request"))
-      filename <- inputComponent.read()
-      sanitizedFilename <- IO(() => sanitize(filename))
+      sanitizedFilename <- inputComponent.askForFilename(
+        requestKey = "save_creation_menu.filename_request", 
+        sanitize = filename => sanitize(filename)
+      )
       result <- IO(() => controller.saveMatch(sanitizedFilename))
       _ <- result match
         case Success(_) => write(i18n.t("save_creation_menu.save_success"))
         case Failure(exception) => write(i18n.t("save_creation_menu.save_failure") :+ exception.getMessage)
-      _ <- IO(() => ())
     yield ()
     

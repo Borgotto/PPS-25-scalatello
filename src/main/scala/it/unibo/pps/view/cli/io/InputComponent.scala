@@ -2,6 +2,7 @@ package it.unibo.pps.view.cli.io
 
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.i18n.I18n
+
 import org.jline.reader.LineReader
 
 enum ReadResult:
@@ -10,9 +11,7 @@ enum ReadResult:
 
 class InputComponent(private val reader: LineReader)(using i18n: I18n):
 
-  private def pass: IO[Unit] = IO(() => ())
-
-  def read(): IO[String] = IO(() => reader.readLine())
+  def pass: IO[Unit] = IO(() => ())
 
   private def interruptableRead(): IO[ReadResult] = IO(() =>
     try ReadResult.Success(reader.readLine())
@@ -34,7 +33,40 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
       )
       output <- handleSelectedOption(option)
     yield output
-  
+
+  def askForInteger(
+    requestKey: String,
+    isNumberValid: Int => Boolean,
+    invalidInputMessageKey: String
+  ): IO[Int] =
+    askForValidInput(
+      requestKey = requestKey,
+      isInputValid = input => isConvertibleToInt(input) && isNumberValid(input.toInt),
+      convert = _.toInt,
+      invalidInputMessageKey = invalidInputMessageKey
+    )
+
+  def askForConfirmation(
+    requestKey: String,
+    invalidInputMessageKey: String
+  ): IO[Boolean] =
+    for
+      input <- askForValidInput(
+        requestKey = requestKey,
+        isInputValid = s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
+        invalidInputMessageKey = invalidInputMessageKey
+      )
+      hasUserConfirmed <- IO(() => input.toLowerCase() == "y")
+    yield hasUserConfirmed
+
+  def askForFilename(requestKey: String, sanitize: String => String): IO[String] =
+    askForValidInput(
+      requestKey = requestKey,
+      isInputValid = _ => true, 
+      convert = sanitize, 
+      invalidInputMessageKey = ""
+    )
+
   private def displayOptions(optionsKeys: Seq[String]): IO[Unit] =
     val indexedOptions = optionsKeys
       .zipWithIndex
@@ -42,7 +74,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
       .mkString("\n", "\n", "")
     write(indexedOptions)
 
-  def askForValidInput[T](
+  private def askForValidInput[T](
     requestKey: String,
     isInputValid: String => Boolean,
     convert: String => T = identity,
@@ -83,4 +115,4 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
   private def isValidOptionChoice(numOptions: Int)(input: String): Boolean =
     isConvertibleToInt(input) && (1 to numOptions).contains(input.toInt)
 
-  def isConvertibleToInt(s: String): Boolean = s.toIntOption.isDefined
+  private def isConvertibleToInt(s: String): Boolean = s.toIntOption.isDefined

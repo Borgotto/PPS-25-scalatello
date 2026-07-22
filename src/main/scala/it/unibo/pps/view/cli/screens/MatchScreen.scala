@@ -43,33 +43,26 @@ class MatchScreen(
 
   private def askForValidPlacement(state: BoardState): IO[Position] =
     for
-      row <- inputComponent.askForValidInput(
+      row <- inputComponent.askForInteger(
         requestKey = "match.placement_request_row",
-        isInputValid = isValidRowForPlacement(state),
-        convert = _.toInt,
+        isNumberValid = isValidRowForPlacement(state),
         invalidInputMessageKey = "match.invalid_row"
       )
-      column <- inputComponent.askForValidInput(
+      column <- inputComponent.askForInteger(
         requestKey = "match.placement_request_column",
-        isInputValid = isValidColumnForPlacement(state, row),
-        convert = _.toInt,
+        isNumberValid = isValidColumnForPlacement(state, row),
         invalidInputMessageKey = "match.invalid_column"
       )
       position <- IO(() => Position(row, column))
     yield position
 
-  private def isValidRowForPlacement(state: BoardState)(s: String): Boolean =
-    inputComponent.isConvertibleToInt(s)
-      && (0 to state.shape.maxRow).contains(s.toInt)
-      && isRowAmongAvailablePlacements(state.userAvailablePlacements)(s.toInt)
+  private def isValidRowForPlacement(state: BoardState)(row: Int): Boolean =
+      (0 to state.shape.maxRow).contains(row)
+      && state.userAvailablePlacements.map(_.row).contains(row)
 
-  private def isValidColumnForPlacement(state: BoardState, selectedRow: Int)(s: String): Boolean =
-    inputComponent.isConvertibleToInt(s)
-      && (0 to state.shape.maxColumn).contains(s.toInt)
-      && state.userAvailablePlacements.contains(Position(selectedRow, s.toInt))
-
-  private def isRowAmongAvailablePlacements(availablePlacements: Set[Position])(row: Int): Boolean =
-    availablePlacements.map(position => position.row).contains(row)
+  private def isValidColumnForPlacement(state: BoardState, row: Int)(column: Int): Boolean =
+      (0 to state.shape.maxColumn).contains(column)
+      && state.userAvailablePlacements.contains(Position(row, column))
 
   private def onMatchEnd(matchResultMessageKey: String): IO[Unit] =
     for
