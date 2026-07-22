@@ -16,8 +16,6 @@ class MainMenuScreen(
   onSaveManagementAction: () => IO[Unit]
 ) extends CLIScreen:
 
-  given onSaveInterrupt: IO[Unit] = IO(() => ())
-
   override def render(): IO[Unit] =
     for
       _ <- write(i18n.t("main_menu.title"))

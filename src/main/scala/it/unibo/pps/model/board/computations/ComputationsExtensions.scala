@@ -7,7 +7,7 @@ import scala.annotation.tailrec
 
 /** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
  *
- *  Every class that uses it must implement the [[inBounds()]] method.
+ *  Every class that uses it must specify the [[inBounds()]] method.
  *
  *  Used by: [[ComputationsExtensionsRectangle]].
  */

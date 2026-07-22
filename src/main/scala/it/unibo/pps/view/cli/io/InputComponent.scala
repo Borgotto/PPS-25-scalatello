@@ -1,6 +1,7 @@
 package it.unibo.pps.view.cli.io
 
-import IO.write
+import it.unibo.pps.view.cli.io.InputComponent.defaultSaveCallback
+import it.unibo.pps.view.cli.io.IO.write
 
 import org.jline.reader.LineReader
 
@@ -31,7 +32,7 @@ class InputComponent(private val reader: LineReader):
     isInputValid: String => Boolean,
     convert: String => T,
     invalidInputMessage: String
-  )(using onSaveInterrupt: => IO[Unit]): IO[T] =
+  )(using onSaveInterrupt: => IO[Unit] = defaultSaveCallback): IO[T] =
     for
       _ <- write(request)
       result <- interruptableRead()
@@ -74,4 +75,6 @@ class InputComponent(private val reader: LineReader):
     case _ => false
 
   def isWithinBounds(min: Int, max: Int)(n: Int): Boolean = n >= min && n <= max
-  
+
+object InputComponent:
+  given defaultSaveCallback: IO[Unit] = IO(() => ())

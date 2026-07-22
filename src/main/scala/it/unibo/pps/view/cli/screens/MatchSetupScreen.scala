@@ -29,8 +29,6 @@ class MatchSetupMenu(
 
   private val minBoardSize = 4
 
-  given onSaveInterrupt: IO[Unit] = IO(() => ())
-
   override def render(): IO[Unit] =
     for
       userColor <- askForUserColor()

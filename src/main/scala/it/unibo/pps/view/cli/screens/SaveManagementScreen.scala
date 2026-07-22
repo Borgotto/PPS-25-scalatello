@@ -20,8 +20,6 @@ class SaveManagementScreen(
   showMainMenu: () => IO[Unit]
 ) extends CLIScreen:
 
-  given onSaveInterrupt: IO[Unit] = IO(() => ())
-
   override def render(): IO[Unit] =
     val options = Seq(
       i18n.t("save_menu.load_action"),
