@@ -3,61 +3,44 @@ package it.unibo.pps.view.cli.screens
 import it.unibo.pps.controller.Controller
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.cli.io.IO.write
-import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
-import it.unibo.pps.view.i18n.I18n
+import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
+import it.unibo.pps.view.cli.screens.SaveMenuAction.*
+import it.unibo.pps.view.i18n.{I18n, localize}
 
 import scala.util.{Failure, Success}
 
-enum SaveMenuOption(val code: String):
-  case Load extends SaveMenuOption("1")
-  case Delete extends SaveMenuOption("2")
+enum SaveMenuAction:
+  case Load, Delete
 
 class SaveManagementScreen(
-  i18n: I18n,
-  inputComponent: InputComponent,
   controller: Controller,
   renderMatch: (state: MatchState) => Unit,
-  showMainMenu: () => IO[Unit]
-) extends CLIScreen:
+  onScreenExit: () => IO[Unit]
+)(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   override def render(): IO[Unit] =
-    val options = Seq(
-      i18n.t("save_menu.load_action"),
-      i18n.t("save_menu.delete_action")
+    inputComponent.askForOption(
+      requestKey = Some("save_menu.action_request"), 
+      options = Seq("save_menu.load_action", "save_menu.delete_action").localize, 
+      handleSelectedOption = handleSelectedSaveMenuOption
     )
-    for
-      _ <- write(i18n.t("save_menu.action_request"))
-      _ <- inputComponent.displayOptions(options)
-      option <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(options.size),
-        identity,
-        i18n.t("generic.invalid_choice")
-      )
-      _ <- handleSelectedSaveMenuOption(option)
-    yield ()
 
-  private def handleSelectedSaveMenuOption(option: String): IO[Unit] = option match
-    case SaveMenuOption.Load.code => showSaveLoadingMenu()
-    case SaveMenuOption.Delete.code => showSaveDeletionMenu()
+  private def handleSelectedSaveMenuOption(ordinal: Int): IO[Unit] =
+    SaveMenuAction.fromOrdinal(ordinal) match
+      case Load => showSaveLoadingMenu()
+      case Delete => showSaveDeletionMenu()
 
   private def saveFilesCount: Int = controller.saveFileNames.size
 
   private def showSaveLoadingMenu(): IO[Unit] =
-    for
-      _ <- write(i18n.t("save_loading_menu.file_choice_request"))
-      _ <- inputComponent.displayOptions(controller.saveFileNames)
-      position <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(saveFilesCount),
-        _.toInt,
-        i18n.t("generic.invalid_choice", saveFilesCount)
-      )
-      _ <- handleFileLoading(position)
-    yield ()
+    inputComponent.askForOption(
+      requestKey = Some("save_loading_menu.file_choice_request"),
+      options = controller.saveFileNames, 
+      handleSelectedOption = handleFileLoading
+    )
 
-  private def handleFileLoading(position: Int): IO[Unit] =
-    val fileName = controller.saveFileNames(position - 1)
+  private def handleFileLoading(ordinal: Int): IO[Unit] =
+    val fileName = controller.saveFileNames(ordinal)
     val result = controller.loadMatch(fileName)
     result match
       case Success(state: MatchState) =>
@@ -68,27 +51,21 @@ class SaveManagementScreen(
       case Failure(_) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_failure"))
-          _ <- write(i18n.t("generic.back_to_menu_message"))
-          _ <- showMainMenu()
+          _ <- onScreenExit()
         yield ()
 
   private def showSaveDeletionMenu(): IO[Unit] =
     for
-      _ <- write(i18n.t("save_deletion_menu.file_choice_request"))
-      _ <- inputComponent.displayOptions(controller.saveFileNames)
-      position <- inputComponent.askForValidInput(
-        i18n.t("generic.choice_request"),
-        inputComponent.isValidOptionChoice(saveFilesCount),
-        _.toInt,
-        i18n.t("generic.invalid_choice", saveFilesCount)
+      _ <- inputComponent.askForOption(
+        requestKey = Some("save_deletion_menu.file_choice_request"), 
+        options = controller.saveFileNames, 
+        handleSelectedOption = handleFileDeletion
       )
-      _ <- handleFileDeletion(position)
-      _ <- write(i18n.t("generic.back_to_menu_message"))
-      _ <- showMainMenu()
+      _ <- onScreenExit()
     yield ()
 
-  private def handleFileDeletion(position: Int): IO[Unit] =
-    val fileName = controller.saveFileNames(position - 1)
+  private def handleFileDeletion(ordinal: Int): IO[Unit] =
+    val fileName = controller.saveFileNames(ordinal)
     val result = controller.deleteSaveFile(fileName)
     result match
       case Success(_) => write(i18n.t("save_deletion_menu.loading_success"))
