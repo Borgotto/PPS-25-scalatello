@@ -5,7 +5,7 @@ import it.unibo.pps.domain.ActivePlayer.*
 import it.unibo.pps.domain.MatchStatus.*
 import it.unibo.pps.domain.Position
 import it.unibo.pps.state.{BoardState, MatchState}
-import it.unibo.pps.view.cli.io.BoardRenderingExtensions.render
+import it.unibo.pps.view.cli.io.BoardRenderingExtension.render
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
 import it.unibo.pps.view.i18n.I18n
@@ -20,8 +20,10 @@ class MatchScreen(
   private given onSaveInterrupt: IO[Unit] = onSaveTrigger()
 
   override def render(): IO[Unit] =
-    println(state.board.render())
-    handleState(state)
+    for
+      _ <- write(state.board.render())
+      _ <- handleState(state)
+    yield ()
 
   private def handleState(state: MatchState): IO[Unit] =
     state.status match
@@ -57,11 +59,11 @@ class MatchScreen(
     yield position
 
   private def isValidRowForPlacement(state: BoardState)(row: Int): Boolean =
-      (0 to state.shape.maxRow).contains(row)
+      (0 to state.shape.maxRowIndex).contains(row)
       && state.userAvailablePlacements.map(_.row).contains(row)
 
   private def isValidColumnForPlacement(state: BoardState, row: Int)(column: Int): Boolean =
-      (0 to state.shape.maxColumn).contains(column)
+      (0 to state.shape.maxColumnIndex).contains(column)
       && state.userAvailablePlacements.contains(Position(row, column))
 
   private def onMatchEnd(matchResultMessageKey: String): IO[Unit] =

@@ -23,15 +23,13 @@ class SaveManagementScreen(
     inputComponent.askForOption(
       requestKey = Some("save_menu.action_request"), 
       options = Seq("save_menu.load_action", "save_menu.delete_action").localize, 
-      handleSelectedOption = handleSelectedSaveMenuOption
+      handleSelectedOption = handleSelectedSaveMenuAction
     )
 
-  private def handleSelectedSaveMenuOption(ordinal: Int): IO[Unit] =
+  private def handleSelectedSaveMenuAction(ordinal: Int): IO[Unit] =
     SaveMenuAction.fromOrdinal(ordinal) match
       case Load => showSaveLoadingMenu()
       case Delete => showSaveDeletionMenu()
-
-  private def saveFilesCount: Int = controller.saveFileNames.size
 
   private def showSaveLoadingMenu(): IO[Unit] =
     inputComponent.askForOption(
@@ -44,15 +42,15 @@ class SaveManagementScreen(
     val fileName = controller.saveFileNames(ordinal)
     val result = controller.loadMatch(fileName)
     result match
-      case Success(state: MatchState) =>
+      case Success(state) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_success"))
           _ <- IO(() => onMatchStart())
           _ <- IO(() => renderMatch(state))
         yield ()
-      case Failure(_) =>
+      case Failure(error) =>
         for
-          _ <- write(i18n.t("save_loading_menu.loading_failure"))
+          _ <- write(i18n.t("save_loading_menu.loading_failure") :+ s"\n${error.getMessage}")
           _ <- onScreenExit()
         yield ()
 
@@ -71,4 +69,4 @@ class SaveManagementScreen(
     val result = controller.deleteSaveFile(fileName)
     result match
       case Success(_) => write(i18n.t("save_deletion_menu.loading_success"))
-      case Failure(_) => write(i18n.t("save_deletion_menu.loading_failure"))
+      case Failure(error) => write(i18n.t("save_deletion_menu.loading_failure") :+ s"\n${error.getMessage}")

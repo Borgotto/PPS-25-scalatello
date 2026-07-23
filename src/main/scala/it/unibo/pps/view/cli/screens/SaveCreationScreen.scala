@@ -30,6 +30,6 @@ class SaveCreationScreen(
       result <- IO(() => controller.saveMatch(sanitizedFilename))
       _ <- result match
         case Success(_) => write(i18n.t("save_creation_menu.save_success"))
-        case Failure(exception) => write(i18n.t("save_creation_menu.save_failure") :+ exception.getMessage)
+        case Failure(exception) => write(i18n.t("save_creation_menu.save_failure") :+ s"\n${exception.getMessage}")
     yield ()
     

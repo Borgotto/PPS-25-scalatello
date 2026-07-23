@@ -39,7 +39,7 @@ trait Controller extends Publisher[MatchState]:
    *  @param fileName the name of the save file from which the match must be loaded.
    *  @return [[scala.util.Success]] if the match is loaded correctly, [[scala.util.Failure]] otherwise.
    */
-  def loadMatch(fileName: String): Try[_]
+  def loadMatch(fileName: String): Try[MatchState]
 
   /** @return the names of the save files. */
   def saveFileNames: Seq[String]
@@ -110,7 +110,7 @@ private[controller] class ControllerImpl extends Controller:
         saveManager.save(logic.get.state)
       case None => throw IllegalStateException("There is no match to save")
 
-  def loadMatch(fileName: String): Try[_] =
+  def loadMatch(fileName: String): Try[MatchState] =
     given filepath: Path = saveDirectory / fileName
     val result = saveManager.load 
     result match

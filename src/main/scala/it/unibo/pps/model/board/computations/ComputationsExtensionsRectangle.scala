@@ -8,4 +8,4 @@ private[board] class ComputationsExtensionsRectangle extends ComputationsExtensi
   extension (p: Position)
     def inBounds(shape: Shape): Boolean =
       val minPosition: Position = Position(0, 0)
-      p.row.inRange(minPosition.row, shape.maxRow) && p.column.inRange(minPosition.column, shape.maxColumn)
+      p.row.inRange(minPosition.row, shape.maxRowIndex) && p.column.inRange(minPosition.column, shape.maxColumnIndex)

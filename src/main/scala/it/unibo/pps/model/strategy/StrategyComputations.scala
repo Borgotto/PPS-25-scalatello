@@ -13,8 +13,8 @@ object StrategyComputations:
       board.placeDisk(color, position, validatePosition = false)
 
     private def weight(position: Position): Int =
-      val maxRow = board.state.shape.maxRow
-      val maxCol = board.state.shape.maxColumn
+      val maxRow = board.state.shape.maxRowIndex
+      val maxCol = board.state.shape.maxColumnIndex
       val row = position.row
       val col = position.column
       if

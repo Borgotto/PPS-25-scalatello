@@ -6,14 +6,8 @@ import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.i18n.{I18n, localize}
 
-enum ColorOption:
-  case Black, White
-
 enum ShapeOption:
   case Square, Rectangular
-
-enum OpponentOption:
-  case Random, Easy, Medium, Hard
 
 class MatchSetupScreen(
   controller: Controller,
@@ -43,9 +37,7 @@ class MatchSetupScreen(
     )
 
   private def handleSelectedColor(ordinal: Int): IO[Color] = 
-    ColorOption.fromOrdinal(ordinal) match
-      case ColorOption.Black => IO(() => Color.Black)
-      case ColorOption.White => IO(() => Color.White)
+    IO(() => Color.fromOrdinal(ordinal))
 
   private def askForBoardShape(): IO[Shape] =
     inputComponent.askForOption(
@@ -98,11 +90,7 @@ class MatchSetupScreen(
     )
   
   private def handleSelectedOpponentType(ordinal: Int): IO[OpponentType] = 
-    OpponentOption.fromOrdinal(ordinal) match
-      case OpponentOption.Random => IO(() => OpponentType.Random)
-      case OpponentOption.Easy => IO(() => OpponentType.Easy)
-      case OpponentOption.Medium => IO(() => OpponentType.Medium)
-      case OpponentOption.Hard => IO(() => OpponentType.Hard)
+    IO(() => OpponentType.fromOrdinal(ordinal))
 
   private def showMatchStartMessage(): IO[Unit] =
     for
