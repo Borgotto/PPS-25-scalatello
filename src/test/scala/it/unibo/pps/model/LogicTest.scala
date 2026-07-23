@@ -1,35 +1,37 @@
 package it.unibo.pps.model
 
-import it.unibo.pps.domain.ActivePlayer.{Opponent, User}
 import it.unibo.pps.domain.{Color, OpponentType, Position, Shape}
-import it.unibo.pps.model.board.Board
+import it.unibo.pps.domain.ActivePlayer.{Opponent, User}
 import it.unibo.pps.domain.Color.*
-import it.unibo.pps.domain.Shape.*
 import it.unibo.pps.domain.MatchStatus.*
 import it.unibo.pps.domain.OpponentType.Random
+import it.unibo.pps.domain.Shape.*
+import it.unibo.pps.model.board.Board
+
 import it.unibo.pps.testutils.TestExtensions.*
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{an, be, not, thrownBy}
-import org.scalatest.matchers.should.Matchers.{should, shouldBe}
+import org.scalatest.matchers.should.Matchers.should
 
 class LogicTest extends AnyFlatSpec:
 
-  val userColor: Color = Black
-  val opponentType: OpponentType = Random
+  private val userColor: Color = Black
+  private val opponentType: OpponentType = Random
 
-  val squareSize = 4
-  val squareShape: Shape = Square(squareSize)
-  val initialSquareBoard: Board = """
+  private val squareSize = 4
+  private val squareShape: Shape = Square(squareSize)
+  private val initialSquareBoard: Board = """
     ....
     .WB.
     .BW.
     ....
   """.toBoard
 
-  val rectangleHeight = 4
-  val rectangleWidth = 6
-  val rectangularShape: Shape = Rectangle(rectangleHeight, rectangleWidth)
-  val initialRectangularBoard: Board = """
+  private val rectangleHeight = 4
+  private val rectangleWidth = 6
+  private val rectangularShape: Shape = Rectangle(rectangleHeight, rectangleWidth)
+  private val initialRectangularBoard: Board = """
     ......
     ..WB..
     ..BW..
