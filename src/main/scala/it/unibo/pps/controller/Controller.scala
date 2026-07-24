@@ -52,6 +52,7 @@ trait Controller extends Publisher[MatchState]:
 
 /** Factory for [[Controller]] instances. */
 object Controller:
+  /** Instantiates the controller of the application. */
   def apply(): Controller = ControllerImpl()
 
 /** Implements the controller of the application. */
