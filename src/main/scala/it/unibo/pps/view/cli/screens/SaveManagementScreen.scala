@@ -36,6 +36,12 @@ class SaveManagementScreen(
       case Delete => showSaveDeletionMenu()
       case GoBack => goBackToMainMenu()
 
+  private def onEmptySaveFilesList(): IO[Unit] =
+    for
+      _ <- write(i18n.t("save_loading_menu.no_files_message"))
+      _ <- goBackToMainMenu()
+    yield ()
+
   private def isGoBackOption(ordinal: Int, numOptions: Int): Boolean =
     ordinal == numOptions - 1
 
@@ -48,12 +54,24 @@ class SaveManagementScreen(
     if isGoBackOption(ordinal, numOptions) then goBack()
     else onFileSelected(ordinal)
 
+  private def showFileSelectionMenu(
+    requestKey: String,
+    onFileSelected: Int => IO[Unit]
+  ): IO[Unit] =
+    val saveFileNames = controller.saveFileNames
+    if saveFileNames.isEmpty then onEmptySaveFilesList()
+    else
+      val options = saveFileNames :+ i18n.t("generic.actions.go_back")
+      inputComponent.askForOption(
+        requestKey = Some(requestKey),
+        options = options,
+        handleSelectedOption = handleSelectedOption(options.size, onFileSelected)
+      )
+
   private def showSaveLoadingMenu(): IO[Unit] =
-    val options = controller.saveFileNames :+ i18n.t("generic.actions.go_back")
-    inputComponent.askForOption(
-      requestKey = Some("save_loading_menu.file_choice_request"),
-      options = options,
-      handleSelectedOption = handleSelectedOption(options.size, handleFileLoading)
+    showFileSelectionMenu(
+      requestKey = "save_loading_menu.file_choice_request",
+      onFileSelected = handleFileLoading
     )
 
   private def handleFileLoading(ordinal: Int): IO[Unit] =
@@ -73,19 +91,18 @@ class SaveManagementScreen(
         yield ()
 
   private def showSaveDeletionMenu(): IO[Unit] =
-    val options = controller.saveFileNames :+ i18n.t("generic.actions.go_back")
-    for
-      _ <- inputComponent.askForOption(
-        requestKey = Some("save_deletion_menu.file_choice_request"), 
-        options = options,
-        handleSelectedOption = handleSelectedOption(options.size, handleFileDeletion)
-      )
-      _ <- goBackToMainMenu()
-    yield ()
+    showFileSelectionMenu(
+      requestKey = "save_deletion_menu.file_choice_request",
+      onFileSelected = handleFileDeletion
+    )
 
   private def handleFileDeletion(ordinal: Int): IO[Unit] =
     val fileName = controller.saveFileNames(ordinal)
     val result = controller.deleteSaveFile(fileName)
-    result match
-      case Success(_) => write(i18n.t("save_deletion_menu.loading_success"))
-      case Failure(error) => write(i18n.t("save_deletion_menu.loading_failure") :+ s"\n${error.getMessage}")
+    val resultMessage = result match
+      case Success(_) => i18n.t("save_deletion_menu.loading_success")
+      case Failure(error) => i18n.t("save_deletion_menu.loading_failure") :+ s"\n${error.getMessage}"
+    for
+      _ <- write(resultMessage)
+      _ <- goBackToMainMenu()
+    yield ()
