@@ -29,7 +29,7 @@ object SaveManager:
 
     def deleteSaveFile(using filePath: Path): Try[Unit] =
       load match
-        case Failure(_) => Failure(SaveError.DeleteError)
+        case Failure(e) => Failure(SaveError.DeleteError(e))
         case Success(_) => Try(os.remove(filePath))
 
   enum SaveManagers:

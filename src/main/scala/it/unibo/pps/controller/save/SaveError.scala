@@ -11,8 +11,8 @@ enum SaveError extends Throwable:
   case WriteError(cause: Throwable)
   case ReadError(cause: Throwable)
   case DecodeError(cause: Throwable)
-  case DeleteError
 
+  case DeleteError(cause: Throwable)
 object SaveErrorHandler:
   def handleSaveErrors(cause: Throwable): SaveError.WriteError =
     cause match
