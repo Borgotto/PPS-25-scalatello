@@ -21,8 +21,8 @@ enum Opponent extends Player derives ReadWriter:
   val strategy: OpponentPlacementStrategy = this match
     case RandomOpponent(_) => RandomPlacementStrategy(color)
     case EasyOpponent(_) => SmartPlacementStrategy(color, depth = 1)
-    case MediumOpponent(_) => SmartPlacementStrategy(color, depth = 3)
-    case HardOpponent(_) => SmartPlacementStrategy(color, depth = 5)
+    case MediumOpponent(_) => SmartPlacementStrategy(color, depth = 2)
+    case HardOpponent(_) => SmartPlacementStrategy(color, depth = 4)
 
 object Opponent:
   def unapply(opponent: Opponent): Option[Color] = Some(opponent.color)
