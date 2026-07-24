@@ -31,7 +31,6 @@ classDiagram
       + saveMatch(fileName: String)
       + loadMatch(fileName: String): MatchState
       + saveFileNames(): List(String)
-
     }
     class SaveManager {
       + save(data)
