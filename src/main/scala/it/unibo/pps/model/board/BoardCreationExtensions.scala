@@ -25,6 +25,7 @@ object BoardCreationExtensions:
      *              Position(0,0) -> Disk(Color.White)
      *              Position(1,1) -> Disk(Color.Black)
      *            ) }}}
+     *            
      *  @return the [[scala.collection.immutable.Map]] created from the string.
      */
     def toPosDiskMap: Map[Position, Disk] =

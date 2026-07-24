@@ -9,9 +9,9 @@ import scala.annotation.tailrec
  *
  *  Every class that uses it must specify the [[inBounds()]] method.
  *
- *  Used by: [[ComputationsExtensionsRectangle]].
+ *  Used by: [[ComputationsPosExtensionsRectangle]].
  */
-private[board] trait ComputationsExtensions:
+private[board] trait ComputationsPosExtensions:
   extension (p: Position)
     /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
      * 
@@ -34,7 +34,7 @@ private[board] trait ComputationsExtensions:
       _getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
         distance.row.abs.equals(distance.column.abs)
 
-    /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
+    /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally or diagonally.
      * 
      *  This is an extension method of [[Position]].
      *  @param firstPos the starting position to consider.

@@ -9,7 +9,7 @@ import upickle.default.ReadWriter
 case class Position(row: Int, column: Int) derives ReadWriter:
   /**
    *  @param pos the position to subtract.
-   *  @return the subtraction of this position and another.
+   *  @return the subtraction of another position from this.
    */
   def -(pos: Position): Position = Position(this.row - pos.row, this.column - pos.column)
 
@@ -39,7 +39,6 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   /** @return the position below this. */
   def down: Position = Position(row + 1, column)
 
-  /** @inheritdoc */
   override def toString: String = s"($row,$column)"
 
 /** This object contains three implicit conversions:
@@ -47,8 +46,8 @@ case class Position(row: Int, column: Int) derives ReadWriter:
  *    - from [[scala.Tuple2]] of ([[String]],[[String]]) to [[Position]];
  *    - from [[String]] to [[Position]].
  *
- *  @example {{{
-*     import it.unibo.pps.utils.Position
+ *  @example
+ *  {{{import it.unibo.pps.utils.Position
  *
  *    first conversion:
  *    val pos: Position = (0,0)

@@ -8,11 +8,12 @@ import scala.annotation.tailrec
 /** The delegate class of [[BoardImpl]].
  *
  *  This helper class computes all the methods of its delegator.
- *  @param board the [[Board]] context, to make this class operate on the correct instance of board.
- *  @param posComputations the [[ComputationsExtensions]] context,
- *                        to make this class use the appropriate methods on different Boards.
+ *
+ *  @param board           the [[Board]] context, to make this class operate on the correct instance of board.
+ *  @param computations the [[ComputationsPosExtensions]] context,
+ *                         to make this class use the appropriate methods on different Boards.
  */
-private[board] class BoardComputations(using board: Board)(using posComputations: ComputationsExtensions):
+private[board] class BoardComputations(using board: Board)(using computations: ComputationsPosExtensions):
   private def getCapturableNeighboursPair(diskColor: Color)(using disks: Map[Position, Disk]): Set[(Position, Position)] =
     val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
     val capturableDisks = disks.keySet -- sameColorDisks
@@ -91,7 +92,7 @@ private[board] class BoardComputations(using board: Board)(using posComputations
    *  @param diskPos the position where the player wants to place the disk. 
    *  @param validatePosition if `diskPos` needs to be validated or not.
    *  @return a new instance of [[Board]] with the disk placed and the disks captured.
-   *  @throws IllegalArgumentException if `diskPos` is not valid.
+   *  @throws java.lang.IllegalArgumentException if `diskPos` is not valid.
    */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =
     def _captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
