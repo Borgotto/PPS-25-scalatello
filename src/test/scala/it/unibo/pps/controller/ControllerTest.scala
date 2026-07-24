@@ -7,6 +7,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify}
 import org.scalatest.flatspec.AnyFlatSpec
 
+/** Tests for [[Controller]] */
 class ControllerTest extends AnyFlatSpec:
   private val BOARD_SIZE = 4
   private val BOARD_SHAPE: Shape = Shape.Square(BOARD_SIZE)
