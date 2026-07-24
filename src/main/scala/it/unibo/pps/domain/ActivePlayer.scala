@@ -6,3 +6,7 @@ import upickle.ReadWriter
 enum ActivePlayer derives ReadWriter:
   case User
   case Opponent
+  
+  def next: ActivePlayer = this match
+    case User => Opponent
+    case Opponent => User

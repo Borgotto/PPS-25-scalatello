@@ -1,7 +1,7 @@
 package it.unibo.pps.view.cli.io
 
-import it.unibo.pps.view.cli.io.InputComponent.defaultSaveCallback
 import it.unibo.pps.view.cli.io.IO.write
+import it.unibo.pps.view.i18n.I18n
 
 import org.jline.reader.LineReader
 
@@ -9,72 +9,110 @@ enum ReadResult:
   case Success(value: String)
   case SaveInterrupt
 
-class InputComponent(private val reader: LineReader):
+class InputComponent(private val reader: LineReader)(using i18n: I18n):
 
-  def read(): IO[String] = IO(() => reader.readLine())
+  def pass: IO[Unit] = IO(() => ())
 
   private def interruptableRead(): IO[ReadResult] = IO(() =>
-    try
-      ReadResult.Success(reader.readLine())
-    catch
-      case _: SaveInterruptException => ReadResult.SaveInterrupt
+    try ReadResult.Success(reader.readLine())
+    catch case _: SaveInterruptException => ReadResult.SaveInterrupt
   )
-  
-  def displayOptions(options: Seq[String]): IO[Unit] =
-    val indexedOptions = options
+
+  def askForOption[T](
+    requestKey: Option[String] = None,
+    options: Seq[String],
+    handleSelectedOption: Int => IO[T]
+  ): IO[T] =
+    for
+      _ <- requestKey.map(key => write(i18n.t(key))).getOrElse(pass)
+      _ <- displayOptions(options)
+      option <- askForInteger(
+        requestKey = "generic.choice_request",
+        isNumberValid = isValidOption(options.size),
+        invalidInputMessageKey = "generic.invalid_choice"
+      )
+      ordinal <- IO(() => option - 1)
+      output <- handleSelectedOption(ordinal)
+    yield output
+
+  def askForInteger(
+    requestKey: String,
+    isNumberValid: Int => Boolean,
+    invalidInputMessageKey: String
+  )(using onSaveInterrupt: => IO[Unit] = pass): IO[Int] =
+    askForValidInput(
+      requestKey = requestKey,
+      isInputValid = input => isConvertibleToInt(input) && isNumberValid(input.toInt),
+      convert = _.toInt,
+      invalidInputMessageKey = invalidInputMessageKey
+    )
+
+  def askForConfirmation(
+    requestKey: String,
+    invalidInputMessageKey: String
+  ): IO[Boolean] =
+    for
+      input <- askForValidInput(
+        requestKey = requestKey,
+        isInputValid = s => s.toLowerCase() == "y" || s.toLowerCase() == "n",
+        invalidInputMessageKey = invalidInputMessageKey
+      )
+      hasUserConfirmed <- IO(() => input.toLowerCase() == "y")
+    yield hasUserConfirmed
+
+  def askForFilename(requestKey: String, sanitize: String => String): IO[String] =
+    askForValidInput(
+      requestKey = requestKey,
+      isInputValid = _ => true,
+      convert = sanitize,
+      invalidInputMessageKey = ""
+    )
+
+  private def displayOptions(optionsKeys: Seq[String]): IO[Unit] =
+    val indexedOptions = optionsKeys
       .zipWithIndex
       .map((option, index) => s"[${index + 1}] $option")
       .mkString("\n", "\n", "")
     write(indexedOptions)
 
-  def askForValidInput[T](
-    request: String,
+  private def askForValidInput[T](
+    requestKey: String,
     isInputValid: String => Boolean,
-    convert: String => T,
-    invalidInputMessage: String
-  )(using onSaveInterrupt: => IO[Unit] = defaultSaveCallback): IO[T] =
+    convert: String => T = identity,
+    invalidInputMessageKey: String
+  )(using onSaveInterrupt: => IO[Unit] = pass): IO[T] =
     for
-      _ <- write(request)
+      _ <- write(i18n.t(requestKey))
       result <- interruptableRead()
       convertedInput <- handleReadResult(
         result,
-        request,
+        requestKey,
         isInputValid,
         convert,
-        invalidInputMessage
+        invalidInputMessageKey
       )
     yield convertedInput
 
   private def handleReadResult[T](
     result: ReadResult,
-    request: String,
+    requestKey: String,
     isInputValid: String => Boolean,
     convert: String => T,
-    invalidInputMessage: String
+    invalidInputMessageKey: String
   )(using onSaveInterrupt: => IO[Unit]): IO[T] = result match
     case ReadResult.SaveInterrupt => 
       for
         _ <- onSaveInterrupt
-        input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+        input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
       yield input
     case ReadResult.Success(input) =>
-      val isValid = isInputValid(input)
-      if isValid then
-        IO(() => convert(input))
+      if isInputValid(input) then IO(() => convert(input))
       else
         for
-          _ <- write(invalidInputMessage)
-          input <- askForValidInput(request, isInputValid, convert, invalidInputMessage)
+          _ <- write(i18n.t(invalidInputMessageKey))
+          input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
         yield input
   
-  def isValidOptionChoice(nOptions: Int)(input: String): Boolean =
-    isConvertibleToInt(input) && isWithinBounds(1, nOptions)(input.toInt)
+  private def isValidOption(numOptions: Int)(option: Int): Boolean = (1 to numOptions).contains(option)
 
-  def isConvertibleToInt(s: String): Boolean = s.toIntOption match
-    case Some(_) => true
-    case _ => false
-
-  def isWithinBounds(min: Int, max: Int)(n: Int): Boolean = n >= min && n <= max
-
-object InputComponent:
-  given defaultSaveCallback: IO[Unit] = IO(() => ())
+  private def isConvertibleToInt(s: String): Boolean = s.toIntOption.isDefined

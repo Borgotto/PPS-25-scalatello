@@ -4,29 +4,27 @@ import it.unibo.pps.state.BoardState
 import it.unibo.pps.domain.Color.{Black, White}
 import it.unibo.pps.domain.Position
 
-object BoardRenderingExtensions:
+object BoardRenderingExtension:
 
   extension (state: BoardState)
 
     def render(): String =
-      val maxRowIndex = state.shape.maxRow
-      val maxColumnIndex = state.shape.maxColumn
-      val firstLine = renderFormattedFirstLine(maxColumnIndex)
-      val rows = renderRows(maxRowIndex, maxColumnIndex)
+      val firstLine = renderFormattedFirstLine()
+      val rows = renderRows()
       val separator = "\n" + "-" * firstLine.length
       s"\n$firstLine" + rows.mkString(separator)
 
-    private def renderFormattedFirstLine(maxColumnIndex: Int): String =
-      (0 to maxColumnIndex)
+    private def renderFormattedFirstLine(): String =
+      (0 to state.shape.maxColumnIndex)
         .map(index => if index == 0 then "     0" else f"$index%4d")
         .mkString("")
         .concat("  ")
 
-    private def renderRows(maxRowIndex: Int, maxColumnIndex: Int): Seq[String] =
-      for rowIndex <- 0 to maxRowIndex yield renderRow(rowIndex, maxColumnIndex)
+    private def renderRows(): Seq[String] =
+      for rowIndex <- 0 to state.shape.maxRowIndex yield renderRow(rowIndex)
 
-    private def renderRow(rowIndex: Int, maxColumnIndex: Int): String =
-      val cells = for columnIndex <- 0 to maxColumnIndex yield renderCell(rowIndex, columnIndex)
+    private def renderRow(rowIndex: Int): String =
+      val cells = for columnIndex <- 0 to state.shape.maxColumnIndex yield renderCell(rowIndex, columnIndex)
       formatRow(rowIndex, cells)
 
     private def renderCell(rowIndex: Int, columnIndex: Int): String =
@@ -38,4 +36,5 @@ object BoardRenderingExtensions:
         case None if state.userAvailablePlacements.contains(position) => "*"
         case _ => " "
 
-    private def formatRow(rowIndex: Int, cells: Seq[String]): String = f"\n$rowIndex%-2d | " + cells.mkString(" | ") + " |"
+    private def formatRow(rowIndex: Int, cells: Seq[String]): String = 
+      f"\n$rowIndex%-2d | " + cells.mkString(" | ") + " |"

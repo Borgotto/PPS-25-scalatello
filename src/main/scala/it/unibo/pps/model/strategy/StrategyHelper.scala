@@ -16,11 +16,11 @@ private object StrategyHelper:
 
       def isInner(i: Int, max: Int) = i == 1 || i == max - 1
 
-      val rEdge = isEdge(pos.row, shape.maxRow)
-      val cEdge = isEdge(pos.column, shape.maxColumn)
+      val rEdge = isEdge(pos.row, shape.maxRowIndex)
+      val cEdge = isEdge(pos.column, shape.maxColumnIndex)
 
       if rEdge && cEdge then Corner
-      else if isInner(pos.row, shape.maxRow) && isInner(pos.column, shape.maxColumn) then InnerCorner
+      else if isInner(pos.row, shape.maxRowIndex) && isInner(pos.column, shape.maxColumnIndex) then InnerCorner
       else if rEdge || cEdge then Edge
       else Inner
 
