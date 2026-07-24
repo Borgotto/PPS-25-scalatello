@@ -26,14 +26,18 @@ classDiagram
   }
   namespace ControllerPackage {
     class Controller {
-      + startMatch(shape: Shape, color: Color)
+      + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
-      + saveMatch(filePath: String)
-      + loadMatch(filePath: String)
+      + saveMatch(fileName: String)
+      + loadMatch(fileName: String): MatchState
+      + saveFileNames(): List(String)
+
     }
     class SaveManager {
-      + save(state: MatchState)
-      + load(): MatchState
+      + save(data)
+      + load(): data
+      + saveFileNames(): List(String)
+      + deleteSaveFile()
     }
   }
   namespace ModelPackage {
@@ -44,17 +48,17 @@ classDiagram
     }
     class Board {
       + state: BoardState
+      + getAvailablePlacements(color: Color): List(Position)
       + isPlacementValid(color: Color, position: Position): Boolean
       + placeDisk(color: Color, position: Position): Board
-      + captureDisks(newDiskPosition: Position): Board
-      + getAvailablePlacements(color: Color): Seq[Position]
     }
     class Disk {
       + color: Color
       + flip(): Disk
     }
     class Player {
-      + state: PlayerState
+      + color: Color
+      + strategy: PlacementStrategy
     }
     class PlacementStrategy
     class User
@@ -85,27 +89,23 @@ Struttura degli state:
 ```mermaid
 classDiagram
     class MatchState {
-      + status: Status
+      + status: MatchStatus
+      + user: User
+      + opponent: Opponent
       + activePlayer: PlayerState
       + board: BoardState
     }
-    class Status {
+    class MatchStatus {
       <<enumeration>>
       InProgress
       UserWon
       OpponentWon
       Tie
     }
-    class PlayerState {
-      <<enumeration>>
-      User
-      Opponent
-      + color: Color
-      + strategy: PlacementStrategy
-    }
     class BoardState {
       + shape: Shape
-      + disks: Seq[DiskState]
+      + disks: List(DiskState)
+      + userAvailablePlacements: List(Position)
     }
     class Shape {
       <<enumeration>>
@@ -132,9 +132,7 @@ classDiagram
     }
 
     MatchState --> BoardState
-    MatchState --> Status
-    MatchState --> PlayerState
-    PlayerState --> Color
+    MatchState --> MatchStatus
     BoardState --> DiskState
     Shape <|-- Square
     Shape <|-- Rectangle
