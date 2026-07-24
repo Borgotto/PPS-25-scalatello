@@ -27,7 +27,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
                                 (using disks: Map[Position, Disk]): Set[Position] =
     @tailrec
     def _getNextConnectingDisk(diskPos: Position, placedDisk: (Position, Color), direction: Position): Option[Position] =
-      val neighbourPos = diskPos - direction
+      val neighbourPos: Position = diskPos - direction
       neighbourPos match
         case p if !p.inBounds(board.shape) || !board.disks.contains(p) => Option.empty
         case p if board.disks(p).color.equals(placedDisk._2.opposite) =>
@@ -60,7 +60,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     @tailrec
     def _getNextEmptyPosition(diskPos: Position, direction: Position): Option[Position] =
-      val neighbourPos = diskPos - direction
+      val neighbourPos:Position = diskPos - direction
       neighbourPos match
         case p
           if (!p.inBounds(board.shape)) ||
@@ -69,7 +69,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
         case p => Some(p)
 
     given disks: Map[Position, Disk] = board.disks
-    val capturableDisks = getCapturableNeighboursPair(diskColor)
+    val capturableDisks: Set[(Position, Position)] = getCapturableNeighboursPair(diskColor)
     for
       (disk, neighbour) <- capturableDisks
       direction: Position = disk - neighbour
@@ -95,7 +95,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =
     def _captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
       val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
-      val disksAfterFlip = disksToFlip.map(pos => (pos, disks(pos).flip)).toMap
+      val disksAfterFlip: Map[Position, Disk] = disksToFlip.map(pos => (pos, disks(pos).flip)).toMap
       disks ++ disksAfterFlip
 
     if validatePosition && !isPlacementValid(diskColor, diskPos)
