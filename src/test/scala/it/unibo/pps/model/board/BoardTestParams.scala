@@ -7,6 +7,7 @@ import it.unibo.pps.testutils.TestExtensions.toBoard
 import it.unibo.pps.model.board.{Board, Disk}
 import it.unibo.pps.state.DiskState
 
+/** Helper class to get the params for [[BoardTest]] */
 class BoardTestParams(val shape: Shape):
   private val whiteDisk: Disk = Disk(Color.White)
   private val blackDisk: Disk = Disk(Color.Black)

@@ -1,13 +1,14 @@
 package it.unibo.pps.model.board
 
 import it.unibo.pps.domain.{Color, Position, Shape}
-import it.unibo.pps.model.board.{Board, Disk}
+import it.unibo.pps.model.board.Board
 import it.unibo.pps.state.BoardState
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{an, be, should}
 import org.scalatest.prop.TableDrivenPropertyChecks
 
+/** Tests for [[Board]] */
 class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   private val BOARD_SIZE: Int = 4
   private val BOARD_HEIGHT: Int = 4
