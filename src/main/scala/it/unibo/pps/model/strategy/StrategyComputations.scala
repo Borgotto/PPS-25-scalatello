@@ -34,8 +34,15 @@ private object StrategyComputations:
    */
   def calculateBestPlacement(color: Color, depth: Int)
                             (using board: Board): Position =
-    val availablePlacements = board.getAvailablePlacements(color).par
-    val bestPlacement = availablePlacements.minBy: position =>
+    val availablePlacements = board.getAvailablePlacements(color)
+
+    // Evaluate positions in parallel, keeping original index for deterministic tie-breaking
+    val zippedPlacements = availablePlacements.zipWithIndex
+    val evaluatedMoves = zippedPlacements.par.map((position, index) =>
       val newBoard = board.placeDisk(color, position, validatePosition = false)
-      negamax(newBoard, depth - 1, color.opposite)
-    bestPlacement
+      val score = negamax(newBoard, depth - 1, color.opposite)
+      (position, score, index)
+    )
+
+    val bestMove: Position = evaluatedMoves.seq.minBy((_, score, index) => (score, index))._1
+    bestMove

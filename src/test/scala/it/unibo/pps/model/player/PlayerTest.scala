@@ -28,8 +28,8 @@ class PlayerTest extends AnyFlatSpec:
 
   it should "use the expected smart strategy depth for predefined opponents" in:
     Opponent.EasyOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 1)
-    Opponent.MediumOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 3)
-    Opponent.HardOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 5)
+    Opponent.MediumOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 2)
+    Opponent.HardOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 4)
 
   it should "support unapply" in:
     val opponent: Opponent = Opponent.RandomOpponent(Color.White)

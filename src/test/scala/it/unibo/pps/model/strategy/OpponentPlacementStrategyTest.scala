@@ -3,23 +3,25 @@ package it.unibo.pps.model.strategy
 import it.unibo.pps.domain.*
 import it.unibo.pps.domain.MatchStatus.*
 import it.unibo.pps.domain.OpponentType.*
-import it.unibo.pps.domain.Shape.*
 import it.unibo.pps.model.Logic
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.player.*
 import it.unibo.pps.testutils.TestExtensions.*
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
+import org.scalatest.ParallelTestExecution
 
-class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks:
+class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks with ParallelTestExecution:
 
   "RandomOpponentPlacementStrategy" should "return a valid placement" in:
     given board: Board = """
-      ....
-      .WB.
-      .BW.
-      ....
+      ......
+      ...W..
+      ..BW..
+      ..BW..
+      ......
       """.toBoard
     val opponent = Opponent.RandomOpponent(Color.White)
     val availablePlacements = board.getAvailablePlacements(opponent.color)
@@ -30,18 +32,19 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
     ("board", "opponent", "expected time in ms"),
     (
       """
-      ..BW
-      .WWB
-      .BBW
-      ....
-      """.toBoard, Opponent.EasyOpponent(Color.White), 100L
+      ......
+      ..BW..
+      .WWB..
+      .BBW..
+      ......
+      """.toBoard, Opponent.EasyOpponent(Color.Black), 100L
     ),
     (
       """
       ......
-      ..BB..
-      .BWBB.
-      ..B...
+      ..BBBB
+      ..WBB.
+      ..W...
       ......
       ......
       """.toBoard, Opponent.MediumOpponent(Color.White), 350L
@@ -49,14 +52,15 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
     (
       """
       ........
-      ......W.
-      ....BWB.
+      ........
+      ........
+      ...BBWB.
       ..BBWB..
-      ..BBW...
-      ..W.W...
+      ..BB....
+      ..WBW...
       ....W...
       ........
-      """.toBoard, Opponent.HardOpponent(Color.White), 2000L
+      """.toBoard, Opponent.HardOpponent(Color.Black), 2000L
     )
   )
 
@@ -66,7 +70,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
   def smartOpponentPerformance(using inputs: TableFor3[Board, Opponent, Long]): Unit =
     forEvery(inputs): (b, opponent, expectedTime) =>
       given Board = b
-      val availablePlacements = b.getAvailablePlacements(Color.White)
+      val availablePlacements = b.getAvailablePlacements(opponent.color)
       val testSubject = s"SmartOpponentPlacementStrategy" +
                         " (input #" + inputs.indexOf((b, opponent, expectedTime)) + ")"
       val depth = opponent.strategy match
@@ -89,15 +93,14 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
         val averageTime = totalTime.sum.toDouble / numberOfRuns
         assert(averageTime < expectedTime, s"SmartOpponentPlacementStrategy took too long on average: ${averageTime} ms")
 
-      def playWholeMatch(player: Player)(using difficulty: OpponentType): Logic =
-        val boardShape = Square(8)
-        val logic = Logic(boardShape, opponent.color, difficulty)
+      def playWholeMatch(player: Opponent)(using difficulty: OpponentType): Logic =
+        val logic = Logic(b.state.shape, player.color, difficulty)
         Iterator.iterate(logic)((turn: Logic) =>
           turn.state.activePlayer match
             case ActivePlayer.Opponent => turn.placeOpponentDisk()
             case ActivePlayer.User =>
               given Board = Board(turn.state.board)
-              val position = opponent.strategy.computePlacement
+              val position = player.strategy.computePlacement
               turn.placeUserDisk(position)
         ).dropWhile(_.state.status == InProgress)
         .next()
@@ -113,6 +116,8 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
         given difficulty: OpponentType = opponent match
           case Opponent.EasyOpponent(_) => Medium
           case _ => Hard
-        val cappedOpponent = Opponent.HardOpponent(opponent.color)
+        val cappedOpponent: Opponent = difficulty match
+          case Hard => Opponent.MediumOpponent(opponent.color)
+          case _ => opponent
         val matchEnd = playWholeMatch(cappedOpponent)
         matchEnd.state.status shouldBe OpponentWon
