@@ -15,11 +15,11 @@ import scala.annotation.tailrec
  */
 private[board] class BoardComputations(using board: Board)(using computations: ComputationsPosExtensions):
   private def getCapturableNeighboursPair(diskColor: Color)(using disks: Map[Position, Disk]): Set[(Position, Position)] =
-    val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
-    val capturableDisks = disks.keySet -- sameColorDisks
+    val sameColorDisks: Set[Position] = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
+    val capturableDisks: Set[Position] = disks.keySet -- sameColorDisks
     for
-      diskPos <- sameColorDisks
-      possibleNeighbourPos <- capturableDisks
+      diskPos: Position <- sameColorDisks
+      possibleNeighbourPos: Position <- capturableDisks
       if possibleNeighbourPos.inNeighbourhood(diskPos)
     yield (diskPos, possibleNeighbourPos)
 
@@ -27,7 +27,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
                                 (using disks: Map[Position, Disk]): Set[Position] =
     @tailrec
     def _getNextConnectingDisk(diskPos: Position, placedDisk: (Position, Color), direction: Position): Option[Position] =
-      val neighbourPos = diskPos - direction
+      val neighbourPos: Position = diskPos - direction
       neighbourPos match
         case p if !p.inBounds(board.shape) || !board.disks.contains(p) => Option.empty
         case p if board.disks(p).color.equals(placedDisk._2.opposite) =>
@@ -35,22 +35,21 @@ private[board] class BoardComputations(using board: Board)(using computations: C
         case p => Some(p)
 
     val capturableNeighboursPos: Set[(Position, Position)] =
-      getCapturableNeighboursPair(diskColor).filter((disk, neighbour) => disk.equals(placedDiskPos))
-    val disksWithoutPlacedDisk: Map[Position, Disk] = disks.filter(e => !e.equals(placedDiskPos))
+      getCapturableNeighboursPair(diskColor).filter((disk, _) => disk.equals(placedDiskPos))
     for
       (disk, neighbour) <- capturableNeighboursPos
-      diskPosition: Position = Position(neighbour.row, neighbour.column)
       direction: Position = disk - neighbour
       connectingDiskPosition: Option[Position] =
-        _getNextConnectingDisk(diskPosition, (placedDiskPos, diskColor), direction)
+        _getNextConnectingDisk(neighbour, (placedDiskPos, diskColor), direction)
       if connectingDiskPosition.isDefined
     yield connectingDiskPosition.get
   
   private def getDisksToFlip(diskPos: Position)(using disks: Map[Position, Disk]): Set[Position] =
     val diskColor: Color = disks(diskPos).color
+    val disksPos: Set[Position] = disks.keySet
     for
       connectingDiskPos: Position <- getConnectingDisks(diskColor, diskPos)
-      diskToFlip: Position <- disks.keySet
+      diskToFlip: Position <- disksPos
       if diskToFlip.inBetweenPos(diskPos, connectingDiskPos)
     yield diskToFlip
 
@@ -61,7 +60,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     @tailrec
     def _getNextEmptyPosition(diskPos: Position, direction: Position): Option[Position] =
-      val neighbourPos = diskPos - direction
+      val neighbourPos:Position = diskPos - direction
       neighbourPos match
         case p
           if (!p.inBounds(board.shape)) ||
@@ -70,12 +69,11 @@ private[board] class BoardComputations(using board: Board)(using computations: C
         case p => Some(p)
 
     given disks: Map[Position, Disk] = board.disks
-    val capturableDisks = getCapturableNeighboursPair(diskColor)
+    val capturableDisks: Set[(Position, Position)] = getCapturableNeighboursPair(diskColor)
     for
       (disk, neighbour) <- capturableDisks
-      diskPos: Position = Position(neighbour.row, neighbour.column)
       direction: Position = disk - neighbour
-      availableMove: Option[Position] = _getNextEmptyPosition(diskPos, direction)
+      availableMove: Option[Position] = _getNextEmptyPosition(neighbour, direction)
       if availableMove.isDefined
     yield availableMove.get
 
@@ -97,7 +95,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =
     def _captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
       val disksToFlip: Set[Position] = getDisksToFlip(diskPos)
-      val disksAfterFlip = disksToFlip.map(pos => (pos, disks(pos).flip)).toMap
+      val disksAfterFlip: Map[Position, Disk] = disksToFlip.map(pos => (pos, disks(pos).flip)).toMap
       disks ++ disksAfterFlip
 
     if validatePosition && !isPlacementValid(diskColor, diskPos)
