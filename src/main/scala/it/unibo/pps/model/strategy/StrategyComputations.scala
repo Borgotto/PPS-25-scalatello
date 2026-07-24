@@ -9,6 +9,10 @@ import scala.math.max
 import scala.collection.parallel.CollectionConverters.*
 
 private object StrategyComputations:
+
+  /**
+   * @see [[https://en.wikipedia.org/wiki/Negamax Negamax algorithm]] for a detailed explanation of the algorithm.
+   */
   private def negamax(board: Board, depth: Int, color: Color)
                      (using alpha: Int = Int.MinValue + 1, beta: Int = Int.MaxValue): Int =
     val availablePlacements = board.getAvailablePlacements(color)
@@ -25,6 +29,9 @@ private object StrategyComputations:
             break(value) // stop searching this branch
           max(value, currentAlpha)
 
+  /**
+   * Runs the negamax algorithm on all available placements and returns the best one for the given color
+   */
   def calculateBestPlacement(color: Color, depth: Int)
                             (using board: Board): Position =
     val availablePlacements = board.getAvailablePlacements(color).par
