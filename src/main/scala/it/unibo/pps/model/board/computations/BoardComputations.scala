@@ -15,11 +15,11 @@ import scala.annotation.tailrec
  */
 private[board] class BoardComputations(using board: Board)(using computations: ComputationsPosExtensions):
   private def getCapturableNeighboursPair(diskColor: Color)(using disks: Map[Position, Disk]): Set[(Position, Position)] =
-    val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
-    val capturableDisks = disks.keySet -- sameColorDisks
+    val sameColorDisks: Set[Position] = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
+    val capturableDisks: Set[Position] = disks.keySet -- sameColorDisks
     for
-      diskPos <- sameColorDisks
-      possibleNeighbourPos <- capturableDisks
+      diskPos: Position <- sameColorDisks
+      possibleNeighbourPos: Position <- capturableDisks
       if possibleNeighbourPos.inNeighbourhood(diskPos)
     yield (diskPos, possibleNeighbourPos)
 
@@ -35,8 +35,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
         case p => Some(p)
 
     val capturableNeighboursPos: Set[(Position, Position)] =
-      getCapturableNeighboursPair(diskColor).filter((disk, neighbour) => disk.equals(placedDiskPos))
-    val disksWithoutPlacedDisk: Map[Position, Disk] = disks.filter(e => !e.equals(placedDiskPos))
+      getCapturableNeighboursPair(diskColor).filter((disk, _) => disk.equals(placedDiskPos))
     for
       (disk, neighbour) <- capturableNeighboursPos
       diskPosition: Position = Position(neighbour.row, neighbour.column)
