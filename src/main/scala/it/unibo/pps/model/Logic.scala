@@ -9,15 +9,52 @@ import it.unibo.pps.model.player.*
 import it.unibo.pps.model.player.Opponent.*
 import it.unibo.pps.state.{BoardState, MatchState}
 
+/** Models the possible ways to interact with the logic of a match.
+ *
+ *  Implemented by: [[LogicImpl]]
+ */
 trait Logic:
+
+  /** @return the current state of the match, represented by a [[MatchState]]
+   *  instance.
+   */
   def state: MatchState
+
+  /** Handles the placement of a disk by the user, also determining the
+   *  match status and the active player after the placement.
+   *
+   * @param position the position chosen by the user for the placement.
+   * @return a new [[Logic]] instance that reflects the new state of the match.
+   */
   def placeUserDisk(position: Position): Logic
+
+  /** Handles the placement of a disk by the virtual opponent, also determining
+   *  the match status and the active player after the placement.
+   *
+   *  @return a new [[Logic]] instance that reflects the new state of the match.
+   */
   def placeOpponentDisk(): Logic
 
-class StandardLogic(
-  private val status: MatchStatus,
+/** Implements the logic of a match.
+ *
+ *  Since every method that modifies the current state of the match returns a new
+ *  [[Logic]], each [[LogicImpl]] instance is a snapshot of the current turn
+ *  of the match.
+ *
+ *  A [[LogicImpl]] should be created only through the factory methods provided by the [[Logic]]
+ *  companion object.
+ *
+ *  @param user the information about the user in this match (i.e. their color).
+ *  @param opponent the information about the opponent in this match (i.e. their color
+ *                 and placement strategy).
+ *  @param status the current status of the match.
+ *  @param activePlayer the player that must perform a placement in the current turn.
+ *  @param board the board of the match.
+ */
+class LogicImpl(
   private val user: User,
   private val opponent: Opponent,
+  private val status: MatchStatus,
   private val activePlayer: ActivePlayer,
   private val board: Board
 ) extends Logic:
@@ -28,7 +65,7 @@ class StandardLogic(
     )
     case ActivePlayer.Opponent => board.state
 
-  val state: MatchState = MatchState(status, user, opponent, activePlayer, boardState)
+  def state: MatchState = MatchState(status, user, opponent, activePlayer, boardState)
 
   def placeUserDisk(position: Position): Logic = activePlayer match
     case ActivePlayer.Opponent => throw IllegalStateException("It is opponent's turn now")
@@ -68,8 +105,9 @@ class StandardLogic(
     val updatedBoard = board.placeDisk(newDiskColor, newDiskPosition)
     val updatedStatus = getUpdatedStatus(updatedBoard)
     val updatedActivePlayer = getUpdatedActivePlayer(updatedBoard)
-    new StandardLogic(updatedStatus, user, opponent, updatedActivePlayer, updatedBoard)
+    new LogicImpl(user, opponent, updatedStatus, updatedActivePlayer, updatedBoard)
 
+/** Factory for [[Logic]] instances. */
 object Logic:
   
   private def getUser(color: Color): User = User(color)
@@ -85,24 +123,46 @@ object Logic:
     case Black => ActivePlayer.User
     case White => ActivePlayer.Opponent
 
-  def apply(boardShape: Shape, userColor: Color, opponentType: OpponentType): StandardLogic =
-    new StandardLogic(
-      InProgress, 
+  /** Creates the logic for a new match that must be started from scratch.
+   *
+   * @param boardShape the shape that the board must have.
+   * @param userColor the color that must be assigned to the user.
+   * @param opponentType the type of the opponent, which determines their placement strategy.
+   */
+  def apply(boardShape: Shape, userColor: Color, opponentType: OpponentType): Logic =
+    new LogicImpl(
       getUser(userColor),
       getOpponent(userColor.opposite, opponentType),
+      InProgress,
       getInitialActivePlayer(userColor),
       Board(boardShape)
     )
 
-  def apply(userColor: Color, opponentType: OpponentType, board: Board) =
-    new StandardLogic(
-      InProgress,
+  /** Creates the logic for a match that must be started from a specific match state.
+   * 
+   * This is meant to be used to resume a saved match.
+   * 
+   * @param state the state of the saved match to resume.
+   */
+  def apply(state: MatchState): Logic =
+    val board = Board(state.board)
+    new LogicImpl(state.user, state.opponent, state.status, state.activePlayer, board)
+
+  /** Creates the logic for a new match that must be started from scratch, 
+   *  but providing a specific [[Board]] instance.
+   *
+   *  This is meant to be used only for testing purposes, in order to provide a
+   *  specific board configuration to ease unit testing.
+   *
+   * @param userColor the color that must be assigned to the user.
+   * @param opponentType the type of the opponent, which determines their placement strategy.
+   * @param board the provided [[Board]] instance.
+   */
+  private[model] def apply(userColor: Color, opponentType: OpponentType, board: Board): Logic =
+    new LogicImpl(
       getUser(userColor),
       getOpponent(userColor.opposite, opponentType),
+      InProgress,
       getInitialActivePlayer(userColor),
       board
     )
-
-  def apply(state: MatchState): StandardLogic =
-    val board = Board(state.board)
-    new StandardLogic(state.status, state.user, state.opponent, state.activePlayer, board)

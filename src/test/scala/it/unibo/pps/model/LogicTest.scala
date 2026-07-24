@@ -14,6 +14,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{an, be, not, thrownBy}
 import org.scalatest.matchers.should.Matchers.should
 
+/** Test suite for [[Logic]]. */
 class LogicTest extends AnyFlatSpec:
 
   private val userColor: Color = Black
