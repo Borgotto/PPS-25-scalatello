@@ -93,11 +93,11 @@ object Board:
  *  Delegates the computations of its methods to an instance of the class [[BoardComputations]].
  *  @param shape the shape of this board.
  *  @param disks the disks on this board.
- *  @param posComputations the context of [[ComputationsExtensions]], it contains the different computations 
+ *  @param computations the context of [[ComputationsExtensions]], it contains the different computations
  *                         that may need to change for different types of boards.
  */
 private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
-                           (using posComputations: ComputationsExtensions) extends Board:
+                           (using computations: ComputationsExtensions) extends Board:
   private given contextBoard: Board = this
   private val compute: BoardComputations = BoardComputations()
 
