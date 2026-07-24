@@ -9,10 +9,7 @@ import it.unibo.pps.model.player.*
 import it.unibo.pps.model.player.Opponent.*
 import it.unibo.pps.state.{BoardState, MatchState}
 
-/** Models the possible ways to interact with the logic of a match.
- *
- *  Implemented by: [[LogicImpl]]
- */
+/** Models the possible ways to interact with the logic of a match. */
 trait Logic:
 
   /** @return the current state of the match, represented by a [[MatchState]]
@@ -22,26 +19,23 @@ trait Logic:
 
   /** Handles the placement of a disk by the user, also determining the
    *  match status and the active player after the placement.
-   *
+   *  
    *  @param position the position chosen by the user for the placement.
-   *
    *  @return a new [[Logic]] instance that reflects the new state of the match.
-   *
    *  @throws IllegalStateException if called when the user is not the active player.
    */
   def placeUserDisk(position: Position): Logic
 
   /** Handles the placement of a disk by the virtual opponent, also determining
    *  the match status and the active player after the placement.
-   *
+   *  
    *  @return a new [[Logic]] instance that reflects the new state of the match.
-   *
    *  @throws IllegalStateException if called when the opponent is not the active player.
    */
   def placeOpponentDisk(): Logic
 
 /** Implements the logic of a match.
- *
+
  *  Since every method that modifies the current state of the match returns a new
  *  [[Logic]], each [[LogicImpl]] instance is a snapshot of the current turn
  *  of the match.
