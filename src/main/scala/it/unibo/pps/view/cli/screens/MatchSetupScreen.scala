@@ -57,7 +57,7 @@ class MatchSetupScreen(
           size <- inputComponent.askForInteger(
             requestKey = "setup_menu.board.square_size_question",
             isNumberValid = isSelectedSizeValid,
-            invalidInputMessageKey = "setup_menu.board.invalid_size"
+            invalidInputMessageKey = "setup_menu.board.invalid_square_size"
           )
           shape <- IO(() => Shape.Square(size))
         yield shape
@@ -66,12 +66,12 @@ class MatchSetupScreen(
           height <- inputComponent.askForInteger(
             requestKey = "setup_menu.board.rectangle_height_question",
             isNumberValid = isSelectedSizeValid,
-            invalidInputMessageKey = "setup_menu.board.invalid_size"
+            invalidInputMessageKey = "setup_menu.board.invalid_rectangle_height"
           )
           width <- inputComponent.askForInteger(
             requestKey = "setup_menu.board.rectangle_width_question",
-            isNumberValid = isSelectedSizeValid,
-            invalidInputMessageKey = "setup_menu.board.invalid_size"
+            isNumberValid = width => isSelectedSizeValid(width) && width != height,
+            invalidInputMessageKey = "setup_menu.board.invalid_rectangle_width"
           )
           shape <- IO(() => Shape.Rectangle(height, width))
         yield shape
