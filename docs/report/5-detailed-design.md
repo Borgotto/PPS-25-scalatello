@@ -249,17 +249,19 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 
 ### Controller
 
-`Controller` è un componente del controller che si occupa del coordinamento della partita.
+`Controller` è un componente del Controller che si occupa del coordinamento della partita.
 
 ```mermaid
 classDiagram
-  class Controller {
-    <<trait>>
-    + startMatch(shape: Shape, color: Color)
-    + handleSelection(position: Position)
-    + saveMatch(filePath: String)
-    + loadMatch(filePath: String)
-  }
+	class Controller {
+		<<trait>>
+		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
+		+ handleSelection(position: Position)
+		+ saveMatch(fileName: String)
+		+ loadMatch(fileName: String): MatchState
+		+ saveFileNames(): Seq[String]
+		+ deleteSaveFile(fileName: String)
+	}
 ```
 
 In dettaglio:
@@ -267,7 +269,9 @@ In dettaglio:
 - `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
-- `loadMatch()` carica il salvataggio di una partita.
+- `loadMatch()` carica il salvataggio di una partita;
+- `saveFileNames()` restituisce una sequenza contenente il nome dei *file* di salvataggio esistenti;
+- `deleteSaveFile()` cancella il *file* di salvataggio richiesto.
 
 ### Interazione tra Controller, Logic e Board
 
