@@ -6,7 +6,7 @@ import it.unibo.pps.view.cli.screens.MainMenuAction.*
 import it.unibo.pps.view.i18n.{I18n, localize}
 
 enum MainMenuAction:
-  case NewGame, SaveFiles, Quit
+  case NewGame, SaveFiles
 
 class MainMenuScreen(
   onNewGameAction: () => IO[Unit],
@@ -16,6 +16,7 @@ class MainMenuScreen(
   override def render(): IO[Unit] =
     for
       _ <- write(i18n.t("main_menu.title"))
+      _ <- write(i18n.t("main_menu.exit_shortcut"))
       _ <- askForActionSelection()
     yield ()
 
@@ -24,7 +25,6 @@ class MainMenuScreen(
       options = Seq(
         "main_menu.actions.new_game",
         "main_menu.actions.load_saved_game",
-        "main_menu.actions.quit"
       ).localize, 
       handleSelectedOption = handleSelectedAction
     )
@@ -33,4 +33,3 @@ class MainMenuScreen(
     MainMenuAction.fromOrdinal(ordinal) match
       case NewGame => onNewGameAction()
       case SaveFiles => onSaveManagementAction()
-      case Quit => write(i18n.t("generic.exit_message"))
