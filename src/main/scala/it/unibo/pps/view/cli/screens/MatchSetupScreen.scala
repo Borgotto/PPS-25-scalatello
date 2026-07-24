@@ -15,6 +15,7 @@ class MatchSetupScreen(
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   private val minBoardSize = 4
+  private val maxBoardSize = 16
 
   override def render(): IO[Unit] =
     for
@@ -75,7 +76,8 @@ class MatchSetupScreen(
           shape <- IO(() => Shape.Rectangle(height, width))
         yield shape
 
-  private def isSelectedSizeValid(size: Int): Boolean = size % 2 == 0 && size >= minBoardSize
+  private def isSelectedSizeValid(size: Int): Boolean =
+    size % 2 == 0 && (minBoardSize to maxBoardSize).contains(size)
 
   private def askForOpponentType(): IO[OpponentType] =
     inputComponent.askForOption(
