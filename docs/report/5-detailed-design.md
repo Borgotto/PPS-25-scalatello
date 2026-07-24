@@ -34,30 +34,6 @@ classDiagram
     View --> Controller
 ```
 
-## BoardManager
-
-TODO: aggiornare
-
-```mermaid
-classDiagram
-    class Board {
-        <<interface>>
-        + initialize()
-        + getBoardState(): BoardState
-        + placeDisk(color: Color, strategy: PlacementStrategy): bool
-        + getAvailablePlacements(color: Color): List~Position~
-    }
-    class BoardManager {
-        <<interface>>
-        + isPlacementLegal(color: Color,position: Position): bool
-        + captureFromPosition(color: Color, position: Position)
-        + computeAvailablePlacements(color Color): List~Position~
-        + computeBestPlacement(color: Color, strategy: PlacementStrategy): Position
-    }
-
-    Board --> BoardManager
-```
-
 ---
 
 ## Player
@@ -227,19 +203,19 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
-    + disks: HashMap~Position, Disk~
-    + shape: Shape
+    ~ disks: Map~Position, Disk~
+    ~ shape: Shape
     + state: BoardState
-    + getAvailableMoves(color: Color): Set~Position~
-    + isMoveValid(position: Position, color: Color): Boolean
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + flipDisks(position: Position, color: Color): Board
+    + captureDisks(position: Position): Board
   }
   class BoardComputations {
-    + getAvailableMoves(color: Color, board: Board): Set~Position~
-    + isMoveValid(position: Position, color: Color, board: Board): Boolean
-    + placeDisk(position: Position, color: Color, board: Board): Board
-    + flipDisks(position: Position, color: Color, board: Board): Board
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
+    + placeDisk(position: Position, color: Color): Board
+    + captureDisks(position: Position): Board
   }
   Board --> BoardComputations: delegates
 ```
@@ -259,7 +235,7 @@ Per semplificare questa operazione viene utilizzato il **factory pattern**.
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
 
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
-- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passandole un riferimento alla `Board` tramite un parametro dei diversi metodi, per permetterle di operare sull'istanza corrente della stessa;
+- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
 
 ### MatchController
 
@@ -269,17 +245,17 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 classDiagram
   class MatchController {
     <<trait>>
-    +initializeMatch()
-    +handleSelection(position: Position)
-    +saveMatch(state: MatchState)
-    +loadMatch()
+    + startMatch(shape: Shape, color: Color)
+    + handleSelection(position: Position)
+    + saveMatch(filePath: String)
+    + loadMatch(filePath: String)
   }
 ```
 
 In dettaglio:
 
-- `initializeMatch()` inizializza la partita con la configurazione iniziale della scacchiera stabilita dalle regole del gioco;
-- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco;
+- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
+- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
 

@@ -1,0 +1,13 @@
+package it.unibo.pps.domain
+
+import upickle.default.ReadWriter
+
+/** Represents the possible colors of a [[Disk]]. */
+enum Color derives ReadWriter:
+  case Black
+  case White
+
+  /** @return the other color value. */
+  def opposite: Color = this match
+    case Black => White
+    case White => Black

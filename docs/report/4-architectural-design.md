@@ -26,10 +26,10 @@ classDiagram
   }
   namespace ControllerPackage {
     class MatchController {
-      + startMatch()
+      + startMatch(shape: Shape, color: Color)
       + handleSelection(position: Position)
-      + saveMatch()
-      + loadMatch()
+      + saveMatch(filePath: String)
+      + loadMatch(filePath: String)
     }
     class SaveManager {
       + save(state: MatchState)
@@ -50,7 +50,7 @@ classDiagram
       + getAvailablePlacements(color: Color): Seq[Position]
     }
     class Disk {
-      + state: DiskState
+      + color: Color
       + flip(): Disk
     }
     class Player {
