@@ -9,7 +9,7 @@ import upickle.default.ReadWriter
 case class Position(row: Int, column: Int) derives ReadWriter:
   /**
    *  @param pos the position to subtract.
-   *  @return the subtraction of this position and another.
+   *  @return the subtraction of another position from this.
    */
   def -(pos: Position): Position = Position(this.row - pos.row, this.column - pos.column)
 

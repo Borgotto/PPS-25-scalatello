@@ -34,7 +34,7 @@ private[board] trait ComputationsPosExtensions:
       _getPosOnSameDiagonal(firstPos, secondPos, direction).contains(p) &&
         distance.row.abs.equals(distance.column.abs)
 
-    /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally and diagonally.
+    /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally or diagonally.
      * 
      *  This is an extension method of [[Position]].
      *  @param firstPos the starting position to consider.
