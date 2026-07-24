@@ -92,7 +92,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
    *  @param diskPos the position where the player wants to place the disk. 
    *  @param validatePosition if `diskPos` needs to be validated or not.
    *  @return a new instance of [[Board]] with the disk placed and the disks captured.
-   *  @throws IllegalArgumentException if `diskPos` is not valid.
+   *  @throws java.lang.IllegalArgumentException if `diskPos` is not valid.
    */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =
     def _captureDisks(using disks: Map[Position, Disk]): Map[Position, Disk] =
