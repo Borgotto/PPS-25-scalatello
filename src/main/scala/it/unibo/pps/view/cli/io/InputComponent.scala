@@ -21,11 +21,13 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
   def askForOption[T](
     requestKey: Option[String] = None,
     options: Seq[String],
+    extraMessageKey: Option[String] = None,
     handleSelectedOption: Int => IO[T]
   ): IO[T] =
     for
       _ <- requestKey.map(key => write(i18n.t(key))).getOrElse(pass)
       _ <- displayOptions(options)
+      _ <- extraMessageKey.map(key => write(i18n.t(key))).getOrElse(pass)
       option <- askForInteger(
         requestKey = "generic.choice_request",
         isNumberValid = isValidOption(options.size),

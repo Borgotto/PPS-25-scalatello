@@ -16,7 +16,6 @@ class MainMenuScreen(
   override def render(): IO[Unit] =
     for
       _ <- write(i18n.t("main_menu.title"))
-      _ <- write(i18n.t("main_menu.exit_shortcut"))
       _ <- askForActionSelection()
     yield ()
 
@@ -26,6 +25,7 @@ class MainMenuScreen(
         "main_menu.actions.new_game",
         "main_menu.actions.load_saved_game",
       ).localize, 
+      extraMessageKey = Some("main_menu.exit_shortcut"),
       handleSelectedOption = handleSelectedAction
     )
 
