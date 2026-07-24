@@ -102,7 +102,7 @@ private[controller] class ControllerImpl extends Controller:
   /** @inheritdoc
    *  @param fileName the name of the save file.
    *  @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
-   *  @throws IllegalStateException if there is no match to save.
+   *  @throws java.lang.IllegalStateException if there is no match to save.
    */
   def saveMatch(fileName: String): Try[_] =
     logic match
