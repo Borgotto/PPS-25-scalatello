@@ -25,7 +25,7 @@ classDiagram
     class CLIView
   }
   namespace ControllerPackage {
-    class MatchController {
+    class Controller {
       + startMatch(shape: Shape, color: Color)
       + handleSelection(position: Position)
       + saveMatch(filePath: String)
@@ -37,10 +37,10 @@ classDiagram
     }
   }
   namespace ModelPackage {
-    class MatchLogic {
+    class Logic {
       + state: MatchState
-      + placeUserDisk(position: Position): MatchLogic
-      + placeOpponentDisk(): MatchLogic
+      + placeUserDisk(position: Position): Logic
+      + placeOpponentDisk(): Logic
     }
     class Board {
       + state: BoardState
@@ -61,9 +61,9 @@ classDiagram
     class Opponent
   }
 
-    MatchLogic --> Board
-    MatchLogic --> Player
-    MatchLogic --> PlacementStrategy: applies
+    Logic --> Board
+    Logic --> Player
+    Logic --> PlacementStrategy: applies
 
     Player <|-- User
     Player <|-- Opponent
@@ -72,10 +72,10 @@ classDiagram
 
     Board --> Disk
 
-    View --> MatchController
-    MatchController ..> View : notifies
-    MatchController --> MatchLogic
-    SaveManager <-- MatchController
+    View --> Controller
+    Controller ..> View : notifies
+    Controller --> Logic
+    SaveManager <-- Controller
 
     View <|.. CLIView
 ```

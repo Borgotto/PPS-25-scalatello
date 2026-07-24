@@ -237,13 +237,13 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
 - nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
 
-### MatchController
+### Controller
 
-`MatchController` è un componente del controller che si occupa del coordinamento della partita.
+`Controller` è un componente del controller che si occupa del coordinamento della partita.
 
 ```mermaid
 classDiagram
-  class MatchController {
+  class Controller {
     <<trait>>
     + startMatch(shape: Shape, color: Color)
     + handleSelection(position: Position)
@@ -259,24 +259,24 @@ In dettaglio:
 - `saveMatch()` salva lo stato della partita attuale;
 - `loadMatch()` carica il salvataggio di una partita.
 
-### Interazione tra MatchController, MatchLogic e Board
+### Interazione tra Controller, Logic e Board
 
 Per eseguire una mossa valida dell'utente o dell'avversario:
 
 ```mermaid
 sequenceDiagram
-  MatchController ->> MatchLogic: placeUserDisk(position) or placeOpponentDisk()
-  MatchLogic ->> Board: isMoveValid(position)
-  Board ->> MatchLogic: true
-  MatchLogic ->> Board: placeDisk(position, color)
-  Board ->> MatchLogic: Board
-  MatchLogic ->> Board: flipDisks(position, color)
-  Board ->> MatchLogic: Board
-  MatchLogic ->> MatchController: true
-  MatchController ->> MatchLogic: getMatchState()
-  MatchLogic ->> Board: getBoardState()
-  Board ->> MatchLogic: boardState
-  MatchLogic ->> MatchController: matchState
+  Controller ->> Logic: placeUserDisk(position) or placeOpponentDisk()
+  Logic ->> Board: isMoveValid(position)
+  Board ->> Logic: true
+  Logic ->> Board: placeDisk(position, color)
+  Board ->> Logic: Board
+  Logic ->> Board: flipDisks(position, color)
+  Board ->> Logic: Board
+  Logic ->> Controller: true
+  Controller ->> Logic: getMatchState()
+  Logic ->> Board: getBoardState()
+  Board ->> Logic: boardState
+  Logic ->> Controller: matchState
 ```
 
-In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `MatchController`.
+In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `Controller`.
