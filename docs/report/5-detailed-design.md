@@ -51,7 +51,11 @@ classDiagram
         + strategy: UserPlacementStrategy
     }
     class Opponent <<Enumeration>> {
-        + RandomOpponent: Opponent
+        + strategy: OpponentPlacementStrategy
+        + RandomOpponent(color: Color): Opponent
+        + EasyOpponent(color: Color): Opponent
+        + MediumOpponent(color: Color): Opponent
+        + HardOpponent(color: Color): Opponent
     }
 
     Player <|-- User
@@ -82,16 +86,22 @@ classDiagram
     class UserPlacementStrategy~Position, Position~ {
         + computePlacement(using userChoice: Position): Position
     }
-    class OpponentPlacementStrategy ~MatchState, Position~ <<Abstract>> {
-        + computePlacement(using match: MatchState)*: Position
+    class OpponentPlacementStrategy ~Board, Position~ {
     }
-    class RandomOpponentPlacementStrategy~MatchState, Position~ {
-        + computePlacement(using match: MatchState): Position
+    class RandomPlacementStrategy {
+        + color: Color
+        + computePlacement(using board: Board): Position
+    }
+    class SmartPlacementStrategy {
+        + color: Color
+        + depth: Int
+        + computePlacement(using board: Board): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
-    OpponentPlacementStrategy <|.. RandomOpponentPlacementStrategy
+    OpponentPlacementStrategy <|.. RandomPlacementStrategy
+    OpponentPlacementStrategy <|.. SmartPlacementStrategy
 ```
 
 ### Scenario: calcolo delle mosse
