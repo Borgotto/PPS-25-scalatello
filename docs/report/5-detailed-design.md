@@ -213,34 +213,31 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
+		~ shape: Shape
     ~ disks: Map~Position, Disk~
-    ~ shape: Shape
     + state: BoardState
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + captureDisks(position: Position): Board
   }
-  class BoardComputations {
+  class BoardComputations ~using boardContext: Board~ {
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + captureDisks(position: Position): Board
   }
   Board --> BoardComputations: delegates
 ```
 
 In particolare:
 
-- `state` permette di ottenere lo stato attuale della scacchiera;
-- `placeDisk()` inserisce un nuovo disco sulla scacchiera, restituendo una nuova scacchiera con le informazioni aggiornate;
-- `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
-- `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
-- `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
+- `shape` la forma della scacchiera;
+- `disks` tutti i dischi presenti sulla scacchiera; 
+- `state` lo stato attuale della scacchiera;
+- `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
+- `getAvailablePlacements()` restituisce tutte le posizioni delle possibili mosse valide;
+- `placeDisk()` inserisce un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate;
 
-Eseguendo `placeDisk()` e `flipDisks()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
-
-Per semplificare questa operazione viene utilizzato il **factory pattern**.
+Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*; per semplificare questa operazione viene utilizzato il **factory pattern**.
 
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
 
