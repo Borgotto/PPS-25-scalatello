@@ -10,19 +10,23 @@ import it.unibo.pps.view.i18n.{I18n, localize}
 import scala.util.{Failure, Success}
 
 enum SaveMenuAction:
-  case Load, Delete
+  case Load, Delete, GoBack
 
 class SaveManagementScreen(
   controller: Controller,
   onMatchStart: () => Unit,
   renderMatch: (state: MatchState) => Unit,
-  onScreenExit: () => IO[Unit]
+  goBackToMainMenu: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
   override def render(): IO[Unit] =
     inputComponent.askForOption(
       requestKey = Some("save_menu.action_request"), 
-      options = Seq("save_menu.load_action", "save_menu.delete_action").localize, 
+      options = Seq(
+        "save_menu.actions.load",
+        "save_menu.actions.delete",
+        "generic.actions.go_back"
+      ).localize,
       handleSelectedOption = handleSelectedSaveMenuAction
     )
 
@@ -30,12 +34,26 @@ class SaveManagementScreen(
     SaveMenuAction.fromOrdinal(ordinal) match
       case Load => showSaveLoadingMenu()
       case Delete => showSaveDeletionMenu()
+      case GoBack => goBackToMainMenu()
+
+  private def isGoBackOption(ordinal: Int, numOptions: Int): Boolean =
+    ordinal == numOptions - 1
+
+  private def goBack(): IO[Unit] = this.render()
+
+  private def handleSelectedOption(
+    numOptions: Int,
+    onFileSelected: Int => IO[Unit]
+  )(ordinal: Int): IO[Unit] =
+    if isGoBackOption(ordinal, numOptions) then goBack()
+    else onFileSelected(ordinal)
 
   private def showSaveLoadingMenu(): IO[Unit] =
+    val options = controller.saveFileNames :+ i18n.t("generic.actions.go_back")
     inputComponent.askForOption(
       requestKey = Some("save_loading_menu.file_choice_request"),
-      options = controller.saveFileNames, 
-      handleSelectedOption = handleFileLoading
+      options = options,
+      handleSelectedOption = handleSelectedOption(options.size, handleFileLoading)
     )
 
   private def handleFileLoading(ordinal: Int): IO[Unit] =
@@ -51,17 +69,18 @@ class SaveManagementScreen(
       case Failure(error) =>
         for
           _ <- write(i18n.t("save_loading_menu.loading_failure") :+ s"\n${error.getMessage}")
-          _ <- onScreenExit()
+          _ <- goBackToMainMenu()
         yield ()
 
   private def showSaveDeletionMenu(): IO[Unit] =
+    val options = controller.saveFileNames :+ i18n.t("generic.actions.go_back")
     for
       _ <- inputComponent.askForOption(
         requestKey = Some("save_deletion_menu.file_choice_request"), 
-        options = controller.saveFileNames, 
-        handleSelectedOption = handleFileDeletion
+        options = options,
+        handleSelectedOption = handleSelectedOption(options.size, handleFileDeletion)
       )
-      _ <- onScreenExit()
+      _ <- goBackToMainMenu()
     yield ()
 
   private def handleFileDeletion(ordinal: Int): IO[Unit] =

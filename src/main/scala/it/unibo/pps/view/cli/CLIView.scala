@@ -35,7 +35,7 @@ class CLIView(using i18n: I18n) extends View:
     controller,
     onMatchStart,
     renderMatch = update,
-    onScreenExit = goBackToMainMenu
+    goBackToMainMenu
   )
 
   override def show(): Unit =
