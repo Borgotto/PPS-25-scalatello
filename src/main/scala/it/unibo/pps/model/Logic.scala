@@ -23,8 +23,11 @@ trait Logic:
   /** Handles the placement of a disk by the user, also determining the
    *  match status and the active player after the placement.
    *
-   * @param position the position chosen by the user for the placement.
-   * @return a new [[Logic]] instance that reflects the new state of the match.
+   *  @param position the position chosen by the user for the placement.
+   *
+   *  @return a new [[Logic]] instance that reflects the new state of the match.
+   *
+   *  @throws IllegalStateException if called when the user is not the active player.
    */
   def placeUserDisk(position: Position): Logic
 
@@ -32,6 +35,8 @@ trait Logic:
    *  the match status and the active player after the placement.
    *
    *  @return a new [[Logic]] instance that reflects the new state of the match.
+   *
+   *  @throws IllegalStateException if called when the opponent is not the active player.
    */
   def placeOpponentDisk(): Logic
 
@@ -139,16 +144,16 @@ object Logic:
     )
 
   /** Creates the logic for a match that must be started from a specific match state.
-   * 
+   *
    * This is meant to be used to resume a saved match.
-   * 
+   *
    * @param state the state of the saved match to resume.
    */
   def apply(state: MatchState): Logic =
     val board = Board(state.board)
     new LogicImpl(state.user, state.opponent, state.status, state.activePlayer, board)
 
-  /** Creates the logic for a new match that must be started from scratch, 
+  /** Creates the logic for a new match that must be started from scratch,
    *  but providing a specific [[Board]] instance.
    *
    *  This is meant to be used only for testing purposes, in order to provide a
