@@ -47,8 +47,8 @@ case class Position(row: Int, column: Int) derives ReadWriter:
  *    - from [[scala.Tuple2]] of ([[String]],[[String]]) to [[Position]];
  *    - from [[String]] to [[Position]].
  *
- *  @example {{{
-*     import it.unibo.pps.utils.Position
+ *  @example 
+ *  {{{import it.unibo.pps.utils.Position
  *
  *    first conversion:
  *    val pos: Position = (0,0)
