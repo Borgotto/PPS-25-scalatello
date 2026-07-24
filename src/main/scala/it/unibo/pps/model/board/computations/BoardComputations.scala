@@ -8,11 +8,12 @@ import scala.annotation.tailrec
 /** The delegate class of [[BoardImpl]].
  *
  *  This helper class computes all the methods of its delegator.
- *  @param board the [[Board]] context, to make this class operate on the correct instance of board.
- *  @param posComputations the [[ComputationsExtensions]] context,
- *                        to make this class use the appropriate methods on different Boards.
+ *
+ *  @param board           the [[Board]] context, to make this class operate on the correct instance of board.
+ *  @param posComputations the [[ComputationsPosExtensions]] context,
+ *                         to make this class use the appropriate methods on different Boards.
  */
-private[board] class BoardComputations(using board: Board)(using posComputations: ComputationsExtensions):
+private[board] class BoardComputations(using board: Board)(using posComputations: ComputationsPosExtensions):
   private def getCapturableNeighboursPair(diskColor: Color)(using disks: Map[Position, Disk]): Set[(Position, Position)] =
     val sameColorDisks = disks.filter((_, disk) => disk.color.equals(diskColor)).keySet
     val capturableDisks = disks.keySet -- sameColorDisks

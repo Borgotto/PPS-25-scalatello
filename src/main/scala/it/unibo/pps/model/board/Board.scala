@@ -3,7 +3,7 @@ package it.unibo.pps.model.board
 import it.unibo.pps.utils.IntExtensions.half
 import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
 import it.unibo.pps.domain.{Color, Position, Shape}
-import it.unibo.pps.model.board.computations.{BoardComputations, ComputationsExtensions, ComputationsExtensionsRectangle}
+import it.unibo.pps.model.board.computations.{BoardComputations, ComputationsPosExtensions, ComputationsPosExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
 
 /** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
@@ -85,19 +85,20 @@ object Board:
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
       case _ =>
-        given contextComputations: ComputationsExtensions = ComputationsExtensionsRectangle()
+        given contextComputations: ComputationsPosExtensions = ComputationsPosExtensionsRectangle()
         BoardImpl(shape, disks)
 
 /** Implements a generic board.
  * 
  *  Delegates the computations of its methods to an instance of the class [[BoardComputations]].
- *  @param shape the shape of this board.
- *  @param disks the disks on this board.
- *  @param computations the context of [[ComputationsExtensions]], it contains the different computations
- *                         that may need to change for different types of boards.
+ *
+ *  @param shape        the shape of this board.
+ *  @param disks        the disks on this board.
+ *  @param computations the context of [[ComputationsPosExtensions]], it contains the different computations
+ *                      that may need to change for different types of boards.
  */
 private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
-                           (using computations: ComputationsExtensions) extends Board:
+                           (using computations: ComputationsPosExtensions) extends Board:
   private given contextBoard: Board = this
   private val compute: BoardComputations = BoardComputations()
 
