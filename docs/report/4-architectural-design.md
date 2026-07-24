@@ -29,8 +29,9 @@ classDiagram
       + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
       + saveMatch(fileName: String)
-      + loadMatch(fileName: String): MatchState
+      + loadMatch(fileName: String): data
       + saveFileNames(): List(String)
+      + deleteSaveFile(fileName: String)
     }
     class SaveManager {
       + save(data)
