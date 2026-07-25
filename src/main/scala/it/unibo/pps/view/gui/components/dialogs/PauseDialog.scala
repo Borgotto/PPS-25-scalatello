@@ -39,3 +39,4 @@ case class PauseDialog()
   title = "Match Paused"
   modal = true
   contents = boxPanel
+  setLocationRelativeTo(mainFrame)

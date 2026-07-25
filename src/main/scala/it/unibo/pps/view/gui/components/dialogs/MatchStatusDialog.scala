@@ -51,3 +51,4 @@ case class MatchStatusDialog(matchState: MatchState)
   title = "Match Ended"
   modal = true
   contents = boxPanel
+  setLocationRelativeTo(mainFrame)  
