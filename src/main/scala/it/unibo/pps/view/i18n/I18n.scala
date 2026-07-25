@@ -23,6 +23,9 @@ class I18n(locale: Locale):
 
 extension (keys: Seq[String])
 
-  /** @return the localized strings given a sequence of string keys. */
+  /** Given a sequence of string keys, returns the localized strings.
+   *  
+   * @param i18n the i18n provider of the application.
+   */
   def localize(using i18n: I18n): Seq[String] = keys.map(key => i18n.t(key))
   
