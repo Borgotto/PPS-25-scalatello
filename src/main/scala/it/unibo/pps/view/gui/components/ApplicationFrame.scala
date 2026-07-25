@@ -8,6 +8,7 @@ import scala.swing.*
 
 trait ApplicationFrame extends MainFrame:
   title = "Scalatello"
+  resizable = false
   
   given mainFrame: ApplicationFrame = this
   private[gui] val controller: Controller
