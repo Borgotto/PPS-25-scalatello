@@ -86,13 +86,13 @@ class MatchPanel
         case Some(color) =>
           DiskButton.PlacedDisk(color)
         case _ if board.userAvailablePlacements.contains(position) =>
-          DiskButton.PlaceableDisk
+          DiskButton.PlaceableDisk(matchState.user.color)
         case _ =>
           DiskButton.EmptyDisk
   
       val button = diskButton.button
       boardPanel.contents += button
-      if diskButton == DiskButton.PlaceableDisk then
+      if diskButton == DiskButton.PlaceableDisk(matchState.user.color) then
         listenTo(button)
         button.action = Action("")(
           mainFrame.controller.handleSelection(position)
