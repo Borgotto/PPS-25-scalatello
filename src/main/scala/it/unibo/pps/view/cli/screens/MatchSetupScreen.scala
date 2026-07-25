@@ -6,13 +6,20 @@ import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.i18n.{I18n, localize}
 
-enum ShapeOption:
-  case Square, Rectangular
-
+/** Implements the CLI screen for match setup.
+ * 
+ * @param controller the controller of the application.
+ * @param onMatchStart injected actions to perform when the match starts.
+ * @param i18n the [[I18n]] provider of the application.
+ * @param inputComponent the [[InputComponent]] instanced for the application.
+ */
 class MatchSetupScreen(
   controller: Controller,
   onMatchStart: () => Unit
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
+
+  private enum ShapeOption:
+    case Square, Rectangular
 
   private val minBoardSize = 4
   private val maxBoardSize = 16

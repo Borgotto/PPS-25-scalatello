@@ -4,20 +4,29 @@ import it.unibo.pps.controller.Controller
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
-import it.unibo.pps.view.cli.screens.SaveMenuAction.*
 import it.unibo.pps.view.i18n.{I18n, localize}
 
 import scala.util.{Failure, Success}
 
-enum SaveMenuAction:
-  case Load, Delete, GoBack
-
+/** Implements the CLI screen for the management of the existing save files.
+ *
+ * @param controller the controller of the application.
+ * @param onMatchStart injected actions to perform when the match loaded from a save file starts.
+ * @param renderMatch the function that handles the rendering of the match state
+ *                    when the match loaded from a save file starts.
+ * @param goBackToMainMenu the function that handles the return to the main menu.
+ * @param i18n the [[I18n]] provider of the application.
+ * @param inputComponent the [[InputComponent]] instanced for the application.
+ */
 class SaveManagementScreen(
   controller: Controller,
   onMatchStart: () => Unit,
   renderMatch: (state: MatchState) => Unit,
   goBackToMainMenu: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
+
+  private enum SaveMenuAction:
+    case Load, Delete, GoBack
 
   override def render(): IO[Unit] =
     inputComponent.askForOption(
@@ -32,9 +41,9 @@ class SaveManagementScreen(
 
   private def handleSelectedSaveMenuAction(ordinal: Int): IO[Unit] =
     SaveMenuAction.fromOrdinal(ordinal) match
-      case Load => showSaveLoadingMenu()
-      case Delete => showSaveDeletionMenu()
-      case GoBack => goBackToMainMenu()
+      case SaveMenuAction.Load => showSaveLoadingMenu()
+      case SaveMenuAction.Delete => showSaveDeletionMenu()
+      case SaveMenuAction.GoBack => goBackToMainMenu()
 
   private def onEmptySaveFilesList(): IO[Unit] =
     for

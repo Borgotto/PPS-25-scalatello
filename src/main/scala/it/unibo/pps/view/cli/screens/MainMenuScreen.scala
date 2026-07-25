@@ -2,16 +2,22 @@ package it.unibo.pps.view.cli.screens
 
 import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.cli.io.IO.write
-import it.unibo.pps.view.cli.screens.MainMenuAction.*
 import it.unibo.pps.view.i18n.{I18n, localize}
 
-enum MainMenuAction:
-  case NewGame, SaveFiles
-
+/** Implements the main menu of the application on CLI.
+ * 
+ * @param onNewGameAction the behavior in case the option to start a new game is selected.
+ * @param onSaveManagementAction the behavior in case the save management option is selected.
+ * @param i18n the [[I18n]] provider of the application.
+ * @param inputComponent the [[InputComponent]] instanced for the application.
+ */
 class MainMenuScreen(
   onNewGameAction: () => IO[Unit],
   onSaveManagementAction: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
+
+  private enum MainMenuAction:
+    case NewGame, SaveFiles
 
   override def render(): IO[Unit] =
     for
@@ -31,5 +37,5 @@ class MainMenuScreen(
 
   private def handleSelectedAction(ordinal: Int): IO[Unit] = 
     MainMenuAction.fromOrdinal(ordinal) match
-      case NewGame => onNewGameAction()
-      case SaveFiles => onSaveManagementAction()
+      case MainMenuAction.NewGame => onNewGameAction()
+      case MainMenuAction.SaveFiles => onSaveManagementAction()

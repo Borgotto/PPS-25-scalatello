@@ -11,9 +11,9 @@ import it.unibo.pps.view.i18n.I18n
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.TerminalBuilder
 
-/** Provides a command-line implementation of the view.
+/** Provides the CLI implementation of the view.
  * 
- * @param i18n the i18n provider of the application.
+ * @param i18n the [[I18n]] provider of the application.
  */
 class CLIView(using i18n: I18n) extends View:
 

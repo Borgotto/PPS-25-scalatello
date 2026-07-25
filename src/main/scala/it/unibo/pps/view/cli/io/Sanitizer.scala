@@ -2,6 +2,7 @@ package it.unibo.pps.view.cli.io
 
 object Sanitizer:
 
+  private val replacementChar = "_"
   private val maxFileNameLength = 255
 
   // ASCII control characters and forbidden characters on Windows
@@ -14,29 +15,29 @@ object Sanitizer:
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
   )
 
-  private def replaceIllegalChars(replacement: String)(fileName: String): String =
-    illegalCharPatterns.replaceAllIn(fileName, replacement)
+  private def replaceIllegalChars(fileName: String): String =
+    illegalCharPatterns.replaceAllIn(fileName, replacementChar)
 
   private def trimEdges(fileName: String): String =
     // Remove trailing spaces and trailing points
     fileName.trim.replaceAll("^[\\s.]+|[\\s.]+$", "")
 
-  private def handleReservedNames(prefix: String)(fileName: String): String =
-    if reservedFileNames.contains(fileName.toUpperCase) then s"$prefix$fileName" else fileName
+  private def handleReservedNames(fileName: String): String =
+    if reservedFileNames.contains(fileName.toUpperCase) then s"$replacementChar$fileName" else fileName
 
   private def truncate(fileName: String): String =
     if fileName.length > maxFileNameLength
     then fileName.substring(0, maxFileNameLength)
     else fileName
 
-  def sanitize(fileName: String, replacement: String = "_"): String =
+  def sanitize(fileName: String): String =
     if fileName == null || fileName.trim.isEmpty then
       val timestamp = System.currentTimeMillis()
-      s"unnamed_save_$timestamp"
+      s"unnamed_$timestamp"
     else
       val _sanitize: String => String =
-        replaceIllegalChars(replacement) _ andThen
-          trimEdges                        andThen
-          handleReservedNames(replacement) andThen
+        replaceIllegalChars _ andThen
+          trimEdges           andThen
+          handleReservedNames andThen
           truncate
       _sanitize(fileName)
