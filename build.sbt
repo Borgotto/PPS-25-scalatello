@@ -12,6 +12,7 @@ lazy val root = project
       "org.mockito" % "mockito-scala-scalatest_3" % "2.2.1" % Test,
       "org.scala-lang" %% "toolkit" % "0.9.2",
       "org.jline" % "jline" % "4.3.1",
-      "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
+      "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
+      "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
     ),
   )
