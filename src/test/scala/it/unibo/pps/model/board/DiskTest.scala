@@ -5,7 +5,7 @@ import it.unibo.pps.model.board.Disk
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 
-/** Tests for [[Disk]] */
+/** Test suite for [[Disk]] */
 class DiskTest extends AnyFlatSpec:
   "A Disk" should "have a color" in:
     val disk = Disk(Color.Black)

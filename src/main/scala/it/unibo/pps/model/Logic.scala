@@ -45,7 +45,7 @@ trait Logic:
  *
  *  @param user the information about the user in this match (i.e. their color).
  *  @param opponent the information about the opponent in this match (i.e. their color
- *                 and placement strategy).
+ *                  and placement strategy).
  *  @param status the current status of the match.
  *  @param activePlayer the player that must perform a placement in the current turn.
  *  @param board the board of the match.

@@ -6,6 +6,7 @@ import it.unibo.pps.model.strategy.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.*
 
+/** Test suite for player. */
 class PlayerTest extends AnyFlatSpec:
 
   "A Player" should "preserve its color" in:

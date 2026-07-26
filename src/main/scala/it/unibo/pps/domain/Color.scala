@@ -7,7 +7,7 @@ enum Color derives ReadWriter:
   case Black
   case White
 
-  /** @return the other color value. */
+  /** @return the other color. */
   def opposite: Color = this match
     case Black => White
     case White => Black

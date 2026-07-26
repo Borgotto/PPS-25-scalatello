@@ -13,6 +13,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
 import org.scalatest.ParallelTestExecution
 
+/** Test suite for opponent placement strategy. */
 class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks with ParallelTestExecution:
 
   "RandomOpponentPlacementStrategy" should "return a valid placement" in:

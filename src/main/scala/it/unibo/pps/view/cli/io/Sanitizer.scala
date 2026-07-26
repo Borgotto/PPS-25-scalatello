@@ -1,5 +1,6 @@
 package it.unibo.pps.view.cli.io
 
+/** Provides utilities for the sanitization of strings. */
 object Sanitizer:
 
   private val replacementChar = "_"
@@ -19,7 +20,7 @@ object Sanitizer:
     illegalCharPatterns.replaceAllIn(fileName, replacementChar)
 
   private def trimEdges(fileName: String): String =
-    // Remove trailing spaces and trailing points
+    // Remove leading and trailing spaces and points
     fileName.trim.replaceAll("^[\\s.]+|[\\s.]+$", "")
 
   private def handleReservedNames(fileName: String): String =
@@ -30,14 +31,21 @@ object Sanitizer:
     then fileName.substring(0, maxFileNameLength)
     else fileName
 
-  def sanitize(fileName: String): String =
+  /** Sanitizes the provided filename by removing illegal characters,
+   *  handling reserved filenames, trimming white-spaces and truncating
+   *  the name if too long.
+   *
+   * @param fileName the filename to sanitize.
+   * @return the sanitized filename.
+   */
+  def sanitizeFilename(fileName: String): String =
     if fileName == null || fileName.trim.isEmpty then
       val timestamp = System.currentTimeMillis()
       s"unnamed_$timestamp"
     else
-      val _sanitize: String => String =
+      val sanitize: String => String =
         replaceIllegalChars _ andThen
           trimEdges           andThen
           handleReservedNames andThen
           truncate
-      _sanitize(fileName)
+      sanitize(fileName)

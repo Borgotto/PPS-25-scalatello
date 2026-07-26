@@ -8,7 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{an, be, should}
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-/** Tests for [[Board]] */
+/** Test suite for [[Board]] */
 class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   private val BOARD_SIZE: Int = 4
   private val BOARD_HEIGHT: Int = 4

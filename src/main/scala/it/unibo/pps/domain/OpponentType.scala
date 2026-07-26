@@ -1,6 +1,8 @@
 package it.unibo.pps.domain
 
-/** Enum to represent the existing types of opponent. */
+/** Represents the possible types of opponent, based on their placement strategy
+ *  (hence, their skill level).
+ */
 enum OpponentType:
   case Random
   case Easy

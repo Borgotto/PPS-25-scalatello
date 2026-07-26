@@ -15,6 +15,7 @@ import os.{Path, pwd, read, temp, write}
 
 import scala.util.{Failure, Success}
 
+/** Test suite for save manager. */
 class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
   private val tmpDir: Path = temp.dir()

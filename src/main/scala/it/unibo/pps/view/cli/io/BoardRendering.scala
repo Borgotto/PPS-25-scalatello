@@ -4,10 +4,12 @@ import it.unibo.pps.state.BoardState
 import it.unibo.pps.domain.Color.{Black, White}
 import it.unibo.pps.domain.Position
 
-object BoardRenderingExtension:
+/** Provides utilities for the rendering of the board. */
+object BoardRendering:
 
   extension (state: BoardState)
 
+    /** @return a string representation of the board state. */
     def render(): String =
       val firstLine = renderFormattedFirstLine()
       val rows = renderRows()

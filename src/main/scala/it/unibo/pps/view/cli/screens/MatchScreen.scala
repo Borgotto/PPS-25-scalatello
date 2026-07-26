@@ -5,7 +5,7 @@ import it.unibo.pps.domain.ActivePlayer.*
 import it.unibo.pps.domain.MatchStatus.*
 import it.unibo.pps.domain.Position
 import it.unibo.pps.state.{BoardState, MatchState}
-import it.unibo.pps.view.cli.io.BoardRenderingExtension.render
+import it.unibo.pps.view.cli.io.BoardRendering.render
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
 import it.unibo.pps.view.i18n.I18n

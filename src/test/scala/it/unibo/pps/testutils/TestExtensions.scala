@@ -5,10 +5,32 @@ import it.unibo.pps.domain.Color.*
 import it.unibo.pps.domain.{Position, Shape}
 import Shape.*
 
+/** Provides useful extensions for testing. */
 object TestExtensions:
 
   extension (string: String)
 
+    /** Creates a [[Board]] instance from a well-formed string representation
+     *  of a board state.
+     *
+     *  The string must be formed in the following way:
+     *    - It must have as many lines as the desired number of rows for the board.
+     *    - Each line must have as many characters as the desired number of columns for the board.
+     *    - The letter 'B' must be used to indicate a cell occupied by a black disk.
+     *    - The letter 'W' must be used to indicate a cell occupied by a white disk.
+     *    - The character '.' must be used to indicate an empty cell.
+     *
+     *  For example, the initial configuration of a 4x4 board is represented as follows:
+     *  {{{
+     *   ....
+     *   .WB.
+     *   .BW.
+     *   ....
+     *  }}}
+     *
+     * @return a [[Board]] instance that reflects the provided string representation.
+     * @throws IllegalArgumentException if the string representation is empty or malformed.
+     */
     def toBoard: Board =
       val lines = parseLines(string)
       checkIfEmpty(lines)

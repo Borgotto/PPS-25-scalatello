@@ -16,6 +16,7 @@ import os.{Path, PermSet, root, temp, write}
 import scala.util.{Failure, Success}
 import java.io.RandomAccessFile
 
+/** Test suite for save errors. */
 class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
 
   private val tmpDir: Path = temp.dir()

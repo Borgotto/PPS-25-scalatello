@@ -7,6 +7,7 @@ import it.unibo.pps.domain.Position
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.shouldEqual
 
+/** Test suite for user placement strategy. */
 class UserPlacementStrategyTest extends AnyFlatSpec:
 
   "UserPlacementStrategy" should "return the user choice" in:

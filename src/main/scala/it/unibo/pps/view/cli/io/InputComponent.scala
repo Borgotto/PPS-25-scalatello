@@ -1,6 +1,6 @@
 package it.unibo.pps.view.cli.io
 
-import it.unibo.pps.view.cli.io.Sanitizer.sanitize
+import it.unibo.pps.view.cli.io.Sanitizer.sanitizeFilename
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.i18n.I18n
 
@@ -129,7 +129,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     askForValidInput(
       requestKey = requestKey,
       isInputValid = _ => true,
-      convert = sanitize,
+      convert = sanitizeFilename,
       invalidInputMessageKey = ""
     )
 
