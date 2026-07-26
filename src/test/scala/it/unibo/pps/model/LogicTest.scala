@@ -4,7 +4,7 @@ import it.unibo.pps.domain.{Color, OpponentType, Position, Shape}
 import it.unibo.pps.domain.ActivePlayer.{Opponent, User}
 import it.unibo.pps.domain.Color.*
 import it.unibo.pps.domain.MatchStatus.*
-import it.unibo.pps.domain.OpponentType.Random
+import it.unibo.pps.domain.OpponentType.Erratic
 import it.unibo.pps.domain.Shape.*
 import it.unibo.pps.model.board.Board
 
@@ -18,7 +18,7 @@ import org.scalatest.matchers.should.Matchers.should
 class LogicTest extends AnyFlatSpec:
 
   private val userColor: Color = Black
-  private val opponentType: OpponentType = Random
+  private val opponentType: OpponentType = Erratic
 
   private val squareSize = 4
   private val squareShape: Shape = Square(squareSize)

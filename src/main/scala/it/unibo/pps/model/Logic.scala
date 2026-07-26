@@ -113,7 +113,7 @@ object Logic:
   
   private def getOpponent(color: Color, opponentType: OpponentType): Opponent =
     opponentType match
-      case Random => RandomOpponent(color)
+      case Erratic => ErraticOpponent(color)
       case Easy => EasyOpponent(color)
       case Medium => MediumOpponent(color)
       case Hard => HardOpponent(color)

@@ -4,7 +4,7 @@ package it.unibo.pps.domain
  *  (hence, their skill level).
  */
 enum OpponentType:
-  case Random
+  case Erratic
   case Easy
   case Medium
   case Hard

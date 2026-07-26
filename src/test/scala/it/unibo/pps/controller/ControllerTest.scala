@@ -17,16 +17,16 @@ class ControllerTest extends AnyFlatSpec:
 
   "A Controller, if the first player is the User" should "notify the state of the match only once" in:
     val mockedController: ControllerImpl = Mockito.spy(ControllerImpl())
-    mockedController.startMatch(BOARD_SHAPE, Color.Black, OpponentType.Random)
+    mockedController.startMatch(BOARD_SHAPE, Color.Black, OpponentType.Erratic)
     verify(mockedController, times(1)).notifySubscribers(any(classOf[MatchState]))
 
   "A Controller, if the first player is the opponent" should "notify the state of the match twice" in:
     val mockedController: ControllerImpl = Mockito.spy(ControllerImpl())
-    mockedController.startMatch(BOARD_SHAPE, Color.White, OpponentType.Random)
+    mockedController.startMatch(BOARD_SHAPE, Color.White, OpponentType.Erratic)
     verify(mockedController, times(2)).notifySubscribers(any(classOf[MatchState]))
 
   "A Controller" should "notify the state of the match thrice, at the start, after user selection and opponent turn" in:
     val mockedController: ControllerImpl = Mockito.spy(ControllerImpl())
-    mockedController.startMatch(BOARD_SHAPE, Color.Black, OpponentType.Random)
+    mockedController.startMatch(BOARD_SHAPE, Color.Black, OpponentType.Erratic)
     mockedController.handleSelection(validPos)
     verify(mockedController, times(3)).notifySubscribers(any(classOf[MatchState]))

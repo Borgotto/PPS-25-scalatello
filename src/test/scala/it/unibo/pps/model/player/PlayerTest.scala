@@ -19,13 +19,13 @@ class PlayerTest extends AnyFlatSpec:
     strategy shouldBe a [UserPlacementStrategy]
 
   "An Opponent" should "return an OpponentPlacementStrategy" in:
-    val opponent: Player = Opponent.RandomOpponent(Color.White)
+    val opponent: Player = Opponent.ErraticOpponent(Color.White)
     val strategy = opponent.strategy
     strategy shouldBe an [OpponentPlacementStrategy]
 
-  it should "use the random strategy for RandomOpponent" in:
-    val opponent = Opponent.RandomOpponent(Color.Black)
-    opponent.strategy shouldBe a [RandomPlacementStrategy]
+  it should "use the erratic strategy for ErraticOpponent" in:
+    val opponent = Opponent.ErraticOpponent(Color.Black)
+    opponent.strategy shouldBe a [ErraticPlacementStrategy]
 
   it should "use the expected smart strategy depth for predefined opponents" in:
     Opponent.EasyOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 1)
@@ -33,7 +33,7 @@ class PlayerTest extends AnyFlatSpec:
     Opponent.HardOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 4)
 
   it should "support unapply" in:
-    val opponent: Opponent = Opponent.RandomOpponent(Color.White)
+    val opponent: Opponent = Opponent.ErraticOpponent(Color.White)
     opponent match
       case Opponent(color) => color shouldBe Color.White
       case _ => fail("Unapply did not work as expected")

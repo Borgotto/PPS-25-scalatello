@@ -51,7 +51,7 @@ classDiagram
         + strategy: UserPlacementStrategy
     }
     class Opponent <<Enumeration>> {
-        + RandomOpponent: Opponent
+        + ErraticOpponent: Opponent
     }
 
     Player <|-- User
@@ -85,13 +85,13 @@ classDiagram
     class OpponentPlacementStrategy ~MatchState, Position~ <<Abstract>> {
         + computePlacement(using match: MatchState)*: Position
     }
-    class RandomOpponentPlacementStrategy~MatchState, Position~ {
+    class ErraticOpponentPlacementStrategy~MatchState, Position~ {
         + computePlacement(using match: MatchState): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
-    OpponentPlacementStrategy <|.. RandomOpponentPlacementStrategy
+    OpponentPlacementStrategy <|.. ErraticOpponentPlacementStrategy
 ```
 
 ### Scenario: calcolo delle mosse

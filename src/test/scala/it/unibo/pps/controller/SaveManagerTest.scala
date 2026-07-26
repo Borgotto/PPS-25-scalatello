@@ -5,7 +5,7 @@ import it.unibo.pps.utils.*
 import it.unibo.pps.model.strategy.*
 import it.unibo.pps.controller.save.SaveManager.*
 import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, Position, Shape}
-import it.unibo.pps.model.player.Opponent.RandomOpponent
+import it.unibo.pps.model.player.Opponent.ErraticOpponent
 import it.unibo.pps.model.player.User
 import it.unibo.pps.utils.Serializer.{Serializer, Serializers}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -31,7 +31,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       MatchState(
         MatchStatus.InProgress,
         User(Color.Black),
-        RandomOpponent(Color.White),
+        ErraticOpponent(Color.White),
         ActivePlayer.User,
         BoardState(Shape.Square(4), Set.empty, Set.empty)
       )
@@ -42,7 +42,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       MatchState(
         MatchStatus.InProgress,
         User(Color.Black),
-        RandomOpponent(Color.White),
+        ErraticOpponent(Color.White),
         ActivePlayer.Opponent,
         BoardState(
           Shape.Rectangle(4, 6),
@@ -60,7 +60,7 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
       MatchState(
         MatchStatus.UserWon,
         User(Color.White),
-        RandomOpponent(Color.Black),
+        ErraticOpponent(Color.Black),
         ActivePlayer.User,
         BoardState(Shape.Square(8), Set.empty, Set.empty)
       )

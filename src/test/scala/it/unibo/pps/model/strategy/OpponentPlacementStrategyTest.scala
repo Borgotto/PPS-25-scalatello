@@ -16,7 +16,7 @@ import org.scalatest.ParallelTestExecution
 /** Test suite for opponent placement strategy. */
 class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks with ParallelTestExecution:
 
-  "RandomOpponentPlacementStrategy" should "return a valid placement" in:
+  "ErraticOpponentPlacementStrategy" should "return a valid placement" in:
     given board: Board = """
       ......
       ...W..
@@ -24,7 +24,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
       ..BW..
       ......
       """.toBoard
-    val opponent = Opponent.RandomOpponent(Color.White)
+    val opponent = Opponent.ErraticOpponent(Color.White)
     val availablePlacements = board.getAvailablePlacements(opponent.color)
     val position: Position = opponent.strategy.computePlacement
     availablePlacements should contain (position)

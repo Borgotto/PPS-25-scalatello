@@ -43,11 +43,11 @@ case class User(color: Color) extends Player derives ReadWriter:
  */
 enum Opponent extends Player derives ReadWriter:
   /**
-   * A random opponent that chooses random placements between available options
+   * An erratic opponent that chooses random placements between available options
    *
    * @param color the color assigned to this opponent
    */
-  case RandomOpponent(color: Color)
+  case ErraticOpponent(color: Color)
 
   /**
    * An opponent whose strategy is to place disks where it gains the most immediate advantage
@@ -76,7 +76,7 @@ enum Opponent extends Player derives ReadWriter:
    * @return an OpponentPlacementStrategy appropriate for this opponent's difficulty level
    */
   val strategy: OpponentPlacementStrategy = this match
-    case RandomOpponent(_) => RandomPlacementStrategy(color)
+    case ErraticOpponent(_) => ErraticPlacementStrategy(color)
     case EasyOpponent(_) => SmartPlacementStrategy(color, depth = 1)
     case MediumOpponent(_) => SmartPlacementStrategy(color, depth = 2)
     case HardOpponent(_) => SmartPlacementStrategy(color, depth = 4)

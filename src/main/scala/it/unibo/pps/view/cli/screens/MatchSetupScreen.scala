@@ -90,7 +90,7 @@ class MatchSetupScreen(
     inputComponent.askForOption(
       requestKey = Some("setup_menu.opponent.type_question"),
       options = Seq(
-        "setup_menu.opponent.type_random",
+        "setup_menu.opponent.type_erratic",
         "setup_menu.opponent.type_easy",
         "setup_menu.opponent.type_medium",
         "setup_menu.opponent.type_hard"

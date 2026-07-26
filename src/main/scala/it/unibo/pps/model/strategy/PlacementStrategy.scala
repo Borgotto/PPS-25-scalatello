@@ -59,7 +59,7 @@ case class UserPlacementStrategy() extends PlacementStrategy[Position, Position]
 sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position] derives ReadWriter
 
 /**
- * Random opponent placement strategy.
+ * Erratic opponent placement strategy.
  *
  * Chooses one of the available placements on the given board at random.
  *
@@ -72,7 +72,7 @@ sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position
  *
  * @throws IllegalStateException when called while the opponent has no available placements on the board.
  */
-case class RandomPlacementStrategy(color: Color) extends OpponentPlacementStrategy:
+case class ErraticPlacementStrategy(color: Color) extends OpponentPlacementStrategy:
   def computePlacement(using board: Board): Position =
     val availablePlacements = board.getAvailablePlacements(color)
     if availablePlacements.isEmpty then throw IllegalStateException("Opponent has no available placements")
