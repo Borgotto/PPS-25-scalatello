@@ -11,39 +11,39 @@ Ciascun membro del gruppo, oltre al ruolo di sviluppatore, ha svolto uno specifi
 Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti.
 
 - Comunicazione dei requisiti di progetto, poi formalizzati nella sezione ["Requisiti"](./3-requirements.md).
-- Verifica del risultato prodotto al termine di ogni iterazione, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per gli sviluppi futuri. fornendo feedback utili a garantire la conformità alle specifiche e la qualità del risultato.
+- Verifica del risultato prodotto al termine di ogni fase (detta _iterazione_) del processo di sviluppo, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per le iterazioni successive.
 - Valutazione e accettazione del risultato finale del progetto.
 
 Tale ruolo è stato assegnato a Cristina Zoccola, poiché è stata la componente del gruppo che ha avanzato l'idea fondante del progetto e che ha più esperienza con il dominio in oggetto.
 
 ### Product Owner
 
-Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupatodei seguenti compiti.
+Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti.
 
-- Redazione del Product Backlog, ossia dell'elenco di attività da svolgere nell'ambito del progetto, inclusa la stima di priorità e tempi per ciascun task individuato e l'assegnazione di ciascun task ai componenti del team di sviluppo.
-- Comunicazione con il committente, per la raccolta dei requisiti e, al termine di ogni iterazione, dei feedback sul risultato presentato.
-- Coordinamento del team di sviluppo in occasione dei meeting pianificati (riportati nella sezione ["Organizzazione del lavoro"](#organizzazione-del-lavoro)).
+- Redazione del Product Backlog, ossia dell'elenco di attività da svolgere nell'ambito del progetto, inclusa la stima di tempi e priorità per ciascuna attività e l'assegnazione di ciascuna attività ai componenti del team di sviluppo.
+- Comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato.
+- Coordinamento del lavoro tra i componenti del team di sviluppo.
 
 Tale ruolo è stato assegnato a Elena Boschetti.
 
 ### Scrum Master
 
-Lo Scrum Master ha avuto il ruolo di supervisionare il processo di sviluppo, al fine di garantirne l'efficienza e la conformità ai principi base del framework Scrum e alle modalità definite all'inizio del progetto.
+Lo Scrum Master ha avuto il ruolo di supervisore del processo di sviluppo, al fine di garantirne l'efficienza e la conformità ai principi base del framework Scrum e alle modalità definite all'inizio del progetto.
 
 Tale ruolo è stato assegnato a Emanuele Borghini.
 
 ## Organizzazione del lavoro
 
-Le attività di progetto sono state suddivise in iterazioni (_dette sprint_) della durata di una settimana. In totale, sono stati pianificati 8 sprint.
+Le attività di progetto sono state suddivise in iterazioni (_dette sprint_), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
 
 Il primo sprint è stato dedicato alle seguenti attività.
 
-- Definizione in dettaglio del processo di sviluppo, inclusa l'assegnazione dei ruoli indicati nella [relativa sezione](#ruoli).
-- Formalizzazione dei requisiti (il cui risultato è riportato nella sezione ["Requisiti"](./3-requirements.md)).
-- Scelta degli strumenti da adottare per la pianificazione del lavoro e per le attività di sviluppo quali testing, build e CI (Continuous Integration).
+- Definizione del processo di sviluppo, inclusa l'assegnazione dei ruoli indicati nella sezione ["Ruoli"](#ruoli).
+- Formalizzazione dei requisiti (il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md)).
+- Scelta degli strumenti da utilizzare per la pianificazione del lavoro e per le attività di sviluppo, quali testing, build e CI (Continuous Integration).
 - Redazione del Product Backlog.
 
-Gli sprint successivi sono stati invece dedicati alle attività di progettazione, sviluppo e redazione della documentazione.
+I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della relazione del progetto.
 
 All'interno di ogni sprint (ad esclusione del primo sprint organizzativo), sono stati svolti i seguenti incontri.
 
@@ -57,7 +57,7 @@ A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
 
 - Come sistema di controllo di versione, è stato utilizzato **Git**.
 - Per l'hosting remoto del repository, è stata utilizzata la piattaforma **GitHub**.
-- Per la gestione dei task del progetto, la redazione del backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, strumento integrato in GitHub.
+- Per la redazione del Product Backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, strumento integrato in GitHub.
 - Come build system, è stato utilizzato **SBT**.
 - Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di [test doubles](https://en.wikipedia.org/wiki/Test_double) da utilizzare all'interno dei test nelle fasi iniziali dello sviluppo.
-- Per la CI (Continuous Integration), sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub.
+- Per la CI, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub.

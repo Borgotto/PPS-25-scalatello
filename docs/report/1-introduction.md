@@ -14,7 +14,7 @@ La relazione si articola nelle seguenti sezioni:
 6. [Testing](./7-testing.md)
 7. [Retrospettiva](./8-retrospective.md)
 
-## Autori
+## Autori del progetto
 
 - Emanuele Borghini
 - Elena Boschetti
