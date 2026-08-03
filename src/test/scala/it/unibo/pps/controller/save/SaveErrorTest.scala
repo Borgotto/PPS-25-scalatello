@@ -1,20 +1,18 @@
-package it.unibo.pps.controller
+package it.unibo.pps.controller.save
 
-import it.unibo.pps.state.*
-import it.unibo.pps.utils.*
-import it.unibo.pps.model.strategy.*
-import it.unibo.pps.controller.save.SaveManager.SaveManagers.*
 import it.unibo.pps.controller.save.SaveError.*
+import it.unibo.pps.controller.save.SaveManager.SaveManagers.*
 import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, Shape}
 import it.unibo.pps.model.player.Opponent.ErraticOpponent
 import it.unibo.pps.model.player.User
+import it.unibo.pps.state.*
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{a, shouldBe}
-import os.{Path, PermSet, root, temp, write}
+import os.{Path, temp, write}
 
-import scala.util.{Failure, Success}
 import java.io.RandomAccessFile
+import scala.util.Failure
 
 /** Test suite for save errors. */
 class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:

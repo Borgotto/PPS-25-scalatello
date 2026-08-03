@@ -1,4 +1,4 @@
-package it.unibo.pps.model.strategy
+package it.unibo.pps.model.player.strategy
 
 import it.unibo.pps.domain.*
 import it.unibo.pps.domain.MatchStatus.*
@@ -6,8 +6,8 @@ import it.unibo.pps.domain.OpponentType.*
 import it.unibo.pps.model.Logic
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.model.player.*
+import it.unibo.pps.model.player.strategy.SmartPlacementStrategy
 import it.unibo.pps.testutils.TestExtensions.*
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}

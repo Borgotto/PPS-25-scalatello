@@ -1,19 +1,17 @@
-package it.unibo.pps.controller
+package it.unibo.pps.controller.save
 
-import it.unibo.pps.state.*
-import it.unibo.pps.utils.*
-import it.unibo.pps.model.strategy.*
 import it.unibo.pps.controller.save.SaveManager.*
-import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, Position, Shape}
+import it.unibo.pps.domain.*
 import it.unibo.pps.model.player.Opponent.ErraticOpponent
 import it.unibo.pps.model.player.User
+import it.unibo.pps.state.*
 import it.unibo.pps.utils.Serializer.{Serializer, Serializers}
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{a, be, noException, shouldBe, shouldEqual, shouldNot}
+import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe, shouldEqual}
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
-import os.{Path, pwd, read, temp, write}
+import os.{Path, read, temp, write}
 
-import scala.util.{Failure, Success}
+import scala.util.Success
 
 /** Test suite for save manager. */
 class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
