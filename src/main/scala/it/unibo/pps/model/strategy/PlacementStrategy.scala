@@ -31,24 +31,6 @@ trait PlacementStrategy[-C, O]:
   def computePlacement(using context: C): O
 
 /**
- * Strategy representing a placement provided directly by the user.
- *
- * This strategy simply returns the identity of the user-supplied position,
- * effectively passing through the user's choice.
- * 
- * @note It derives a uPickle ReadWriter so instances can be serialized/deserialized where needed.
- */
-case class UserPlacementStrategy() extends PlacementStrategy[Position, Position] derives ReadWriter:
-  /**
-   * Return the user-provided position unchanged.
-   *
-   * @param userChoice the user's chosen position
-   * @return the same `Position` supplied by the caller
-   * @note The method expects the user's choice to be supplied as a contextual `Position`.
-   */
-  def computePlacement(using userChoice: Position): Position = userChoice
-
-/**
  * Trait for [[Opponent]]s' placement strategies.
  *
  * Opponent strategies compute a placement based on the current [[Board]] and produce a [[Position]].

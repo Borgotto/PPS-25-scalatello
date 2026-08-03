@@ -17,26 +17,13 @@ trait Player:
    */
   def color: Color
 
-  /**
-   * The placement strategy used by this player to compute moves.
-   *
-   * This can be either a [[UserPlacementStrategy]] or an [[OpponentPlacementStrategy]]
-   * depending on whether the player is human or AI-controlled.
-   *
-   * @return [[UserPlacementStrategy]] | [[OpponentPlacementStrategy]]
-   */
-  def strategy: UserPlacementStrategy | OpponentPlacementStrategy
-
 /**
  * Represents a human player controlled by user input.
- *
- * The user player uses a UserPlacementStrategy to accept positions directly from the user.
  *
  * @param color the color assigned to this user player
  * @note This class derives a uPickle ReadWriter for serialization support.
  */
-case class User(color: Color) extends Player derives ReadWriter:
-  val strategy: UserPlacementStrategy = UserPlacementStrategy()
+case class User(color: Color) extends Player derives ReadWriter
 
 /**
  * Represents an AI-controlled opponent player with configurable difficulty levels.

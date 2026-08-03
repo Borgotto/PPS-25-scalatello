@@ -13,13 +13,8 @@ class PlayerTest extends AnyFlatSpec:
     val user: User = User(Color.White)
     user.color shouldBe Color.White
 
-  "A User" should "return a UserPlacementStrategy" in:
-    val user: Player = User(Color.Black)
-    val strategy = user.strategy
-    strategy shouldBe a [UserPlacementStrategy]
-
   "An Opponent" should "return an OpponentPlacementStrategy" in:
-    val opponent: Player = Opponent.ErraticOpponent(Color.White)
+    val opponent = Opponent.ErraticOpponent(Color.White)
     val strategy = opponent.strategy
     strategy shouldBe an [OpponentPlacementStrategy]
 
