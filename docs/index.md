@@ -22,6 +22,10 @@ La relazione si articola nelle seguenti sezioni:
 
 I backlog degli sprint sono documentati nella apposita sezione [Backlogs](./process/index.md).
 
+## Scaladoc
+
+La scaladoc generata è disponibile nella cartella [docs/scaladoc](./scaladoc/index.html).
+
 ## Autori del progetto
 
 - Emanuele Borghini
