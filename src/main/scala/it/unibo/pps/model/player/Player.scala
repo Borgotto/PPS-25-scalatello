@@ -1,8 +1,7 @@
 package it.unibo.pps.model.player
 
 import it.unibo.pps.domain.Color
-import it.unibo.pps.model.strategy.*
-
+import it.unibo.pps.model.player.strategy.{ErraticPlacementStrategy, OpponentPlacementStrategy, SmartPlacementStrategy}
 import upickle.ReadWriter
 
 /**

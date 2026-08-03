@@ -1,10 +1,11 @@
-package it.unibo.pps.model.strategy
+package it.unibo.pps.model.player.strategy
 
 import it.unibo.pps.domain.{Color, Position}
 import it.unibo.pps.model.board.Board
-import it.unibo.pps.model.strategy.StrategyHelper.*
+import it.unibo.pps.model.player.strategy.StrategyHelper.score
 
-import scala.util.boundary, boundary.break
+import scala.util.boundary
+import boundary.break
 import scala.math.max
 import scala.collection.parallel.CollectionConverters.*
 

@@ -1,4 +1,4 @@
-package it.unibo.pps.model.strategy
+package it.unibo.pps.model.player.strategy
 
 import it.unibo.pps.domain.{Color, Position}
 import it.unibo.pps.model.board.Board
