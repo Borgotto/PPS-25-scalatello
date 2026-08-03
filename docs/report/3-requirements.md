@@ -1,31 +1,60 @@
 # Requisiti
 
+In questo capitolo, sono riportati tutti i requisiti emersi in fase di analisi.
+
+La presentazione dei requisiti si articola nelle seguenti sezioni:
+
+- [Requisiti di business](#requisiti-di-business)
+- [Modello di dominio](#modello-di-dominio)
+- [Requisiti funzionali](#requisiti-funzionali)
+- [Requisiti non funzionali](#requisiti-non-funzionali)
+- [Requisiti di implementazione](#requisiti-di-implementazione)
+
 ## Requisiti di business
 
-- Creazione di un'applicazione che permetta di giocare al gioco da tavolo Othello, in modalità single player contro un avversario virtuale autonomo.
-- Realizzazione dell'applicazione entro due mesi. La versione finale dell'applicazione realizzata entro tale arco di tempo deve soddisfare i requisiti funzionali definiti nella sezione [Requisiti funzionali](#requisiti-funzionali)
+L'obiettivo centrale del progetto è la realizzazione di un'applicazione che permetta di giocare al gioco da tavolo Othello. Nello specifico, l'utente potrà giocare in modalità single-player contro un giocatore virtuale autonomo. L'implementazione del gioco dovrà aderire alle regole tradizionali di Othello (le quali sono riportate in seguito).
 
-## Analisi del dominio
+## Modello di dominio
 
-Il gioco prevede due giocatori, ciascuno dei quali possiede un determinato numero di pedine, le quali sono di colore nero da un lato e di colore bianco dall'altro. Ad ogni giocatore è assegnato uno dei due colori. Il terreno di gioco, diviso in celle, è di forma quadrata o rettangolare.
+Questa sezione ha l'obiettivo di presentare il dominio applicativo del progetto, ossia il gioco Othello. A tale scopo, sono innanzitutto riportate le regole tradizionali del gioco, al quale l'implementazione realizzata dovrà aderire. Successivamente, sulla base di queste e degli obiettivi esplicitati nella precedente sezione, sono individuate le entità coinvolte e le relazioni tra queste, fino a pervenire ad un modello di dominio espresso tramite il formalismo UML.
 
-Prima di iniziare a giocare, si posizionano due pedine bianche e due nere nelle quattro caselle centrali del terreno di gioco, in modo da creare una configurazione a X con le pedine bianche lungo una diagonale e con le pedine nere lungo l'altra diagonale.
+### Regole del gioco
 
-Il giocatore che inizia il gioco è quello a cui è assegnato il colore nero. A turni alterni, ciascun giocatore effettua una mossa, che consiste nell'appoggiare una nuova pedina in una casella vuota in modo che essa imprigioni una o più pedine avversarie. Con il termine "imprigionare", si intende chiudere il lato opposto ancora libero di una pedina o sequenza di pedine avversarie. Si possono imprigionare pedine in orizzontale, in verticale e in diagonale. Una pedina, una volta imprigionata, viene rovesciata e diventa di proprietà di chi ha eseguito la mossa.
+Il gioco prevede due giocatori, ciascuno dei quali possiede un determinato numero di pedine (dette "dischi"), le quali sono di colore nero da un lato e di colore bianco dall'altro. Ad ogni giocatore è assegnato uno dei due colori. Il terreno di gioco, diviso in celle, è di forma quadrata o rettangolare.
 
-Sono ammesse solo mosse con le quali si gira almeno una pedina, altrimenti il giocatore salta il turno. Non è possibile passare il turno se esiste almeno una mossa valida.
+Prima di iniziare a giocare, si posizionano due dischi bianchi e due neri nelle quattro caselle centrali del terreno di gioco, in modo da creare una configurazione a X con i dischi bianchi lungo una diagonale e con i dischi neri lungo l'altra diagonale.
 
-Non è possibile spostare in un'altra cella una pedina che è già stata posizionata sul terreno di gioco.
+Il giocatore che inizia il gioco è quello a cui è assegnato il colore nero. A turni alterni, ciascun giocatore effettua una mossa, che consiste nell'appoggiare una nuovo disco in una casella vuota in modo che esso imprigioni uno o più dischi avversari. Con il termine "imprigionare", si intende chiudere il lato opposto ancora libero di un disco o sequenza di dischi avversari. Si possono imprigionare dischi in orizzontale, in verticale e in diagonale. Un disco, una volta imprigionato, viene rovesciato e diventa di proprietà di chi ha eseguito la mossa.
 
-La partita termina in due condizioni: quando tutte le caselle di gioco sono occupate oppure quando nessuno dei due giocatori ha mosse valide da effettuare.
+Sono ammesse solo mosse con le quali si gira almeno un disco, altrimenti il giocatore salta il turno. Un giocatore non può passare il turno se ha almeno una mossa valida.
 
-La modalità classica del gioco prevede che, al termine della partita, il vincitore sia il giocatore che ha il maggior numero di pedine del proprio colore sul terreno di gioco.
+Si precisa, inoltre, che non è possibile spostare in un'altra cella un disco che è già stato posizionato sul terreno di gioco.
 
-È però nota anche un'altra modalità di gioco – detta "a perdere" – che, al contrario, prevede che il vincitore sia il giocatore che al termine della partita ha il numero minore di proprie pedine sul terreno di gioco.
+Una partita termina quando si presenta almeno una delle due seguenti condizioni:
+
+- tutte le caselle di gioco sono occupate da un disco;
+- nessuno dei due giocatori ha mosse valide da effettuare.
+
+Il vincitore è il giocatore che, al termine della partita, ha il maggior numero di dischi del proprio colore sul terreno di gioco.
+
+### Analisi del dominio
+
+Dalle regole del gioco, si distinguono innanzitutto le seguenti entità:
+
+- il terreno di gioco (`Board`);
+- i dischi (`Disk`) posizionati sul terreno di gioco dai giocatori;
+- il concetto di colore (`Color`), sia come colore corrente di un disco posizionato sul colore di gioco, sia come colore assegnato ad un avversario;
+- il concetto di giocatore (`Player`).
+
+Dato inoltre il requisito secondo cui l'utente deve poter giocare in modalità single player contro un avversario virtuale, si distinguono come giocatori l'utente umano (`User`) e l'avversario virtuale (`Opponent`). Poiché l'avversario virtuale deve essere in grado di giocare in maniera autonoma, si deduce inoltre che l'avversario debba essere dotato di una strategia da seguire per decidere quale mossa effettuare (`PlacementStrategy`).
+
+Infine, si deduce anche la necessità di avere un'entità che rappresenti la logica di gioco (`Logic`), la quale abbia il compito di coordinare l'interazione tra le diverse entità al fine di attuare le dinamiche di gioco previste; ad esempio, tale entità si dovrà occupare della gestione dei turni, della gestione del compimento di una mossa da parte di un giocatore e della verifica delle condizioni di terminazione della partita.
+
+Il seguente diagramma UML riassume le entità e le relazioni tra queste che sono state individuate.
 
 ```mermaid
 ---
-title: Diagramma UML di dominio
+title: Diagramma UML di dominio.
 ---
 classDiagram
   class Logic
@@ -38,41 +67,21 @@ classDiagram
   class Color
 
   Logic --> Board
-  Logic --> Player
   Logic --> PlacementStrategy: applies
 
   Player <|-- User
   Player <|-- Opponent
-
-  Player --> PlacementStrategy : provides
   Player --> Color: is assigned
+
+  User <-- Logic
+  Opponent <-- Logic
+
+  Opponent --> PlacementStrategy : behaves according to
+
+  PlacementStrategy --> Board: applied on
 
   Board --> Disk
   Disk --> Color: has
-```
-
-```mermaid
----
-title: Flusso della partita
----
-flowchart TD
-
-Start --> InitBoard
-InitBoard --> PlayerTurn
-PlayerTurn --> CheckMoves
-
-CheckMoves --> HasMove
-HasMove --> ExecuteMove
-HasMove --> NextPlayer
-ExecuteMove --> FlipDiscs
-FlipDiscs --> NextPlayer
-
-NextPlayer --> CheckGameOver
-
-CheckGameOver --> Continue
-Continue --> PlayerTurn
-
-CheckGameOver --> EndGame
 ```
 
 ## Requisiti funzionali
