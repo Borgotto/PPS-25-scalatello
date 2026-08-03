@@ -1,6 +1,14 @@
-# Backlogs
+# Backlog
 
-Ciascun sprint ha durata di una settimana, ad eccezione del primo breve sprint di due giorni, e l'ultimo sprint di due settimane.
+## Github Projects
+
+Il backlog degli sprint è visibile nella sezione [Projects](https://github.com/Borgotto/PPS-25-scalatello/projects) della repository del progetto.
+
+Dove sono presenti le task di ciascun sprint, organizzate in *priorità*, *dimensione*, *stato* e *assegnatario*
+
+## Report degli sprint
+
+Oltre al backlog su GitHub, per ciascuno sprint è presente un report che documenta le attività svolte, le decisioni prese e i risultati ottenuti.
 
 - [Sprint 0](./0-sprint.md): Bootstrap, analisi dei requisiti, processo di sviluppo
 - [Sprint 1](./1-sprint.md): Design architetturale e progettazione dei componenti

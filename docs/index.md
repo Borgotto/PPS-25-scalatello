@@ -20,7 +20,7 @@ La relazione si articola nelle seguenti sezioni:
 
 ## Sprint backlog
 
-I backlog degli sprint sono documentati nella apposita sezione [Backlogs](./process/index.md).
+I backlog degli sprint sono documentati nella apposita sezione [backlogs](./process/index.md).
 
 ## Scaladoc
 

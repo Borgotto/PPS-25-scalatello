@@ -41,7 +41,7 @@ Il primo sprint è stato dedicato alle seguenti attività.
 - Definizione del processo di sviluppo, descritto nel presente capitolo.
 - Formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md).
 - Scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo.
-- Redazione del product backlog, consultabile al seguente [link](https://github.com/users/Borgotto/projects/1).
+- Redazione del product backlog, consultabile al seguente [link ai Projects della repository](https://github.com/Borgotto/PPS-25-scalatello/projects).
 
 I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della presente relazione.
 
