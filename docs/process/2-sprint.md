@@ -1,6 +1,7 @@
 # Sprint 2
 
-In questo sprint il gruppo ha come obiettivo principale la realizzazione del prototipo del sistema.\
+In questo sprint il gruppo ha come obiettivo principale la realizzazione del prototipo del sistema.
+
 Ovvero la realizzazione di una versione funzionante del gioco, con le funzionalità principali implementate.
 
 ## Obiettivi
@@ -24,5 +25,4 @@ Un incontro finale è stato programmato per il giorno 06/07/2026, sempre da remo
 
 Gli obiettivi con priorità P1 sono stati completati entro la data del 06/07/2026 di fine sprint, mentre gli obiettivi con priorità P2 sono stati rimandati allo sprint successivo.
 
-<!-- todo: aggiornare la data del prossimo incontro -->
-Un nuovo incontro è stato fissato per il giorno ??/07/2026 per dare l'inizio al prossimo sprint, in cui il gruppo completerà le tasks rimaste.
+Un nuovo incontro è stato fissato per il giorno 06/07/2026 per dare l'inizio al prossimo sprint, in cui il gruppo completerà le tasks rimaste.
