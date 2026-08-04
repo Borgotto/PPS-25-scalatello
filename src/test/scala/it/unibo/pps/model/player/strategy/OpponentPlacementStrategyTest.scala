@@ -38,7 +38,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
       .WWB..
       .BBW..
       ......
-      """.toBoard, Opponent.EasyOpponent(Color.Black), 100L
+      """.toBoard, Opponent.EasyOpponent(Color.Black), 250L
     ),
     (
       """
@@ -48,7 +48,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
       ..W...
       ......
       ......
-      """.toBoard, Opponent.MediumOpponent(Color.White), 350L
+      """.toBoard, Opponent.MediumOpponent(Color.White), 500L
     ),
     (
       """
@@ -61,7 +61,7 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
       ..WBW...
       ....W...
       ........
-      """.toBoard, Opponent.HardOpponent(Color.Black), 2000L
+      """.toBoard, Opponent.HardOpponent(Color.Black), 2500L
     )
   )
 
