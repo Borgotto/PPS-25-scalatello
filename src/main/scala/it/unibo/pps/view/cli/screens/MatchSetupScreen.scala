@@ -105,6 +105,6 @@ class MatchSetupScreen(
     for
       _ <- write(i18n.t("match.match_started_message"))
       _ <- write(i18n.t("match.legend"))
-      _ <- write(i18n.t("match.save_shortcut"))
+      _ <- write(i18n.t("match.shortcuts"))
     yield ()
     
