@@ -14,4 +14,5 @@ lazy val root = project
       "org.jline" % "jline" % "4.3.1",
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
     ),
+    Compile / doc / target := baseDirectory.value / "docs" / "scaladoc",
   )

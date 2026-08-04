@@ -51,7 +51,11 @@ classDiagram
         + strategy: UserPlacementStrategy
     }
     class Opponent <<Enumeration>> {
-        + ErraticOpponent: Opponent
+        + strategy: OpponentPlacementStrategy
+        + ErraticOpponent(color: Color): Opponent
+        + EasyOpponent(color: Color): Opponent
+        + MediumOpponent(color: Color): Opponent
+        + HardOpponent(color: Color): Opponent
     }
 
     Player <|-- User
@@ -82,16 +86,22 @@ classDiagram
     class UserPlacementStrategy~Position, Position~ {
         + computePlacement(using userChoice: Position): Position
     }
-    class OpponentPlacementStrategy ~MatchState, Position~ <<Abstract>> {
-        + computePlacement(using match: MatchState)*: Position
+    class OpponentPlacementStrategy ~Board, Position~ {
     }
-    class ErraticOpponentPlacementStrategy~MatchState, Position~ {
-        + computePlacement(using match: MatchState): Position
+    class ErraticPlacementStrategy {
+        + color: Color
+        + computePlacement(using board: Board): Position
+    }
+    class SmartPlacementStrategy {
+        + color: Color
+        + depth: Int
+        + computePlacement(using board: Board): Position
     }
 
     PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
-    OpponentPlacementStrategy <|.. ErraticOpponentPlacementStrategy
+    OpponentPlacementStrategy <|.. ErraticPlacementStrategy
+    OpponentPlacementStrategy <|.. SmartPlacementStrategy
 ```
 
 ### Scenario: calcolo delle mosse
@@ -203,53 +213,52 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 classDiagram
   class Board {
     <<trait>>
+		~ shape: Shape
     ~ disks: Map~Position, Disk~
-    ~ shape: Shape
     + state: BoardState
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + captureDisks(position: Position): Board
   }
-  class BoardComputations {
+  class BoardComputations ~using boardContext: Board~ {
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
-    + captureDisks(position: Position): Board
   }
   Board --> BoardComputations: delegates
 ```
 
 In particolare:
 
-- `state` permette di ottenere lo stato attuale della scacchiera;
-- `placeDisk()` inserisce un nuovo disco sulla scacchiera, restituendo una nuova scacchiera con le informazioni aggiornate;
-- `flipDisks()` si occupa di capovolgere i dischi catturati dal nuovo disco piazzato sulla scacchiera, restituendo una scacchiera nuova con i valori aggiornati;
-- `isMoveValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
-- `getAvailableMoves()` calcola tutte le posizioni delle possibili mosse valide, restituendone una lista;
+- `shape` la forma della scacchiera;
+- `disks` tutti i dischi presenti sulla scacchiera; 
+- `state` lo stato attuale della scacchiera;
+- `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
+- `getAvailablePlacements()` restituisce tutte le posizioni delle possibili mosse valide;
+- `placeDisk()` inserisce un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate;
 
-Eseguendo `placeDisk()` e `flipDisks()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
-
-Per semplificare questa operazione viene utilizzato il **factory pattern**.
+Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*; per semplificare questa operazione viene utilizzato il **factory pattern**.
 
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
 
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
 - nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
 
-### MatchController
+### Controller
 
-`MatchController` è un componente del controller che si occupa del coordinamento della partita.
+`Controller` è un componente del Controller che si occupa del coordinamento della partita.
 
 ```mermaid
 classDiagram
-  class MatchController {
-    <<trait>>
-    + startMatch(shape: Shape, color: Color)
-    + handleSelection(position: Position)
-    + saveMatch(filePath: String)
-    + loadMatch(filePath: String)
-  }
+	class Controller {
+		<<trait>>
+		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
+		+ handleSelection(position: Position)
+		+ saveMatch(fileName: String)
+		+ loadMatch(fileName: String): MatchState
+		+ saveFileNames(): Seq[String]
+		+ deleteSaveFile(fileName: String)
+	}
 ```
 
 In dettaglio:
@@ -257,26 +266,28 @@ In dettaglio:
 - `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
 - `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
 - `saveMatch()` salva lo stato della partita attuale;
-- `loadMatch()` carica il salvataggio di una partita.
+- `loadMatch()` carica il salvataggio di una partita;
+- `saveFileNames()` restituisce una sequenza contenente il nome dei *file* di salvataggio esistenti;
+- `deleteSaveFile()` cancella il *file* di salvataggio richiesto.
 
-### Interazione tra MatchController, MatchLogic e Board
+### Interazione tra Controller, Logic e Board
 
 Per eseguire una mossa valida dell'utente o dell'avversario:
 
 ```mermaid
 sequenceDiagram
-  MatchController ->> MatchLogic: placeUserDisk(position) or placeOpponentDisk()
-  MatchLogic ->> Board: isMoveValid(position)
-  Board ->> MatchLogic: true
-  MatchLogic ->> Board: placeDisk(position, color)
-  Board ->> MatchLogic: Board
-  MatchLogic ->> Board: flipDisks(position, color)
-  Board ->> MatchLogic: Board
-  MatchLogic ->> MatchController: true
-  MatchController ->> MatchLogic: getMatchState()
-  MatchLogic ->> Board: getBoardState()
-  Board ->> MatchLogic: boardState
-  MatchLogic ->> MatchController: matchState
+  Controller ->> Logic: placeUserDisk(position) or placeOpponentDisk()
+  Logic ->> Board: isMoveValid(position)
+  Board ->> Logic: true
+  Logic ->> Board: placeDisk(position, color)
+  Board ->> Logic: Board
+  Logic ->> Board: flipDisks(position, color)
+  Board ->> Logic: Board
+  Logic ->> Controller: true
+  Controller ->> Logic: getMatchState()
+  Logic ->> Board: getBoardState()
+  Board ->> Logic: boardState
+  Logic ->> Controller: matchState
 ```
 
-In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `MatchController`.
+In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `Controller`.

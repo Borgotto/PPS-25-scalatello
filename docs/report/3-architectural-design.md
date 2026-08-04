@@ -25,45 +25,49 @@ classDiagram
     class CLIView
   }
   namespace ControllerPackage {
-    class MatchController {
-      + startMatch(shape: Shape, color: Color)
+    class Controller {
+      + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
-      + saveMatch(filePath: String)
-      + loadMatch(filePath: String)
+      + saveMatch(fileName: String)
+      + loadMatch(fileName: String): data
+      + saveFileNames(): List(String)
+      + deleteSaveFile(fileName: String)
     }
     class SaveManager {
-      + save(state: MatchState)
-      + load(): MatchState
+      + save(data)
+      + load(): data
+      + saveFileNames(): List(String)
+      + deleteSaveFile()
     }
   }
   namespace ModelPackage {
-    class MatchLogic {
+    class Logic {
       + state: MatchState
-      + placeUserDisk(position: Position): MatchLogic
-      + placeOpponentDisk(): MatchLogic
+      + placeUserDisk(position: Position): Logic
+      + placeOpponentDisk(): Logic
     }
     class Board {
       + state: BoardState
+      + getAvailablePlacements(color: Color): List(Position)
       + isPlacementValid(color: Color, position: Position): Boolean
       + placeDisk(color: Color, position: Position): Board
-      + captureDisks(newDiskPosition: Position): Board
-      + getAvailablePlacements(color: Color): Seq[Position]
     }
     class Disk {
       + color: Color
       + flip(): Disk
     }
     class Player {
-      + state: PlayerState
+      + color: Color
+      + strategy: PlacementStrategy
     }
     class PlacementStrategy
     class User
     class Opponent
   }
 
-    MatchLogic --> Board
-    MatchLogic --> Player
-    MatchLogic --> PlacementStrategy: applies
+    Logic --> Board
+    Logic --> Player
+    Logic --> PlacementStrategy: applies
 
     Player <|-- User
     Player <|-- Opponent
@@ -72,10 +76,10 @@ classDiagram
 
     Board --> Disk
 
-    View --> MatchController
-    MatchController ..> View : notifies
-    MatchController --> MatchLogic
-    SaveManager <-- MatchController
+    View --> Controller
+    Controller ..> View : notifies
+    Controller --> Logic
+    SaveManager <-- Controller
 
     View <|.. CLIView
 ```
@@ -85,27 +89,23 @@ Struttura degli state:
 ```mermaid
 classDiagram
     class MatchState {
-      + status: Status
+      + status: MatchStatus
+      + user: User
+      + opponent: Opponent
       + activePlayer: PlayerState
       + board: BoardState
     }
-    class Status {
+    class MatchStatus {
       <<enumeration>>
       InProgress
       UserWon
       OpponentWon
       Tie
     }
-    class PlayerState {
-      <<enumeration>>
-      User
-      Opponent
-      + color: Color
-      + strategy: PlacementStrategy
-    }
     class BoardState {
       + shape: Shape
-      + disks: Seq[DiskState]
+      + disks: List(DiskState)
+      + userAvailablePlacements: List(Position)
     }
     class Shape {
       <<enumeration>>
@@ -132,9 +132,7 @@ classDiagram
     }
 
     MatchState --> BoardState
-    MatchState --> Status
-    MatchState --> PlayerState
-    PlayerState --> Color
+    MatchState --> MatchStatus
     BoardState --> DiskState
     Shape <|-- Square
     Shape <|-- Rectangle
