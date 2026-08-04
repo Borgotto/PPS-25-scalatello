@@ -2,7 +2,7 @@ name: Generate Scaladoc and deploy to GitHub Pages
 on:
   push:
     branches:
-      - docs
+      - 'docs**'
   workflow_dispatch:
 permissions:
   contents: read
