@@ -7,7 +7,7 @@ import it.unibo.pps.domain.Position
 import it.unibo.pps.state.{BoardState, MatchState}
 import it.unibo.pps.view.cli.io.BoardRendering.render
 import it.unibo.pps.view.cli.io.IO.write
-import it.unibo.pps.view.cli.io.{InputComponent, IO, given_Monad_IO}
+import it.unibo.pps.view.cli.io.{IO, InputComponent, given_Monad_IO}
 import it.unibo.pps.view.i18n.I18n
 
 /** Implements the CLI screen that shows the current state of the match.
@@ -15,6 +15,7 @@ import it.unibo.pps.view.i18n.I18n
  * @param controller the controller of the application.
  * @param matchState the current state of the match.
  * @param onSaveTrigger the behavior in case the shortcut to save the match is triggered.
+ * @param onQuitTrigger the behavior in case the shortcut to quit the match is triggered.                     
  * @param onMatchExit injected actions to perform when leaving the match.
  * @param i18n the [[I18n]] provider of the application.
  * @param inputComponent the [[InputComponent]] instanced for the application.
@@ -23,10 +24,14 @@ class MatchScreen(
   controller: Controller,
   matchState: MatchState,
   onSaveTrigger: () => IO[Unit],
+  onQuitTrigger: () => IO[Unit],
   onMatchExit: () => IO[Unit]
 )(using i18n: I18n, inputComponent: InputComponent) extends CLIScreen:
 
-  private given onSaveInterrupt: IO[Unit] = onSaveTrigger()
+  private given matchInterruptHandlers: inputComponent.MatchInterruptHandlers(
+    onSave = onSaveTrigger,
+    onQuit = onQuitTrigger
+  )
 
   override def render(): IO[Unit] =
     for
