@@ -5,9 +5,9 @@ import it.unibo.pps.utils.IntExtensions.inBetween
 
 import scala.annotation.tailrec
 
-/** Helper trait that contains extension methods of [[Position]] to make computations on a [[Board]].
+/** Helper trait that contains extension methods of [[domain.Position]] to make computations on a [[model.board.Board]].
  *
- *  Every class that uses it must specify the [[inBounds()]] method.
+ *  Every class that uses it must specify the [[ComputationsPosExtensions.inBounds()]] method.
  *
  *  Used by: [[ComputationsPosExtensionsRectangle]].
  */
@@ -15,7 +15,7 @@ private[board] trait ComputationsPosExtensions:
   extension (p: Position)
     /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
      * 
-     *  This is an extension method of [[Position]].
+     *  This is an extension method of [[domain.Position]].
      *  @param firstPos the starting position to be considered on the diagonal.
      *  @param secondPos the last position to be considered on the diagonal.
      *  @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
@@ -36,7 +36,7 @@ private[board] trait ComputationsPosExtensions:
 
     /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally or diagonally.
      * 
-     *  This is an extension method of [[Position]].
+     *  This is an extension method of [[domain.Position]].
      *  @param firstPos the starting position to consider.
      *  @param secondPos the last position to consider.
      *  @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
@@ -51,7 +51,7 @@ private[board] trait ComputationsPosExtensions:
      *
      *  Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
      * 
-     *  This is an extension method of [[Position]].
+     *  This is an extension method of [[domain.Position]].
      *  @param pos the position of which to consider the neighbourhood of.
      *  @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
      */
@@ -60,10 +60,10 @@ private[board] trait ComputationsPosExtensions:
       val distance: Position = p - pos
       distance.row.abs <= maxDistance && distance.column.abs <= maxDistance
 
-    /** Used to know if this position is in the bounds of the [[Board]].
+    /** Used to know if this position is in the bounds of the [[model.board.Board]].
      * 
-     *  This is an extension method of [[Position]].
-     *  @param shape the [[Shape]] of the board.
+     *  This is an extension method of [[domain.Position]].
+     *  @param shape the [[domain.Shape]] of the board.
      *  @return `true` if the position is in the bounds of the board, `false` otherwise.
      */
     def inBounds(shape: Shape): Boolean

@@ -15,8 +15,8 @@ import scala.util.{Failure, Success}
  * @param renderMatch the function that handles the rendering of the match state
  *                    when the match loaded from a save file starts.
  * @param goBackToMainMenu the function that handles the return to the main menu.
- * @param i18n the [[I18n]] provider of the application.
- * @param inputComponent the [[InputComponent]] instanced for the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
+ * @param inputComponent the [[io.InputComponent]] instanced for the application.
  */
 class SaveManagementScreen(
   controller: Controller,

@@ -7,12 +7,12 @@ import upickle.ReadWriter
 /**
  * Base trait defining the interface for a player in the game.
  *
- * A player has a [[Color]] and a [[PlacementStrategy]].
+ * A player has a [[domain.Color]] and a [[strategy.PlacementStrategy]].
  * This trait acts as a common abstraction for both human users and AI opponents.
  */
 trait Player:
   /**
-   * @return the Color associated with this player
+   * @return the [[domain.Color]] associated with this player
    */
   def color: Color
 
@@ -59,7 +59,7 @@ enum Opponent extends Player derives ReadWriter:
   /**
    * The placement strategy for this opponent, determined by its difficulty level.
    *
-   * @return an OpponentPlacementStrategy appropriate for this opponent's difficulty level
+   * @return an [[player.strategy.OpponentPlacementStrategy]] appropriate for this opponent's difficulty level
    */
   val strategy: OpponentPlacementStrategy = this match
     case ErraticOpponent(_) => ErraticPlacementStrategy(color)

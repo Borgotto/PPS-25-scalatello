@@ -4,7 +4,7 @@ import it.unibo.pps.state.MatchState
 import upickle.default.{read, write}
 
 /**
- * Serialization utilities used by the [[SaveManager]] system.
+ * Serialization utilities used by the [[controller.save.SaveManager]] system.
  *
  * This object provides a small type-class abstraction for converting values
  * to and from [[String]], together with predefined serializers for common project types.

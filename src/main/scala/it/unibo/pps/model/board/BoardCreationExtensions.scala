@@ -5,7 +5,8 @@ import it.unibo.pps.domain.{Color, Position}
 /** This object contains helper extension methods of [[String]] to create a [[Board]]. */
 object BoardCreationExtensions:
   extension (s: String)
-    /** Transforms a string with a specific pattern in a [[scala.collection.immutable.Map]] of [[Position]] -> [[Disk]].
+    /** Transforms a string with a specific pattern in a 
+     * [[scala.collection.immutable.Map]] of [[domain.Position]] -> [[Disk]].
      * 
      *  This is an extension method of [[String]].
      *

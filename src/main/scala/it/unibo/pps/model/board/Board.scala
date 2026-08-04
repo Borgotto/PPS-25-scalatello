@@ -6,33 +6,31 @@ import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.computations.{BoardComputations, ComputationsPosExtensions, ComputationsPosExtensionsRectangle}
 import it.unibo.pps.state.{BoardState, DiskState}
 
-/** Defines the board where a [[User]] and an [[Opponent]] can place disks to play the game.
+/** Defines the board where a [[player.User]] and an [[player.Opponent]] can place disks to play the game.
  *
  *  All methods must be specified by every class using it.
- *
- *  Used by: [[BoardImpl]]
  */
 trait Board:
-  /** @return the [[Shape]] of this board */
+  /** @return the [[domain.Shape]] of this board */
   private[board] def shape: Shape
 
   /** @return the [[scala.collection.immutable.Map]] of the disks on this board,
-   *         with [[Position]] as `keys` and [[Disk]] as `values`.
+   *         with [[domain.Position]] as `keys` and [[Disk]] as `values`.
    */
   private[board] def disks: Map[Position, Disk]
 
-  /** @return the [[BoardState]] of this board. */
+  /** @return the [[state.BoardState]] of this board. */
   def state: BoardState
 
   /**
-   *  @param diskColor the color of the disk that needs to be placed.
-   *  @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
+   *  @param diskColor the [[domain.Color]] of the disk that needs to be placed.
+   *  @return a [[scala.collection.immutable.Set]] of [[domain.Position]] containing all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position]
 
   /** Validates a placement.
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk.
+   *  @param diskColor the [[domain.Color]] of the disk that the player wants to place.
+   *  @param diskPos the [[domain.Position]] where the player wants to place the disk.
    *  @return `true` if the placement is valid, `false` otherwise.
    */
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean
@@ -43,8 +41,8 @@ trait Board:
    *
    *  A disk is captured if it is of the other color than the placed one and is enclosed between the placed disk 
    *  and another disk of the same color of the placed disk.
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk. 
+   *  @param diskColor the [[domain.Color]] of the disk that the player wants to place.
+   *  @param diskPos the [[domain.Position]] where the player wants to place the disk. 
    *  @param validatePosition if `diskPos` needs to be validated or not, default = `true`.
    *  @return a new instance of board with the disk placed and the disks captured.
    */
@@ -53,7 +51,7 @@ trait Board:
 /** Factory for [[Board]] instances. */
 object Board:
   /** Given a shape, creates a board with the initial disks configuration.
-   *  @param shape the [[Shape]] of the board that will be created.
+   *  @param shape the [[domain.Shape]] of the board that will be created.
    */
   def apply(shape: Shape): Board =
     val bottomRightCenterPos: Position =
@@ -72,15 +70,15 @@ object Board:
     apply(shape, initialDisks)
 
   /** Given a state, creates a board with that configuration.
-   *  @param state the [[BoardState]] from where the board will be created.
+   *  @param state the [[state.BoardState]] from where the board will be created.
    */
   def apply(state: BoardState): Board =
     val disks = state.disks.map(disk => disk.position -> Disk(disk.color)).toMap
     apply(state.shape, disks)
 
   /** Given a shape and some disks, creates a board.
-   *  @param shape the [[Shape]] of the board that will be created.
-   *  @param disks the disks that will be on the board.
+   *  @param shape the [[domain.Shape]] of the board that will be created.
+   *  @param disks the [[Disk]]s that will be on the board.
    */
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
     shape match
@@ -92,8 +90,8 @@ object Board:
  * 
  *  Delegates the computations of its methods to an instance of the class [[BoardComputations]].
  *
- *  @param shape        the shape of this board.
- *  @param disks        the disks on this board.
+ *  @param shape the [[domain.Shape]] of this board.
+ *  @param disks the [[Disk]]s on this board.
  *  @param computations the context of [[ComputationsPosExtensions]], it contains the different computations
  *                      that may need to change for different types of boards.
  */
@@ -102,7 +100,7 @@ private[board] class BoardImpl(val shape: Shape, val disks: Map[Position, Disk])
   private given contextBoard: Board = this
   private val compute: BoardComputations = BoardComputations()
 
-  /** The [[BoardState]] of this board. */
+  /** The [[state.BoardState]] of this board. */
   lazy val state: BoardState = BoardState(shape, disks.map((pos, disk) => DiskState(disk.color, pos)).toSet, Set())
 
   def getAvailablePlacements(diskColor: Color): Set[Position] =

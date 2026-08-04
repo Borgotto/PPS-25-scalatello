@@ -13,7 +13,7 @@ class QuitMatchInterruptException extends RuntimeException("Quit match shortcut 
 
 /** Handles the enabling and the disabling of keyboard shortcuts.
  * 
- * @param reader the [[LineReader]] instance that reads from the terminal.
+ * @param reader the [[org.jline.reader.LineReader]] instance that reads from the terminal.
  */
 class ShortcutManager(private val reader: LineReader):
 
