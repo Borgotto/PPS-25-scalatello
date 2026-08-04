@@ -13,7 +13,7 @@ class ControllerTest extends AnyFlatSpec:
   private val BOARD_SHAPE: Shape = Shape.Square(BOARD_SIZE)
 
   private val topLeftCenterPos: Position = Position(BOARD_SIZE / 2 - 1, BOARD_SIZE / 2 - 1)
-  private val validPos: Position = Position(topLeftCenterPos.row, topLeftCenterPos.column - 1)
+  private val validPos: Position = topLeftCenterPos.left
 
   "A Controller, if the first player is the User" should "notify the state of the match only once" in:
     val mockedController: ControllerImpl = Mockito.spy(ControllerImpl())
