@@ -21,7 +21,7 @@ class SaveCreationScreen(
     for
       saveMatch <- inputComponent.askForConfirmation(
         requestKey = "save_creation_menu.save_request",
-        invalidInputMessageKey = "save_creation_menu.invalid_choice"
+        invalidInputMessageKey = "generic.invalid_confirmation_choice"
       )
       _ <- if saveMatch then handleSave() else inputComponent.pass
     yield ()

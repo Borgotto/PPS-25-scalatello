@@ -15,13 +15,21 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
 
   private enum ReadResult:
     case Success(value: String)
-    case SaveInterrupt
+    case SaveMatchInterrupt
+    case QuitMatchInterrupt
 
   def pass: IO[Unit] = IO(() => ())
 
+  case class MatchInterruptHandlers(
+    onSave: () => IO[Unit] = () => pass,
+    onQuit: () => IO[Unit] = () => pass
+  )
+
   private def interruptableRead(): IO[ReadResult] = IO(() =>
     try ReadResult.Success(reader.readLine())
-    catch case _: SaveInterruptException => ReadResult.SaveInterrupt
+    catch
+      case _: SaveMatchInterruptException => ReadResult.SaveMatchInterrupt
+      case _: QuitMatchInterruptException => ReadResult.QuitMatchInterrupt
   )
 
   /** Implements the I/O scenario in which the user has to choose an option
@@ -76,7 +84,9 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
    * @param isNumberValid the predicate that determines if an integer is a valid choice.
    * @param invalidInputMessageKey the key that identifies the string to show in case the provided
    *                               input is not valid.
-   * @param onSaveInterrupt the behavior in case the read is interrupted by a save interrupt.
+   * @param matchInterruptHandlers the [[MatchInterruptHandlers]] instance that encapsulates the actions to execute 
+   *                 if this input function is used during a match and the press of a match shortcut
+   *                 is detected.
    * @return an [[IO]] action that triggers the described I/O scenario when executed and wraps
    *         the input value.
    */
@@ -84,7 +94,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     requestKey: String,
     isNumberValid: Int => Boolean,
     invalidInputMessageKey: String
-  )(using onSaveInterrupt: => IO[Unit] = pass): IO[Int] =
+  )(using matchInterruptHandlers: MatchInterruptHandlers = MatchInterruptHandlers()): IO[Int] =
     askForValidInput(
       requestKey = requestKey,
       isInputValid = input => isConvertibleToInt(input) && isNumberValid(input.toInt),
@@ -145,7 +155,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     isInputValid: String => Boolean,
     convert: String => T = identity,
     invalidInputMessageKey: String
-  )(using onSaveInterrupt: => IO[Unit] = pass): IO[T] =
+  )(using matchInterruptHandlers: MatchInterruptHandlers = MatchInterruptHandlers()): IO[T] =
     for
       _ <- write(i18n.t(requestKey))
       result <- interruptableRead()
@@ -164,10 +174,15 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     isInputValid: String => Boolean,
     convert: String => T,
     invalidInputMessageKey: String
-  )(using onSaveInterrupt: => IO[Unit]): IO[T] = result match
-    case ReadResult.SaveInterrupt => 
+  )(using matchInterruptHandlers: MatchInterruptHandlers = MatchInterruptHandlers()): IO[T] = result match
+    case ReadResult.SaveMatchInterrupt =>
       for
-        _ <- onSaveInterrupt
+        _ <- matchInterruptHandlers.onSave()
+        input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
+      yield input
+    case ReadResult.QuitMatchInterrupt =>
+      for
+        _ <- matchInterruptHandlers.onQuit()
         input <- askForValidInput(requestKey, isInputValid, convert, invalidInputMessageKey)
       yield input
     case ReadResult.Success(input) =>
