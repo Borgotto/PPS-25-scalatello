@@ -9,7 +9,7 @@ import scala.annotation.tailrec
  *
  *  This helper class computes all the methods of its delegator.
  *
- *  @param board           the [[Board]] context, to make this class operate on the correct instance of board.
+ *  @param board           the [[model.board.Board]] context, to make this class operate on the correct instance of board.
  *  @param computations the [[ComputationsPosExtensions]] context,
  *                         to make this class use the appropriate methods on different Boards.
  */
@@ -53,9 +53,9 @@ private[board] class BoardComputations(using board: Board)(using computations: C
       if diskToFlip.inBetweenPos(diskPos, connectingDiskPos)
     yield diskToFlip
 
-  /** Delegate method of [[BoardImpl.getAvailablePlacements()]].
-   *  @param diskColor the color of the disk that needs to be placed.
-   *  @return a [[scala.collection.immutable.Set]] of [[Position]] containing all the available placements positions.
+  /** Delegate method of [[model.board.BoardImpl.getAvailablePlacements()]].
+   *  @param diskColor the [[domain.Color]] of the disk that needs to be placed.
+   *  @return a [[scala.collection.immutable.Set]] of [[domain.Position]] containing all the available placements positions.
    */
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     @tailrec
@@ -77,19 +77,19 @@ private[board] class BoardComputations(using board: Board)(using computations: C
       if availableMove.isDefined
     yield availableMove.get
 
-  /** Delegate method of [[BoardImpl.isPlacementValid()]].
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk.
+  /** Delegate method of [[model.board.BoardImpl.isPlacementValid()]].
+   *  @param diskColor the [[domain.Color]] of the disk that wants to be placed.
+   *  @param diskPos the [[domain.Position]] where the player wants to place the disk.
    *  @return `true` if the placement is valid, `false` otherwise.
    */
   def isPlacementValid(diskColor: Color, diskPos: Position): Boolean =
     getAvailablePlacements(diskColor).contains(diskPos)
 
-  /** Delegate method of [[BoardImpl.placeDisk()]].
-   *  @param diskColor the color of the disk that wants to be placed.
-   *  @param diskPos the position where the player wants to place the disk. 
+  /** Delegate method of [[model.board.BoardImpl.placeDisk()]].
+   *  @param diskColor the [[domain.Color]] of the disk that wants to be placed.
+   *  @param diskPos the [[domain.Position]] where the player wants to place the disk. 
    *  @param validatePosition if `diskPos` needs to be validated or not.
-   *  @return a new instance of [[Board]] with the disk placed and the disks captured.
+   *  @return a new instance of [[model.board.Board]] with the disk placed and the disks captured.
    *  @throws java.lang.IllegalArgumentException if `diskPos` is not valid.
    */
   def placeDisk(diskColor: Color, diskPos: Position, validatePosition: Boolean): Board =

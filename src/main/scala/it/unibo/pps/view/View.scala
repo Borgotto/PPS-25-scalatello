@@ -5,8 +5,8 @@ import it.unibo.pps.state.MatchState
 
 /** Models the possible ways to interact with the view of the application.
  * 
- *  The view is also a [[Subscriber]] that listens to 
- *  [[MatchState]] updates, in order to display the current state of a match
+ *  The view is also a [[observer.Subscriber]] that listens to
+ *  [[state.MatchState]] updates, in order to display the current state of a match
  *  as it changes.
  */
 trait View extends Subscriber[MatchState]:

@@ -11,27 +11,28 @@ import scala.util.{Success, Try}
 import os.Path
 
 /** Defines the main controller of the application.
+ * 
+ *  This controller is also a [[observer.Publisher]] that sends updates about the [[state.MatchState]]
  *
  *  All methods must be specified by every class using it.
- *
- *  Used by: [[ControllerImpl]]
  */
 trait Controller extends Publisher[MatchState]:
   /** Starts and configures a match according to the given settings.
-   *  @param boardShape the [[Shape]] the [[Board]] must have.
-   *  @param userColor the [[Color]] assigned to the user.
+   *  @param boardShape the [[domain.Shape]] the [[model.board.Board]] must have.
+   *  @param userColor the [[domain.Color]] assigned to the user.
    *  @param opponentType the type of opponent.
    */
   def startMatch(boardShape: Shape, userColor: Color, opponentType: OpponentType): Unit
 
   /** Given the position selected by the user, handles their turn.
-   *  @param position the position selected by the user.
+   *  @param position the [[domain.Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit
 
   /** Saves the current state of the match.
    *  @param fileName the name of the save file.
-   *  @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
+   *  @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise. 
+   *  @note It must throw and exception if there is no match to save.
    */
   def saveMatch(fileName: String): Try[_]
 
@@ -90,7 +91,7 @@ private[controller] class ControllerImpl extends Controller:
       case _ => notifySubscribers(logic.get.state)
 
   /** Given the position selected by the user, handles their turn. Then handles the available opponent's turns.
-   *  @param position the position selected by the user.
+   *  @param position the [[domain.Position]] selected by the user.
    */
   def handleSelection(position: Position): Unit =
     logic match
@@ -99,11 +100,6 @@ private[controller] class ControllerImpl extends Controller:
         handleOpponentTurn()
       case None => ()
 
-  /** @inheritdoc
-   *  @param fileName the name of the save file.
-   *  @return [[scala.util.Success]] if the save is successful, [[scala.util.Failure]] otherwise.
-   *  @throws java.lang.IllegalStateException if there is no match to save.
-   */
   def saveMatch(fileName: String): Try[_] =
     logic match
       case Some(currentLogic) =>

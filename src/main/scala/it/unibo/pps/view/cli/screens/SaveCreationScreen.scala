@@ -10,8 +10,8 @@ import scala.util.{Failure, Success}
 /** Implements the CLI screen for the creation of match save.
  * 
  * @param controller the controller of the application.
- * @param i18n the [[I18n]] provider of the application.
- * @param inputComponent the [[InputComponent]] instanced for the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
+ * @param inputComponent the [[io.InputComponent]] instanced for the application.
  */
 class SaveCreationScreen(
   controller: Controller,
@@ -21,7 +21,7 @@ class SaveCreationScreen(
     for
       saveMatch <- inputComponent.askForConfirmation(
         requestKey = "save_creation_menu.save_request",
-        invalidInputMessageKey = "save_creation_menu.invalid_choice"
+        invalidInputMessageKey = "generic.invalid_confirmation_choice"
       )
       _ <- if saveMatch then handleSave() else inputComponent.pass
     yield ()

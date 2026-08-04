@@ -8,7 +8,7 @@ package it.unibo.pps.observer
 trait Subscriber[State]:
 
   /**
-   * Defines the behavior of this [[Subscriber]] upon the notification of a new state.
+   * Defines the behavior of this [[observer.Subscriber]] upon the notification of a new state.
    * 
    * @param state the notified state.
    */

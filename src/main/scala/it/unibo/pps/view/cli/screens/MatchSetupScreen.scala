@@ -10,8 +10,8 @@ import it.unibo.pps.view.i18n.{I18n, localize}
  * 
  * @param controller the controller of the application.
  * @param onMatchStart injected actions to perform when the match starts.
- * @param i18n the [[I18n]] provider of the application.
- * @param inputComponent the [[InputComponent]] instanced for the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
+ * @param inputComponent the [[io.InputComponent]] instanced for the application.
  */
 class MatchSetupScreen(
   controller: Controller,
@@ -105,6 +105,6 @@ class MatchSetupScreen(
     for
       _ <- write(i18n.t("match.match_started_message"))
       _ <- write(i18n.t("match.legend"))
-      _ <- write(i18n.t("match.save_shortcut"))
+      _ <- write(i18n.t("match.shortcuts"))
     yield ()
     

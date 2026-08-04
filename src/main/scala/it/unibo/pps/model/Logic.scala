@@ -12,7 +12,7 @@ import it.unibo.pps.state.{BoardState, MatchState}
 /** Models the possible ways to interact with the logic of a match. */
 trait Logic:
 
-  /** @return the current state of the match, represented by a [[MatchState]]
+  /** @return the current state of the match, represented by a [[state.MatchState]]
    *  instance.
    */
   def state: MatchState
@@ -22,7 +22,7 @@ trait Logic:
    *  
    *  @param position the position chosen by the user for the placement.
    *  @return a new [[Logic]] instance that reflects the new state of the match.
-   *  @throws IllegalStateException if called when the user is not the active player.
+   *  @throws java.lang.IllegalStateException if called when the user is not the active player.
    */
   def placeUserDisk(position: Position): Logic
 
@@ -30,7 +30,7 @@ trait Logic:
    *  the match status and the active player after the placement.
    *  
    *  @return a new [[Logic]] instance that reflects the new state of the match.
-   *  @throws IllegalStateException if called when the opponent is not the active player.
+   *  @throws java.lang.IllegalStateException if called when the opponent is not the active player.
    */
   def placeOpponentDisk(): Logic
 
@@ -148,14 +148,14 @@ object Logic:
     new LogicImpl(state.user, state.opponent, state.status, state.activePlayer, board)
 
   /** Creates the logic for a new match that must be started from scratch,
-   *  but providing a specific [[Board]] instance.
+   *  but providing a specific [[model.board.Board]] instance.
    *
    *  This is meant to be used only for testing purposes, in order to provide a
    *  specific board configuration to ease unit testing.
    *
    * @param userColor the color that must be assigned to the user.
    * @param opponentType the type of the opponent, which determines their placement strategy.
-   * @param board the provided [[Board]] instance.
+   * @param board the provided [[model.board.Board]] instance.
    */
   private[model] def apply(userColor: Color, opponentType: OpponentType, board: Board): Logic =
     new LogicImpl(

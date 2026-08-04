@@ -3,7 +3,7 @@ package it.unibo.pps.view.cli
 import it.unibo.pps.controller.Controller
 import it.unibo.pps.state.MatchState
 import it.unibo.pps.view.View
-import it.unibo.pps.view.cli.io.{ExitInterruptException, given_Monad_IO, InputComponent, IO, ShortcutManager}
+import it.unibo.pps.view.cli.io.{ExitAppInterruptException, given_Monad_IO, InputComponent, IO, ShortcutManager}
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.cli.screens.*
 import it.unibo.pps.view.i18n.I18n
@@ -13,7 +13,7 @@ import org.jline.terminal.TerminalBuilder
 
 /** Provides the CLI implementation of the view.
  * 
- * @param i18n the [[I18n]] provider of the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
  */
 class CLIView(using i18n: I18n) extends View:
 
@@ -41,24 +41,32 @@ class CLIView(using i18n: I18n) extends View:
     renderMatch = update,
     goBackToMainMenu
   )
+  
+  private val matchQuitScreen = MatchQuitScreen(controller, onMatchExit)
 
   override def show(): Unit =
     try
-      shortcutManager.enableExitShortcut()
+      shortcutManager.enableAppExitShortcut()
       showMainMenu()
-    catch case _: ExitInterruptException => exit()
+    catch case _: ExitAppInterruptException => exit()
 
   private def showMainMenu(): IO[Unit] = mainMenuScreen.render()
 
   private def showMatchSetupScreen(): IO[Unit] = matchSetupScreen.render()
-
-  private def showSaveCreationScreen(currentMatchState: MatchState): IO[Unit] =
+  
+  private def showInMatchScreen(screen: CLIScreen, currentMatchState: MatchState): IO[Unit] =
     for
-      _ <- IO(() => shortcutManager.disableSaveShortcut())
-      _ <- saveCreationScreen.render()
-      _ <- IO(() => shortcutManager.enableSaveShortcut())
+      _ <- IO(() => shortcutManager.disableMatchShortcuts())
+      _ <- screen.render()
+      _ <- IO(() => shortcutManager.enableMatchShortcuts())
       _ <- IO(() => update(currentMatchState))
     yield ()
+
+  private def showSaveCreationScreen(currentMatchState: MatchState): IO[Unit] =
+    showInMatchScreen(saveCreationScreen, currentMatchState)
+  
+  private def showMatchQuitScreen(currentMatchState: MatchState): IO[Unit] =
+    showInMatchScreen(matchQuitScreen, currentMatchState)
   
   private def goBackToMainMenu(): IO[Unit] =
     for 
@@ -68,11 +76,11 @@ class CLIView(using i18n: I18n) extends View:
   
   private def onMatchStart(): Unit =
     controller.subscribe(this)
-    shortcutManager.enableSaveShortcut()
+    shortcutManager.enableMatchShortcuts()
   
   private def onMatchExit(): IO[Unit] =
     controller.unsubscribe(this)
-    shortcutManager.disableSaveShortcut()
+    shortcutManager.disableMatchShortcuts()
     goBackToMainMenu()
 
   override def update(state: MatchState): Unit =
@@ -80,6 +88,7 @@ class CLIView(using i18n: I18n) extends View:
       controller,
       state,
       onSaveTrigger = () => showSaveCreationScreen(state),
+      onQuitTrigger = () => showMatchQuitScreen(state),
       onMatchExit = onMatchExit
     )
     matchScreen.render()
