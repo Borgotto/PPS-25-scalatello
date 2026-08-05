@@ -277,17 +277,15 @@ Per eseguire una mossa valida dell'utente o dell'avversario:
 ```mermaid
 sequenceDiagram
   Controller ->> Logic: placeUserDisk(position) or placeOpponentDisk()
-  Logic ->> Board: isMoveValid(position)
+  Logic ->> Board: isPlacementValid(position)
   Board ->> Logic: true
   Logic ->> Board: placeDisk(position, color)
   Board ->> Logic: Board
-  Logic ->> Board: flipDisks(position, color)
-  Board ->> Logic: Board
-  Logic ->> Controller: true
+  Logic ->> Controller: Logic
   Controller ->> Logic: getMatchState()
   Logic ->> Board: getBoardState()
   Board ->> Logic: boardState
   Logic ->> Controller: matchState
 ```
 
-In caso `isMoveValid()` restituisca `false` il flusso tornerebbe a `Controller`.
+In caso `isPlacementValid()` restituisse `false` il flusso tornerebbe a `Controller`.
