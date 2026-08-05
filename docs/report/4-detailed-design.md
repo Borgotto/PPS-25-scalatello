@@ -212,15 +212,15 @@ Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitan
 ```mermaid
 classDiagram
   class Board {
-    <<trait>>
-		~ shape: Shape
+    <<interface>>
+	  ~ shape: Shape
     ~ disks: Map~Position, Disk~
     + state: BoardState
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
   }
-  class BoardComputations ~using boardContext: Board~ {
+  class BoardComputations {
     + getAvailablePlacements(color: Color): Set~Position~
     + isPlacementValid(position: Position, color: Color): Boolean
     + placeDisk(position: Position, color: Color): Board
@@ -251,7 +251,7 @@ Nell'implementazione della Board viene utilizzato il design pattern: **delegatio
 ```mermaid
 classDiagram
 	class Controller {
-		<<trait>>
+		<<interface>>
 		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
 		+ handleSelection(position: Position)
 		+ saveMatch(fileName: String)
