@@ -190,7 +190,7 @@ sequenceDiagram
 ```mermaid
 classDiagram
   class Disk {
-    <<trait>>
+    <<interface>>
     + color: Color
     + flip(): Disk
   }
