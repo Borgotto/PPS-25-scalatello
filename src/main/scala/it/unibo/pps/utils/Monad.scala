@@ -10,7 +10,7 @@ trait Monad[M[_]]:
    *
    * @param a the value to wrap.
    * @tparam A the type of the value to wrap.
-   * @return the value wrapped inside the monad [[M]].
+   * @return the value wrapped inside the monad `M`.
    */
   def unit[A](a: A): M[A]
 
@@ -19,7 +19,7 @@ trait Monad[M[_]]:
     /** Sequentially composes two monads by applying a function
      *  to the value inside the monad `M[A]`.
      *
-     * @param f the function taking the inner value of type [[A]] and returning the new monad `M[B]`.
+     * @param f the function taking the inner value of type `A` and returning the new monad `M[B]`.
      * @tparam B the result type of the new monad.
      * @return the combined monad `M[B]`.
      */
@@ -27,7 +27,7 @@ trait Monad[M[_]]:
 
     /** Transforms the value inside a monad `M[A]` by applying a function.
      *
-     * @param f the transformation function from [[A]] to [[B]].
+     * @param f the transformation function from `A` to `B`.
      * @tparam B the target type of the transformation.
      * @return a new monad `M[B]` containing the transformed value.
      */
