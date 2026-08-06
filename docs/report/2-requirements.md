@@ -58,28 +58,24 @@ title: Diagramma UML di dominio.
 ---
 classDiagram
   class Logic
-  class Player
-  class User
-  class Opponent
   class PlacementStrategy
+  class Opponent
+  class User
   class Board
   class Disk
   class Color
+  class Player
 
-  Logic --> Board
   Logic --> PlacementStrategy: applies
-
-  Player <|-- User
-  Player <|-- Opponent
-  Player --> Color: is assigned
-
-  User <-- Logic
-  Opponent <-- Logic
+  Logic --> Opponent
+  Logic --> User
+  Logic --> Board
 
   Opponent --> PlacementStrategy : behaves according to
-
+  Opponent --|> Player
+  User --|> Player
+  Player --> Color: is assigned
   PlacementStrategy --> Board: applied on
-
   Board --> Disk
   Disk --> Color: has
 ```

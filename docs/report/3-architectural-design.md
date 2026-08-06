@@ -52,42 +52,38 @@ classDiagram
       + placeUserDisk(position: Position): Logic
       + placeOpponentDisk(): Logic
     }
+    class PlacementStrategy
+    class Opponent
+    class User
     class Board {
       + state: BoardState
-      + getAvailablePlacements(color: Color): List(Position)
-      + isPlacementValid(color: Color, position: Position): Boolean
-      + placeDisk(color: Color, position: Position): Board
     }
     class Disk {
-      + color: Color
-      + flip(): Disk
+      + state: DiskState
     }
-    class Player {
-      + color: Color
-      + strategy: PlacementStrategy
-    }
-    class PlacementStrategy
-    class User
-    class Opponent
+    class Color
+    class Player
   }
 
-    Logic --> Board
-    Logic --> Player
-    Logic --> PlacementStrategy: applies
+  Logic --> PlacementStrategy: applies
+  Logic --> Opponent
+  Logic --> User
+  Logic --> Board
 
-    Player <|-- User
-    Player <|-- Opponent
+  Opponent --> PlacementStrategy : behaves according to
+  Opponent --|> Player
+  User --|> Player
+  Player --> Color: is assigned
+  PlacementStrategy --> Board: applied on
+  Board --> Disk
+  Disk --> Color: has
 
-    Player --> PlacementStrategy : provides
+  View --> Controller
+  Controller ..> View : notifies
+  Controller --> Logic
+  SaveManager <-- Controller
 
-    Board --> Disk
-
-    View --> Controller
-    Controller ..> View : notifies
-    Controller --> Logic
-    SaveManager <-- Controller
-
-    View <|.. CLIView
+  View <|.. CLIView
 ```
 
 Struttura degli state:
