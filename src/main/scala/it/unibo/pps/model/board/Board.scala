@@ -81,10 +81,9 @@ object Board:
    *  @param disks the [[Disk]]s that will be on the board.
    */
   def apply(shape: Shape, disks: Map[Position, Disk]): Board =
-    shape match
-      case _ =>
-        given contextPosComputations: ComputationsPosExtensions = ComputationsPosExtensionsRectangle()
-        BoardImpl(shape, disks)
+    given ComputationsPosExtensions = shape match
+      case _ => ComputationsPosExtensionsRectangle()
+    BoardImpl(shape, disks)
 
 /** Implements a generic board.
  * 
