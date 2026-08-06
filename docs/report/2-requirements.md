@@ -103,6 +103,7 @@ classDiagram
 - Se, quando è il suo turno, l’utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
 - Durante una partita, l’utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito. L’utente deve poter effettuare salvataggi di partite diverse e conservarli in contemporanea.
 - L'utente deve poter eliminare un salvataggio effettuato.
+- L'utente deve poter abbandonare una partita senza salvare.
 - L'utente deve poter uscire dall'applicazione in qualsiasi momento.
 
 ### Di sistema
