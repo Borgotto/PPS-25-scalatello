@@ -3,8 +3,8 @@ package it.unibo.pps.domain
 import upickle.default.ReadWriter
 
 /** Represents a two-dimensional position.
- *  @param row the row of a [[Board]].
- *  @param column the column of a [[Board]].
+ *  @param row the row of a [[model.board.Board]].
+ *  @param column the column of a [[model.board.Board]].
  */
 case class Position(row: Int, column: Int) derives ReadWriter:
   /**
@@ -42,7 +42,7 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   override def toString: String = s"($row,$column)"
 
 /** This object contains three implicit conversions:
- *    - from [[scala.Tuple2]] of ([[int]],[[Int]]) to [[Position]];
+ *    - from [[scala.Tuple2]] of ([[Int]],[[Int]]) to [[Position]];
  *    - from [[scala.Tuple2]] of ([[String]],[[String]]) to [[Position]];
  *    - from [[String]] to [[Position]].
  *

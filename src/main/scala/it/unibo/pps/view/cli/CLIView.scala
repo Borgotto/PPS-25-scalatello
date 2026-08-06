@@ -13,7 +13,7 @@ import org.jline.terminal.TerminalBuilder
 
 /** Provides the CLI implementation of the view.
  * 
- * @param i18n the [[I18n]] provider of the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
  */
 class CLIView(using i18n: I18n) extends View:
 

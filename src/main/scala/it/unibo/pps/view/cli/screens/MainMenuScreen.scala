@@ -8,8 +8,8 @@ import it.unibo.pps.view.i18n.{I18n, localize}
  * 
  * @param onNewGameAction the behavior in case the option to start a new game is selected.
  * @param onSaveManagementAction the behavior in case the save management option is selected.
- * @param i18n the [[I18n]] provider of the application.
- * @param inputComponent the [[InputComponent]] instanced for the application.
+ * @param i18n the [[i18n.I18n]] provider of the application.
+ * @param inputComponent the [[io.InputComponent]] instanced for the application.
  */
 class MainMenuScreen(
   onNewGameAction: () => IO[Unit],

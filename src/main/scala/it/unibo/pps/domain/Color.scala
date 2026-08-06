@@ -2,7 +2,7 @@ package it.unibo.pps.domain
 
 import upickle.default.ReadWriter
 
-/** Represents the possible colors of a [[Disk]]. */
+/** Represents the possible colors of a [[model.board.Disk]]. */
 enum Color derives ReadWriter:
   case Black
   case White

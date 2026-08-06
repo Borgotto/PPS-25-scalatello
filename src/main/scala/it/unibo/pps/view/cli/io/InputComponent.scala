@@ -8,7 +8,7 @@ import org.jline.reader.LineReader
 
 /** Provides reusable functions for multi-step I/O operations on CLI.
  *
- * @param reader the [[LineReader]] instance that reads from the terminal.
+ * @param reader the [[org.jline.reader.LineReader]] instance that reads from the terminal.
  * @param i18n the i18n provider of the application.
  */
 class InputComponent(private val reader: LineReader)(using i18n: I18n):

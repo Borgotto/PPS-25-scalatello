@@ -13,7 +13,7 @@ import upickle.default.ReadWriter
  * the given context via Scala 3 `using` (contextual) parameter.
  *
  * @tparam C the type of the context required to compute a placement
- *           (e.g. [[Position]] for user choice, or [[Board]] for an opponent
+ *           (e.g. [[domain.Position]] for user choice, or [[model.board.Board]] for an opponent
  *            whose decision depends on the current board state).
  * @tparam O the output of the computed placement or decision
  * @note This trait is contravariant in `C` (the context type), this allows a strategy that requires
@@ -33,9 +33,9 @@ trait PlacementStrategy[-C, O]:
 /**
  * Trait for [[Opponent]]s' placement strategies.
  *
- * Opponent strategies compute a placement based on the current [[Board]] and produce a [[Position]].
+ * Opponent strategies compute a placement based on the current [[model.board.Board]] and produce a [[domain.Position]].
  * 
- * @note This trait is sealed to be able to derive a uPickle [[ReadWriter]] for
+ * @note This trait is sealed to be able to derive a [[upickle.default.ReadWriter]] for
  * serialization support.
  */
 sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position] derives ReadWriter
@@ -48,11 +48,11 @@ sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position
  * @param color the color of the opponent for which placements are requested, used to filter valid placements
  *
  * Behavior:
- * - Queries [[Board.getAvailablePlacements]] to obtain the set of legal placements for the opponent.
+ * - Queries [[model.board.Board.getAvailablePlacements]] to obtain the set of legal placements for the opponent.
  * - If no placements are available, an IllegalStateException is thrown to signal an unexpected game state.
  * - Otherwise selects one element at random and returns it.
  *
- * @throws IllegalStateException when called while the opponent has no available placements on the board.
+ * @throws java.lang.IllegalStateException when called while the opponent has no available placements on the board.
  */
 case class ErraticPlacementStrategy(color: Color) extends OpponentPlacementStrategy:
   def computePlacement(using board: Board): Position =
@@ -70,7 +70,7 @@ case class ErraticPlacementStrategy(color: Color) extends OpponentPlacementStrat
  *
  * @note This strategy delegates to [[StrategyComputations.calculateBestPlacement]] to perform the actual
  * evaluation/search. The method uses the provided `board` and the configured `depth`
- * to return the best [[Position]] found by the algorithm.
+ * to return the best [[domain.Position]] found by the algorithm.
  */
 case class SmartPlacementStrategy(color: Color, depth: Int) extends OpponentPlacementStrategy:
   def computePlacement(using board: Board): Position =

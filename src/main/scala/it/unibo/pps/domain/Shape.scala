@@ -2,7 +2,7 @@ package it.unibo.pps.domain
 
 import upickle.default.ReadWriter
 
-/** Represents the possible shapes of a [[Board]]. */
+/** Represents the possible shapes of a [[model.board.Board]]. */
 enum Shape derives ReadWriter:
   case Square(size: Int)
   case Rectangle(height: Int, width: Int)
