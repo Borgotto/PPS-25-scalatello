@@ -1,5 +1,62 @@
 # Design di dettaglio
 
+## Struttura degli state
+
+```mermaid
+classDiagram
+    class MatchState {
+      + status: MatchStatus
+      + user: User
+      + opponent: Opponent
+      + activePlayer: PlayerState
+      + board: BoardState
+    }
+    class MatchStatus {
+      <<enumeration>>
+      InProgress
+      UserWon
+      OpponentWon
+      Tie
+    }
+    class BoardState {
+      + shape: Shape
+      + disks: List(DiskState)
+      + userAvailablePlacements: List(Position)
+    }
+    class Shape {
+      <<enumeration>>
+    }
+    class Square {
+      + size: int
+    }
+    class Rectangle {
+      + height: int
+      + width: int
+    }
+    class DiskState {
+      + color: Color
+      + position: Position
+    }
+    class Color {
+      <<enumeration>>
+      Black
+      White
+    }
+    class Position {
+      + row: int
+      + column: int
+    }
+
+    MatchState --> BoardState
+    MatchState --> MatchStatus
+    BoardState --> DiskState
+    Shape <|-- Square
+    Shape <|-- Rectangle
+    BoardState --> Shape
+    DiskState --> Color
+    DiskState --> Position
+```
+
 ## Aggiornamento View
 
 Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer

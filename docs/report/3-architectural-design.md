@@ -18,6 +18,12 @@ La scelta architetturale adottata comporta inoltre i seguenti vantaggi.
 
 ## Architettura complessiva
 
+Dopo aver individuato i tre macro-componenti sopra indicati, quali Model, View e Controller, si è innanzitutto deciso di raggruppare in un modulo distinto tutte le entità che concorrono alla realizzazione di uno stesso macro-componente, definendo quindi un modulo per il Model, un modulo per il Controller e un modulo per la View. Successivamente, si è passati alla progettazione delle interazioni tra le diverse entità, cercando di minimizzare le dipendenze sia intra-modulo che inter-modulo.
+
+L'unica entità del modulo Model che comunica con l'esterno è `Logic`: l'unico modo per interagire con lo stato di una partita è attraverso una delle interfacce esposte da tale entità. Le operazioni che si possono effettuare sullo stato di una partita sono fondamentalmente tre: la lettura dello stato, la sua modifica attraverso una mossa dell'utente e la sua modifica attraverso una mossa dell'avversario.
+
+Per quanto concerne la modifica dello stato del Model (il quale costituisce il core dell'applicazione), coerentemente con i principi della programmazione funzionale, si è ritenuto opportuno seguire il principio di immutabilità: ogni operazione che modifica `Logic` ritorna una nuova istanza di `Logic`, che è di fatto uno snapshot atomico dello stato corrente della partita. Tale approccio elimina la presenza di side-effects interni e quindi potenziali bug dovuti ad essi.
+
 ```mermaid
 ---
 title: Diagramma UML architetturale
@@ -25,7 +31,7 @@ title: Diagramma UML architetturale
 classDiagram
   namespace ViewPackage {
     class View {
-      + showMenu()
+      + show()
       + update(state: MatchState)
     }
     class CLIView
@@ -35,14 +41,14 @@ classDiagram
       + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
       + saveMatch(fileName: String)
-      + loadMatch(fileName: String): data
-      + saveFileNames(): List(String)
+      + loadMatch(fileName: String): MatchState
+      + saveFileNames: List~String~
       + deleteSaveFile(fileName: String)
     }
     class SaveManager {
-      + save(data)
-      + load(): data
-      + saveFileNames(): List(String)
+      + save(data: MatchState)
+      + load(): MatchState
+      + saveFileNames: List~String~
       + deleteSaveFile()
     }
   }
@@ -61,7 +67,9 @@ classDiagram
     class Disk {
       + state: DiskState
     }
-    class Color
+    class Color {
+      <<enumeration>>
+    }
     class Player
   }
 
@@ -84,63 +92,6 @@ classDiagram
   SaveManager <-- Controller
 
   View <|.. CLIView
-```
-
-Struttura degli state:
-
-```mermaid
-classDiagram
-    class MatchState {
-      + status: MatchStatus
-      + user: User
-      + opponent: Opponent
-      + activePlayer: PlayerState
-      + board: BoardState
-    }
-    class MatchStatus {
-      <<enumeration>>
-      InProgress
-      UserWon
-      OpponentWon
-      Tie
-    }
-    class BoardState {
-      + shape: Shape
-      + disks: List(DiskState)
-      + userAvailablePlacements: List(Position)
-    }
-    class Shape {
-      <<enumeration>>
-    }
-    class Square {
-      + size: int
-    }
-    class Rectangle {
-      + height: int
-      + width: int
-    }
-    class DiskState {
-      + color: Color
-      + position: Position
-    }
-    class Color {
-      <<enumeration>>
-      Black
-      White
-    }
-    class Position {
-      + row: int
-      + column: int
-    }
-
-    MatchState --> BoardState
-    MatchState --> MatchStatus
-    BoardState --> DiskState
-    Shape <|-- Square
-    Shape <|-- Rectangle
-    BoardState --> Shape
-    DiskState --> Color
-    DiskState --> Position
 ```
 
 ## Interazione tra View, Controller e Model
