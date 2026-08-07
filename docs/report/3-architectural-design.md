@@ -45,10 +45,11 @@ sequenceDiagram
     Controller->>View: update(matchState)
 ```
 
+Infine, ai fini delle funzionalità di creazione, caricamento e cancellazione di salvataggi di una partita, sono stati previsti appositi metodi e properietà esposti dal Controller e un'entità aggiuntiva (`SaveManager`) a cui il Controller delega tali compiti.
+
+Tutte le entità e le modalità di interazione tra di esse descritte nella presente sezione sono raffigurate nel seguente diagramma architetturale.
+
 ```mermaid
----
-title: Diagramma UML architetturale
----
 classDiagram
   namespace ViewPackage {
     class View {
@@ -108,7 +109,7 @@ classDiagram
   Disk --> Color: has
 
   View --> Controller
-  Controller ..> View : notifies
+  View <.. Controller : notifies
   Controller --> Logic
   SaveManager <-- Controller
 
