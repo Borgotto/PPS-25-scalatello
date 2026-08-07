@@ -22,7 +22,28 @@ Dopo aver individuato i tre macro-componenti sopra indicati, quali Model, View e
 
 L'unica entità del modulo Model che comunica con l'esterno è `Logic`: l'unico modo per interagire con lo stato di una partita è attraverso una delle interfacce esposte da tale entità. Le operazioni che si possono effettuare sullo stato di una partita sono fondamentalmente tre: la lettura dello stato, la sua modifica attraverso una mossa dell'utente e la sua modifica attraverso una mossa dell'avversario.
 
-Per quanto concerne la modifica dello stato del Model (il quale costituisce il core dell'applicazione), coerentemente con i principi della programmazione funzionale, si è ritenuto opportuno seguire il principio di immutabilità: ogni operazione che modifica `Logic` ritorna una nuova istanza di `Logic`, che è di fatto uno snapshot atomico dello stato corrente della partita. Tale approccio elimina la presenza di side-effects interni e quindi potenziali bug dovuti ad essi.
+Per quanto concerne la modifica dello stato del Model (il quale costituisce il core dell'applicazione), coerentemente con i principi della programmazione funzionale, si è ritenuto opportuno seguire il principio di immutabilità: ogni operazione che modifica `Logic` ritorna una nuova istanza di `Logic`, che è di fatto uno snapshot atomico dello stato corrente della partita. Tale approccio elimina la presenza di side-effects interni e quindi potenziali bug dovuti ad essi. Tale approccio è stato poi applicato anche a `Board` e `Disk`, le altre due entità il cui stato varia nel corso di una partita.
+
+Per quanto riguarda la lettura dello stato del Model, invece di rendere direttamente accessibili le proprietà di `Logic` che descrivono lo stato della partita, si è scelto di esporre lo stato mediante un'unica proprietà di tipo `MatchState`, struttura dati immutabile che incapsula uno stato specifico di una partita. È stata presa questa scelta in ragione del fatto che la View deve poter leggere lo stato della partita per renderizzarlo: sarebbe infatti stato scorretto che la View leggesse lo stato della partita direttamente da `Logic`, poiché avrebbe introdotto una dipendenza diretta tra View e Model, violando il pattern MVC.
+
+Successivamente, è stata progettata l'interazione tra View e Controller. Innanzitutto, è necessario che la View comunichi con il Controller al fine di innescare la creazione di una partita e comunicare la posizione scelta dall'utente ad ogni suo turno: pertanto, la View ha un riferimento interno al Controller. Anche il Controller ha necessità di comunicare con la View per notificare ad essa lo stato della partita aggiornato dopo una mossa di un giocatore; tuttavia, introdurre un riferimento interno alla View nel Controller avrebbe introdotto una dipendenza ciclica tra View e Controller. Si è pertanto stabilito, per la fase di design di dettaglio, l'obiettivo di trovare una soluzione che permettesse al Controller di notificare lo stato corrente della partita alla View senza introdurre una dipendenza diretta da essa.
+
+A titolo esemplificativo, il seguente diagramma riassume l'interazione pianificata tra View, Controller e Model per la gestione delle mosse, nello scenario in cui l'utente esegua una mossa a cui segua una mossa dell'avversario. (Nota: le operazioni su Logic effettuate dopo la creazione di una nuova istanza di Logic sono da intendersi svolte sopra la nuova istanza di Logic).
+
+```mermaid
+sequenceDiagram
+    View->>Controller: handleSelection(position)
+    Controller->>Logic: placeUserDisk(position)
+    Logic->>Controller: new Logic instance
+    Controller->>Logic: get MatchState
+    Logic->>Controller: MatchState
+    Controller->>View: update(matchState)
+    Controller->>Logic: placeOpponentDisk()
+    Logic->>Controller: new Logic instance
+    Controller->>Logic: get MatchState
+    Logic->>Controller: MatchState
+    Controller->>View: update(matchState)
+```
 
 ```mermaid
 ---
@@ -92,23 +113,4 @@ classDiagram
   SaveManager <-- Controller
 
   View <|.. CLIView
-```
-
-## Interazione tra View, Controller e Model
-
-Iterazione del loop di gioco tra View, Controller e Model, nell'eventualità di una mossa legale da parte dell'utente a cui segue una mossa dell'avversario.
-
-```mermaid
-sequenceDiagram
-    View->>Controller: handleSelection(position)
-    Controller->>Logic: placeUserDisk(position)
-    Logic->>Controller: true
-    Controller->>Logic: get match state
-    Logic->>Controller: MatchState
-    Controller->>View: update(matchState)
-    Controller->>Logic: placeOpponentDisk()
-    Logic->>Controller: true
-    Controller->>Logic: get match state
-    Logic->>Controller: MatchState
-    Controller->>View: update(matchState)
 ```
