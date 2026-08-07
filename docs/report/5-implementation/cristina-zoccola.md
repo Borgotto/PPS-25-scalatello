@@ -106,6 +106,18 @@ Questo metodo utilizza lo specifico *pattern* definito come espressione regolare
 
 Fa anche uso della `implicit conversion` di `Position` da tupla a posizione (implementata da: [Emanuele Borghini](./emanuele-borghini.md)).
 
+Uso del metodo nella *factory*:
+
+```scala
+val initialDisks: Map[Position, Disk] =
+      s"""
+        ${bottomRightCenterPos.left.up} -> W
+        ${bottomRightCenterPos.up} -> B
+        ${bottomRightCenterPos.left} -> B
+        $bottomRightCenterPos -> W
+      """.toPosDiskMap
+```
+
 ### BoardComputations
 
 **BoardComputations** è una `class` che utilizza due contesti tramite `given/using`: uno di tipo `Board` e l'altro di tipo `ComputationsPosExtensions`, entrambi approfonditi nei paragrafi precedenti.
@@ -239,6 +251,6 @@ All'interno del `companion object` del `trait` `Controller`, è presente la *fac
 
 Ho implementato tutti i metodi presenti all'interno della `case class` `Position`.
 
-Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di `-`, che equivale a quello di `/`.
+Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso della maggior parte (l'uso di `-` equivale a quello di `/`).
 
-Gli altri metodi, che permettono di ottenere la posizione nella direzione richiesta, sono stati usati soprattutto per rendere i *test* più semplici e leggibili.
+I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i *test* più semplici e leggibili.
