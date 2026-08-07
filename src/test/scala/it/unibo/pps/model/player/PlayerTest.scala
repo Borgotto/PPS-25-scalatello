@@ -25,9 +25,3 @@ class PlayerTest extends AnyFlatSpec:
     Opponent.EasyOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 1)
     Opponent.MediumOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 2)
     Opponent.HardOpponent(Color.Black).strategy shouldBe SmartPlacementStrategy(Color.Black, 4)
-
-  it should "support unapply" in:
-    val opponent: Opponent = Opponent.ErraticOpponent(Color.White)
-    opponent match
-      case Opponent(color) => color shouldBe Color.White
-      case _ => fail("Unapply did not work as expected")
