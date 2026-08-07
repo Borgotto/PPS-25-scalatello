@@ -1,6 +1,7 @@
 package it.unibo.pps.controller.save
 
 import it.unibo.pps.utils.Serializer.*
+import it.unibo.pps.controller.save.SaveError.*
 
 import scala.util.{Try, Success, Failure}
 import os.{Path, read, write}
@@ -31,7 +32,7 @@ object SaveManager:
         write.over(filePath, serializedData)
         Success(())
       catch
-        case e => Failure(SaveErrorHandler.handleSaveErrors(e))
+        case e => Failure(handleSaveErrors(e))
 
     /**
      * Loads data from the given file path.
@@ -46,7 +47,19 @@ object SaveManager:
         val serializedData = read(filePath)
         Success(serializer.decode(serializedData))
       catch
-        case e => Failure(SaveErrorHandler.handleLoadErrors(e))
+        case e => Failure(handleLoadErrors(e))
+
+    /**
+     * Deletes the passed save file.
+     *
+     * @param filePath file to delete (provided as a contextual parameter)
+     * @return a `Try[Unit]` representing success or failure
+     * @note If the file cannot be loaded, deletion is refused and `DeleteError` is returned.
+     */
+    def deleteSaveFile(using filePath: Path): Try[Unit] =
+      load match
+        case Failure(e) => Failure(handleDeleteErrors(e))
+        case Success(_) => Try(os.remove(filePath))
 
     /**
      * Lists the names of all (valid) files saved in `savePath`.
@@ -58,18 +71,7 @@ object SaveManager:
       try os.list(savePath).filter(load(using _).isSuccess).map(_.last)
       catch case _ => Seq.empty
 
-    /**
-     * Deletes the passed save file.
-     *
-     * @param filePath file to delete (provided as a contextual parameter)
-     * @return a `Try[Unit]` representing success or failure
-     * @note If the file cannot be loaded, deletion is refused and `DeleteError` is returned.
-     */
-    def deleteSaveFile(using filePath: Path): Try[Unit] =
-      load match
-        case Failure(e) => Failure(SaveError.DeleteError(e))
-        case Success(_) => Try(os.remove(filePath))
-
+  class MatchStateSaveManager(override val savePath: Path) extends SaveManager(savePath)(using Serializers.MatchSerializer)
   /**
    * Concrete save managers for the supported serializable types.
    */

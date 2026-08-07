@@ -46,39 +46,49 @@ enum SaveError extends Throwable:
  * Utility object that maps low-level exceptions to the corresponding [[SaveError]].
  *
  * The handler separates write and read/decode failures:
- * - write-related failures are mapped to [[SaveError.WriteError]]
- * - load/read failures are mapped to either [[SaveError.ReadError]] or [[SaveError.DecodeError]]
+ * - write-related failures are mapped to [[WriteError]]
+ * - load/read failures are mapped to either [[ReadError]] or [[DecodeError]]
  */
-object SaveErrorHandler:
+private object SaveError:
   /**
-   * Converts a thrown exception into a [[SaveError.WriteError]].
+   * Converts a thrown exception into a [[WriteError]].
    *
    * Typical cases include missing files, access denied errors, and generic I/O failures.
    *
    * @param cause the original exception thrown during save
-   * @return a [[SaveError.WriteError]] wrapping the original cause
+   * @return a [[WriteError]] wrapping the original cause
    */
-  def handleSaveErrors(cause: Throwable): SaveError.WriteError =
+  def handleSaveErrors(cause: Throwable): WriteError =
     cause match
-      case e: FileNotFoundException => SaveError.WriteError(e) // File inaccessible
-      case e: AccessDeniedException => SaveError.WriteError(e) // Permission denied
-      case e: IOException           => SaveError.WriteError(e)
+      case e: FileNotFoundException => WriteError(e) // File inaccessible
+      case e: AccessDeniedException => WriteError(e) // Permission denied
+      case e: IOException           => WriteError(e)
 
   /**
-   * Converts a thrown exception into either a [[SaveError.ReadError]] or a [[SaveError.DecodeError]].
+   * Converts a thrown exception into either a [[ReadError]] or a [[DecodeError]].
    *
-   * File access problems are mapped to [[SaveError.ReadError]],
-   * while parsing/decoding-related exceptions are mapped to [[SaveError.DecodeError]].
+   * File access problems are mapped to [[ReadError]],
+   * while parsing/decoding-related exceptions are mapped to [[DecodeError]].
    *
    * @param cause the original exception thrown during load
-   * @return a [[SaveError.ReadError]] or [[SaveError.DecodeError]] depending on the failure type
+   * @return a [[ReadError]] or [[DecodeError]] depending on the failure type
    */
-  def handleLoadErrors(cause: Throwable): SaveError.ReadError | SaveError.DecodeError =
+  def handleLoadErrors(cause: Throwable): ReadError | DecodeError =
     cause match
-      case e: AbortException         => SaveError.DecodeError(e) // uPickle parsing error
-      case e: TraceException         => SaveError.DecodeError(e) // uPickle trace errors
-      case e: ParsingFailedException => SaveError.DecodeError(e) // uJSON parsing error
-      case e: NoSuchFileException    => SaveError.ReadError(e) // Missing files
-      case e: FileNotFoundException  => SaveError.ReadError(e) // File inaccessible
-      case e: AccessDeniedException  => SaveError.ReadError(e) // Permission denied
-      case e: IOException            => SaveError.ReadError(e)
+      case e: AbortException         => DecodeError(e) // uPickle parsing error
+      case e: TraceException         => DecodeError(e) // uPickle trace errors
+      case e: ParsingFailedException => DecodeError(e) // uJSON parsing error
+      case e: NoSuchFileException    => ReadError(e)   // Missing files
+      case e: FileNotFoundException  => ReadError(e)   // File inaccessible
+      case e: AccessDeniedException  => ReadError(e)   // Permission denied
+      case e: IOException            => ReadError(e)
+
+  /**
+   * Converts a thrown exception into a [[DeleteError]].
+   * 
+   * @param cause the original exception thrown during delete
+   * @return a [[DeleteError]] wrapping the original cause
+   */
+  def handleDeleteErrors(cause: Throwable): DeleteError =
+    cause match
+      case e: SaveError.ReadError => DeleteError(e) // Cannot load file, don't allow deletion

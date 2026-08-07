@@ -65,4 +65,10 @@ class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
 
   it should "fail with a ReadError when trying to load from a non-readable file" in:
     saveManager.load(using inaccessibleFile) shouldBe a [Failure[ReadError]]
+    
+  "Deleting" should "fail with a DeleteError when trying to delete a non-existent file" in:
+    saveManager.deleteSaveFile(using tmpDir / "non_existent_file.txt") shouldBe a [Failure[DeleteError]]
+    
+  it should "fail with a DeleteError when trying to delete a file that cannot be loaded" in:
+    saveManager.deleteSaveFile(using inaccessibleFile) shouldBe a [Failure[DeleteError]]
 
