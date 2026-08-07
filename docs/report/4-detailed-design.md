@@ -101,14 +101,13 @@ La struttura del componente Player è stata progettata come un'interfaccia, che 
 classDiagram
     class Player <<Interface>> {
         + color: Color
-        + strategy: UserPlacementStrategy | OpponentPlacementStrategy
     }
     class User {
         + color: Color
-        + strategy: UserPlacementStrategy
     }
     class Opponent <<Enumeration>> {
-        + strategy: OpponentPlacementStrategy
+        + color: Color
+        + strategy: PlacementStrategy
         + ErraticOpponent(color: Color): Opponent
         + EasyOpponent(color: Color): Opponent
         + MediumOpponent(color: Color): Opponent
@@ -121,10 +120,9 @@ classDiagram
 
 ## PlacementStrategy
 
-La placement strategy è una interfaccia che permette di definire il comportamento del giocatore, sia esso umano o virtuale.
+La placement strategy è una interfaccia che permette di definire il comportamento di un giocatore.
 
-Per il giocatore umano, la placement strategy consiste semplicemente nel leggere l'input dell'utente e restituire la posizione selezionata.\
-Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
+Per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
 
 - Pattern Strategy
 
@@ -133,15 +131,10 @@ Mentre per l'avversario virtuale, la placement strategy consiste nel calcolare l
 
   Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.
 
-  Inoltre, rende più semplice l'integrazione nella logica del gioco, in quanto è possibile chiamare la strategia di mossa del giocatore senza dover distinguere tra giocatore umano e avversario virtuale.
-
 ```mermaid
 classDiagram
     class PlacementStrategy~-C, O~ <<Interface>> {
         + computePlacement(using context: C)*: O
-    }
-    class UserPlacementStrategy~Position, Position~ {
-        + computePlacement(using userChoice: Position): Position
     }
     class OpponentPlacementStrategy ~Board, Position~ {
     }
@@ -155,7 +148,6 @@ classDiagram
         + computePlacement(using board: Board): Position
     }
 
-    PlacementStrategy <|.. UserPlacementStrategy
     PlacementStrategy <|.. OpponentPlacementStrategy
     OpponentPlacementStrategy <|.. ErraticPlacementStrategy
     OpponentPlacementStrategy <|.. SmartPlacementStrategy
@@ -182,7 +174,7 @@ sequenceDiagram
     User->>View: chooses a position
     View->>Controller: handleSelection(userChoice)
     Controller->>Logic: placeDisk(userChoice)
-    Logic-->>Logic: get active player
+    Logic-->>Logic: get Opponent player
     Logic->>Player: get placement strategy
     Player-->>Logic: PlacementStrategy
     Logic-->>Logic: computePlacement()
@@ -193,17 +185,10 @@ sequenceDiagram
 
 ### SaveManager
 
-Il save manager è un componente del controller che si occupa di gestire il salvataggio e il caricamento dello stato della partita.
-
-Il save manager fornisce due metodi principali:
-
-- `save(matchState: MatchState)`: salva lo stato della partita corrente su un file.
-- `load()`: carica lo stato della partita da un file.
+Il save manager è un componente del controller che si occupa di gestire il salvataggio e il caricamento delle partite.
 
 Solo una istanza del save manager è presente all'interno del controller.\
-Questa istanza può salvare un unico stato della partita alla volta, e il salvataggio sovrascrive eventuali salvataggio precedente.
-
-Il caricamento tenta di leggere lo stato della partita da un file, e se il file non esiste o è corrotto, il save manager riporta un errore al controller.
+Questa istanza può salvare più partite, ognuna in un file separato all'interno di una cartella passata come parametro al momento della creazione del save manager.
 
 - Pattern Adapter
 
@@ -212,18 +197,23 @@ Il caricamento tenta di leggere lo stato della partita da un file, e se il file 
 
 ```mermaid
 classDiagram
-    class SaveManager <<Interface>> {
-        + save(matchState: MatchState, filePath: String)*: Boolean
-        + load(filePath: String)*: MatchState
-    }
+  class SaveManager <<Interface>> {
+    + save(data)(filePath)
+    + load(filePath)
+    + saveFileNames(): Seq[String]
+    + deleteSaveFile(filePath)
+  }
 ```
+
+Data la natura delle operazioni di I/O, le chiamate al save manager possono fallire.\
+Per questo motivo i metodi `save()`, `load()` e `deleteSaveFile()` in caso di fallimento, l'oggetto restituito conterrà un'eccezione che descrive il motivo.
 
 #### Scenario: salvataggio di una partita
 
 ```mermaid
 sequenceDiagram
-    View->>Controller: saveGame()
-    Controller->>Logic: getMatchState()
+    View->>Controller: saveMatch(filePath)
+    Controller->>Logic: get state
     Logic->>Controller: MatchState
     Controller->>SaveManager: save(MatchState, filePath)
 ```
@@ -232,10 +222,10 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    View->>Controller: loadGame()
+    View->>Controller: loadMatch(filePath)
     Controller->>SaveManager: load(filePath)
     SaveManager->>Controller: MatchState
-    Controller->>Logic: setMatchState(MatchState)
+    Controller->>Logic: apply(MatchState)
 ```
 
 ---
