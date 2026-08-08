@@ -9,16 +9,16 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 /** Test suite for the implementations of [[ComputationsPosExtensions]] */
 class ComputationsPosExtensionsTest extends AnyFlatSpec with TableDrivenPropertyChecks:
-  private val SIZE = 4
-  private val HEIGHT = 4
-  private val WIDTH = 6
+  private val BOARD_SIZE = 4
+  private val BOARD_HEIGHT = 4
+  private val BOARD_WIDTH = 6
 
   private val inBoundsTestTable = Table(
     ("shape", "pos", "expectedResult"),
-    (Shape.Square(SIZE), Position(0, 0), true),
-    (Shape.Square(SIZE), Position(SIZE, SIZE), false),
-    (Shape.Rectangle(HEIGHT, WIDTH), Position(0, 0), true),
-    (Shape.Rectangle(HEIGHT, WIDTH), Position(HEIGHT, WIDTH), false),
+    (Shape.Square(BOARD_SIZE), Position(0, 0), true),
+    (Shape.Square(BOARD_SIZE), Position(BOARD_SIZE, BOARD_SIZE), false),
+    (Shape.Rectangle(BOARD_HEIGHT, BOARD_WIDTH), Position(0, 0), true),
+    (Shape.Rectangle(BOARD_HEIGHT, BOARD_WIDTH), Position(BOARD_HEIGHT, BOARD_WIDTH), false),
   )
   "A Position" should "know if it is in the bounds of a shape" in:
     forEvery(inBoundsTestTable):

@@ -26,22 +26,22 @@ case class Position(row: Int, column: Int) derives ReadWriter:
    */
   def /(pos: Position): Position =
     (pos.row, pos.column) match
-      case (r, c) if r.equals(0) && c.equals(0) => Position(r, c)
-      case (r, c) if r.equals(0) => Position(r, column / c)
-      case (r, c) if c.equals(0) => Position(row / r, c)
-      case (_, _) => Position(row / pos.row, column / pos.column)
+      case (r, c) if r.equals(0) && c.equals(0) => (r, c)
+      case (r, c) if r.equals(0) => (r, column / c)
+      case (r, c) if c.equals(0) => (row / r, c)
+      case (_, _) => (row / pos.row, column / pos.column)
 
   /** @return the position to the left of this. */
-  def left: Position = Position(row, column - 1)
+  def left: Position = (row, column - 1)
 
   /** @return the position to the right of this. */
-  def right: Position = Position(row, column + 1)
+  def right: Position = (row, column + 1)
 
   /** @return the position on top of this. */
-  def up: Position = Position(row - 1, column)
+  def up: Position = (row - 1, column)
 
   /** @return the position below this. */
-  def down: Position = Position(row + 1, column)
+  def down: Position = (row + 1, column)
 
   /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
    *

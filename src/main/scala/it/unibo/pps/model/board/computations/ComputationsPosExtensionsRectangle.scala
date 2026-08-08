@@ -9,5 +9,5 @@ import it.unibo.pps.utils.IntExtensions.inRange
 private[board] object ComputationsPosExtensionsRectangle extends ComputationsPosExtensions:
   extension (p: Position)
     def inBounds(shape: Shape): Boolean =
-      val minPosition: Position = Position(0, 0)
+      val minPosition: Position = (0, 0)
       p.row.inRange(minPosition.row, shape.maxRowIndex) && p.column.inRange(minPosition.column, shape.maxColumnIndex)
