@@ -5,6 +5,7 @@ import it.unibo.pps.utils.IntExtensions.{inBetween, inRange}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 
+/** Test suite for [[IntExtensions]] */
 class IntExtensionsTest extends AnyFlatSpec:
   private val TEST_NUM = 4
 
