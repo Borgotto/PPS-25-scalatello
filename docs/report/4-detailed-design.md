@@ -1,6 +1,70 @@
 # Design di dettaglio
 
-## Struttura degli state
+## Model
+
+### Struttura complessiva
+
+Per prima cosa, in questa fase sono state maggiormente dettagliate le interazioni tra le principali entità del Model, già delineate in precedenza. Il seguente diagramma mostra proprietà e metodi esposti da ciascuna entità.
+
+```mermaid
+classDiagram
+  class Logic {
+    + state: MatchState
+    + placeUserDisk(position: Position): Logic
+    + placeOpponentDisk(): Logic
+  }
+  class PlacementStrategy {
+    + computePlacement(board: Board): Position
+  }
+  class Opponent {
+    + strategy: PlacementStrategy
+  }
+  class User
+  class Board {
+    + state: BoardState
+    + isPlacementValid(diskColor: Color, diskPosition: Position): bool
+    + placeDisk(diskColor: Color, diskPosition: Position): Board
+    + getAvailablePlacements(diskColor: Color): Set~Position~
+  }
+  class Disk {
+    + color: Color
+    + flip(): Disk
+  }
+  class Color {
+    <<enumeration>>
+    Black
+    White
+  }
+  class Player {
+    + color: Color
+  }
+
+  Logic --> PlacementStrategy: applies
+  Logic --> Opponent
+  Logic --> User
+  Logic --> Board
+
+  Opponent --> PlacementStrategy
+  Opponent --|> Player
+  User --|> Player
+  Player --> Color: is assigned
+  PlacementStrategy --> Board
+  Board --> Disk
+  Disk --> Color: has
+```
+
+Come già citato nell'analisi di dominio, l'avversario (`Opponent`) effettua le proprie mosse seguendo una specifica strategia (`PlacementStrategy`), rappresentabile come una funzione che prende in input lo stato corrente del terreno di gioco (`Board`) e restituisce in output la posizione in cui effettuare la mossa, decisa secondo uno specifico algoritmo. L'applicazione di tale funzione è effettuata dalla `Logic` ad ogni turno dell'avversario virtuale.
+
+Oltre all'applicazione della strategia dell'avversario per conoscere la sua prossima mossa, la `Logic` deve comunicare con la `Board` anche per le seguenti operazioni:
+
+- ottenerne lo stato (necessario affinché la `Logic` possa restituire lo stato completo della partita);
+- sapere se il posizionamento di un disco di un certo colore in una specifica posizione è valido;
+- posizionare un disco (operazione che implica anche il rovesciamento dei dischi catturati, effettiuato dalla `Board`);
+- conoscere i posizionamenti validi che un giocatore può effettuare dato lo stato corrente della `Board` (sia per stabilire se un giocatore non ha mosse valide disponibili, sia affinché possano essere fornite all'utente le mosse valide che può effettuare).
+
+Da notare che il metodo `placeDisk()` della `Board`, che ne modifica lo stato, restituisce una nuova istanza di `Board`, coerentemente con il principio di immutabilità adottato anche per la `Logic`; analogo principio è stato adottato per il metodo `flip()` dei `Disk` (che ne effettua il rovesciamento).
+
+Nel diagramma sottostante è inoltre dettagliata la struttura di `MatchState` (che descrive uno stato della una partita) e delle sue sottoparti.
 
 ```mermaid
 classDiagram
@@ -8,7 +72,7 @@ classDiagram
       + status: MatchStatus
       + user: User
       + opponent: Opponent
-      + activePlayer: PlayerState
+      + activePlayer: ActivePlayer
       + board: BoardState
     }
     class MatchStatus {
@@ -20,12 +84,10 @@ classDiagram
     }
     class BoardState {
       + shape: Shape
-      + disks: List(DiskState)
-      + userAvailablePlacements: List(Position)
+      + disks: Set~DiskState~
+      + userAvailablePlacements: Set~Position~
     }
-    class Shape {
-      <<enumeration>>
-    }
+    class Shape
     class Square {
       + size: int
     }
@@ -46,6 +108,11 @@ classDiagram
       + row: int
       + column: int
     }
+    class ActivePlayer {
+      <<enumeration>>
+      User
+      Opponent
+    }
 
     MatchState --> BoardState
     MatchState --> MatchStatus
@@ -55,9 +122,11 @@ classDiagram
     BoardState --> Shape
     DiskState --> Color
     DiskState --> Position
+    BoardState --> Position
+    MatchState --> ActivePlayer
 ```
 
-## Aggiornamento View
+## Aggiornamento della View
 
 Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
 
