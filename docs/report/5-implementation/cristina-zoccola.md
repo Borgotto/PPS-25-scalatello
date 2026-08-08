@@ -169,32 +169,13 @@ Alcune parti del *refactor* effettuato su questa classe, sono state fatte in col
 
 ### ComputationsPosExtensions
 
-**ComputationsPosExtensions** è un `trait` che contiene `extension methods` di `Position`, utili per operare con le posizioni all'interno della scacchiera.
-
-All'interno di questo `trait` i metodi: `onSameDiagonal(Position, Position)`, `inBetweenPos(Position, Position)` e `inNeighbourhood(Position)` hanno già un'implementazione, in quanto sufficientemente generici e riutilizzabili, rimane comunque la possibilità di effettuare un `override` in caso di scacchiere con regole o forme particolari.
-
-Il metodo `inBounds(Shape)` che riguarda i confini della scacchiera: visto che questo dipende strettamente dalla forma della stessa, ad ogni implementazione del `trait` le regole da seguire cambieranno.
-
-Per implementare i metodi ho usato le seguenti funzionalità di Scala:
-
-- `pattern matching`;
-- creazione di un **accumulatore** tramite `tail recursion` e `pattern matching`.
-
-```scala
-@tailrec
-def _getPosOnSameDiagonal(source: Position, destination: Position,
-          direction: Position, acc: Set[Position] = Set()): Set[Position] =
-  val nextPos: Position = source - direction
-  (nextPos, destination) match
-    case (f, s) if f.equals(s) => acc
-    case (f, s) => _getPosOnSameDiagonal(f, s, direction, acc + f)
-```
+**ComputationsPosExtensions** è un `trait` che contiene un `extension method` di `Position`, questo metodo definisce i confini della scacchiera.
 
 ### ComputationsPosExtensionsRectangle
 
-**ComputationsPosExtensionsRectangle** è una `class` che implementa il `trait` `ComputationsPosExtensions`.
+**ComputationsPosExtensionsRectangle** è un `object` che implementa il `trait` `ComputationsPosExtensions`.
 
-Come spiegato prima, in questa classe viene implementato solamente il metodo `inBounds(Shape)`: con i confini da rispettare in caso di scacchiera quadrata o rettangolare.
+In questo `object` viene implementato il metodo definito nel `trait`: con i confini da rispettare in caso di scacchiera quadrata o rettangolare.
 
 ## IntExtensions
 
@@ -251,6 +232,21 @@ All'interno del `companion object` del `trait` `Controller`, è presente la *fac
 
 Ho implementato tutti i metodi presenti all'interno della `case class` `Position`.
 
-Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso della maggior parte di essi (l'uso di `-` equivale a quello di `/`).
+Per implementare i metodi ho usato le seguenti funzionalità di Scala:
+
+- `pattern matching`;
+- creazione di un **accumulatore** tramite `tail recursion` e `pattern matching`.
+
+```scala
+@tailrec
+def _getPosOnSameDiagonal(source: Position, destination: Position,
+          direction: Position, acc: Set[Position] = Set()): Set[Position] =
+  val nextPos: Position = source - direction
+  (nextPos, destination) match
+    case (f, s) if f.equals(s) => acc
+    case (f, s) => _getPosOnSameDiagonal(f, s, direction, acc + f)
+```
+
+Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di alcuni (l'uso di `-` equivale a quello di `/`).
 
 I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
