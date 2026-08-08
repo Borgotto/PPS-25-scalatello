@@ -5,7 +5,7 @@ import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
 import it.unibo.pps.utils.IntExtensions.half
 import it.unibo.pps.testutils.TestExtensions.toBoard
 import it.unibo.pps.model.board.{Board, Disk}
-import it.unibo.pps.state.DiskState
+import it.unibo.pps.state.{BoardState, DiskState}
 
 /** Helper class to get the params for [[BoardTest]] */
 class BoardTestParams(val shape: Shape):
@@ -36,6 +36,8 @@ class BoardTestParams(val shape: Shape):
         """.toPosDiskMap
 
   val initialBoard: Board = Board(shape)
+  
+  val initialBoardState: BoardState = initialBoard.state
 
   val boardDuringMatch: Board =
     shape match

@@ -3,6 +3,7 @@ package it.unibo.pps.model.board
 import it.unibo.pps.domain.{Color, Position, Shape}
 import it.unibo.pps.model.board.Board
 import it.unibo.pps.state.BoardState
+import it.unibo.pps.model.board.BoardCreationExtensions.toPosDiskMap
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{an, be, should}
@@ -16,6 +17,26 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
   private val squareParams: BoardTestParams = BoardTestParams(Shape.Square(BOARD_SIZE))
   private val rectangleParams: BoardTestParams = BoardTestParams(Shape.Rectangle(BOARD_HEIGHT, BOARD_WIDTH))
+
+  private val disksMapCreationTestTable = Table(
+    ("stringToTest", "expectedMap"),
+    ("(0,0) -> W", Map[Position, Disk](Position(0,0) -> Disk(Color.White))),
+    (
+      """
+         (0,0) -> b
+         (1,1) -> B
+      """,
+      Map[Position, Disk](
+        Position(0, 0) -> Disk(Color.Black),
+        Position(1, 1) -> Disk(Color.Black)
+      )
+    )
+  )
+  "Using the conversion from String to Map" should "create the correct Map of disks" in:
+    forEvery(disksMapCreationTestTable):
+      (stringToTest, expectedMap) =>
+        println(stringToTest.toPosDiskMap)
+        stringToTest.toPosDiskMap should be(expectedMap)
 
   private val initialBoardsTestTable = Table(
     ("initialBoard", "initialDisksOnBoard"),
@@ -32,7 +53,7 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     (squareParams.initialBoard, squareParams.shape, squareParams.initialDisksOnBoard),
     (rectangleParams.initialBoard, rectangleParams.shape, rectangleParams.initialDisksOnBoard)
   )
-  "A Board given some disks" should "be created with those disks" in:
+  "A Board, given some disks" should "be created with those disks" in:
     forEvery(creationBoardsTestTable):
       (initialBoard, boardShape, initialDisksOnBoard) =>
         initialBoard.disks should be(Board(boardShape, initialDisksOnBoard).disks)
@@ -128,6 +149,16 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         val boardState: BoardState = initialBoard.state
         val expectedState: BoardState = BoardState(boardShape, expectedDiskStates, Set[Position]())
         boardState.equals(expectedState) should be(true)
+
+  private val creationBoardFromStateTestTable = Table(
+    ("state", "expectedBoard"),
+    (squareParams.initialBoardState, squareParams.initialBoard),
+    (rectangleParams.initialBoardState, rectangleParams.initialBoard)
+  )
+  "A Board, given a BoardState" should "be created with those informations" in:
+    forEvery(creationBoardFromStateTestTable):
+      (state, expectedBoard) =>
+        Board(state) should be(expectedBoard)
 
   private val movesNotAfterSameColor = Table(
     ("board", "expectedAvailableMoves"),
