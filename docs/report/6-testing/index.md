@@ -1,6 +1,8 @@
 # Testing
 
-Il codice è stato testato utilizzando **ScalaTest** con il supporto di **Mockito**.
+Il *testing* del codice è stato una parte fondamentale dello sviluppo, in quanto è stato seguito il metodo **TDD**.
+
+Esso è stato testato utilizzando **ScalaTest** con il supporto di **Mockito**.
 
 ## Mockito
 
