@@ -6,7 +6,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 /** Test suite for [[Position]] */
 class PositionTest extends AnyFlatSpec with TableDrivenPropertyChecks:
-  private val initialPos: Position = Position(2, 3)
+  private val initialPos: Position = (2, 3)
 
   "A subtraction between positions" should "subtract both coordinates" in:
     initialPos - Position(1, 2) should be(Position(1, 1))
@@ -69,3 +69,6 @@ class PositionTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     forEvery(inNeighbourhoodTestTable):
       (pos, neighbourPos, expectedResult) =>
         pos.inNeighbourhood(neighbourPos) should be(expectedResult)
+
+  "Using the toString on a Position" should "result in (row,column)" in:
+    initialPos.toString should be("(2,3)")
