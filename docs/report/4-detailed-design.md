@@ -126,43 +126,66 @@ classDiagram
     MatchState --> ActivePlayer
 ```
 
-## Aggiornamento della View
+### Board
 
-Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
+`Disk` è un componente del Model che modella le pedine (o dischi) del gioco.
 
 ```mermaid
 classDiagram
-    class Model {
-        <<interface>>
-        + state: MatchState
-    }
-    class Publisher {
-        <<interface>>
-        + subscribe(subscriber: Subscriber)
-        + unsubscribe(subscriber: Subscriber)
-        # notifySubscribers(state: MatchState)
-    }
-    class Controller {
-        <<interface>>
-    }
-    class Subscriber {
-        <<interface>>
-        + update(state: MatchState)
-    }
-    class View {
-        <<interface>>
-    }
-
-    Controller --> Model
-    Publisher --> Subscriber: notifies
-    Publisher <|.. Controller
-    Subscriber <|.. View
-    View --> Controller
+  class Disk {
+    <<interface>>
+    + color: Color
+    + flip(): Disk
+  }
 ```
 
----
+Nello specifico:
 
-## Player
+- `color` restituisce il suo colore;
+- `flip()` capovolge il disco (cambiandone il colore).
+
+Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**.
+
+Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
+
+`Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
+
+```mermaid
+classDiagram
+  class Board {
+    <<interface>>
+	  ~ shape: Shape
+    ~ disks: Map~Position, Disk~
+    + state: BoardState
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
+    + placeDisk(position: Position, color: Color): Board
+  }
+  class BoardComputations {
+    + getAvailablePlacements(color: Color): Set~Position~
+    + isPlacementValid(position: Position, color: Color): Boolean
+    + placeDisk(position: Position, color: Color): Board
+  }
+  Board --> BoardComputations: delegates
+```
+
+In particolare:
+
+- `shape` la forma della scacchiera;
+- `disks` tutti i dischi presenti sulla scacchiera;
+- `state` lo stato attuale della scacchiera;
+- `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
+- `getAvailablePlacements()` restituisce tutte le posizioni delle possibili mosse valide;
+- `placeDisk()` inserisce un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate;
+
+Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*; per semplificare questa operazione viene utilizzato il **factory pattern**.
+
+Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**:
+
+- la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
+- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
+
+### Giocatori
 
 La struttura del componente Player è stata progettata come un'interfaccia, che rappresenta un giocatore generico, che può fare scelte di posizionamento dei dischi sulla scacchiera.
 
@@ -171,11 +194,8 @@ classDiagram
     class Player <<Interface>> {
         + color: Color
     }
-    class User {
-        + color: Color
-    }
+    class User
     class Opponent <<Enumeration>> {
-        + color: Color
         + strategy: PlacementStrategy
         + ErraticOpponent(color: Color): Opponent
         + EasyOpponent(color: Color): Opponent
@@ -187,7 +207,7 @@ classDiagram
     Player <|-- Opponent
 ```
 
-## PlacementStrategy
+### Strategie dell'avversario
 
 La placement strategy è una interfaccia che permette di definire il comportamento di un giocatore.
 
@@ -222,9 +242,7 @@ classDiagram
     OpponentPlacementStrategy <|.. SmartPlacementStrategy
 ```
 
-### Scenario: calcolo delle mosse
-
-Il controller delega alla logica di gioco il compito di calcolare la mossa da eseguire, fornendo alla logica del gioco la scelta dell'utente, mentre le informazioni necessarie per calcolare la mossa dell'avversario sono già presenti all'interno della logica del gioco.
+#### Scenario: calcolo delle mosse
 
 ```mermaid
 sequenceDiagram
@@ -250,7 +268,31 @@ sequenceDiagram
     Note over Logic, Board: placement then follows<br> the board diagram below
 ```
 
----
+## Controller
+
+`Controller` è un componente del Controller che si occupa del coordinamento della partita.
+
+```mermaid
+classDiagram
+	class Controller {
+		<<interface>>
+		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
+		+ handleSelection(position: Position)
+		+ saveMatch(fileName: String)
+		+ loadMatch(fileName: String): MatchState
+		+ saveFileNames(): Seq[String]
+		+ deleteSaveFile(fileName: String)
+	}
+```
+
+In dettaglio:
+
+- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
+- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
+- `saveMatch()` salva lo stato della partita attuale;
+- `loadMatch()` carica il salvataggio di una partita;
+- `saveFileNames()` restituisce una sequenza contenente il nome dei *file* di salvataggio esistenti;
+- `deleteSaveFile()` cancella il *file* di salvataggio richiesto.
 
 ### SaveManager
 
@@ -297,111 +339,38 @@ sequenceDiagram
     Controller->>Logic: apply(MatchState)
 ```
 
----
+## Propagazione degli aggiornamenti di stato di una partita
 
-### Disk
-
-`Disk` è un componente del Model che modella le pedine (o dischi) del gioco. 
+Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
 
 ```mermaid
 classDiagram
-  class Disk {
-    <<interface>>
-    + color: Color
-    + flip(): Disk
-  }
+    class Model {
+        <<interface>>
+        + state: MatchState
+    }
+    class Publisher {
+        <<interface>>
+        + subscribe(subscriber: Subscriber)
+        + unsubscribe(subscriber: Subscriber)
+        # notifySubscribers(state: MatchState)
+    }
+    class Controller {
+        <<interface>>
+    }
+    class Subscriber {
+        <<interface>>
+        + update(state: MatchState)
+    }
+    class View {
+        <<interface>>
+    }
+
+    Controller --> Model
+    Publisher --> Subscriber: notifies
+    Publisher <|.. Controller
+    Subscriber <|.. View
+    View --> Controller
 ```
 
-Nello specifico:
-
-- `color` restituisce il suo colore;
-- `flip()` capovolge il disco (cambiandone il colore).
-
-Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**.
-
-Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
-
-### Board e BoardComputations
-
-`Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
-
-```mermaid
-classDiagram
-  class Board {
-    <<interface>>
-	  ~ shape: Shape
-    ~ disks: Map~Position, Disk~
-    + state: BoardState
-    + getAvailablePlacements(color: Color): Set~Position~
-    + isPlacementValid(position: Position, color: Color): Boolean
-    + placeDisk(position: Position, color: Color): Board
-  }
-  class BoardComputations {
-    + getAvailablePlacements(color: Color): Set~Position~
-    + isPlacementValid(position: Position, color: Color): Boolean
-    + placeDisk(position: Position, color: Color): Board
-  }
-  Board --> BoardComputations: delegates
-```
-
-In particolare:
-
-- `shape` la forma della scacchiera;
-- `disks` tutti i dischi presenti sulla scacchiera; 
-- `state` lo stato attuale della scacchiera;
-- `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
-- `getAvailablePlacements()` restituisce tutte le posizioni delle possibili mosse valide;
-- `placeDisk()` inserisce un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate;
-
-Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*; per semplificare questa operazione viene utilizzato il **factory pattern**.
-
-Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**: 
-
-- la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
-- nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.
-
-### Controller
-
-`Controller` è un componente del Controller che si occupa del coordinamento della partita.
-
-```mermaid
-classDiagram
-	class Controller {
-		<<interface>>
-		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
-		+ handleSelection(position: Position)
-		+ saveMatch(fileName: String)
-		+ loadMatch(fileName: String): MatchState
-		+ saveFileNames(): Seq[String]
-		+ deleteSaveFile(fileName: String)
-	}
-```
-
-In dettaglio:
-
-- `startMatch()` crea una nuova partita istanziando tutti i componenti necessari; 
-- `handleSelection()` si occupa di gestire la posizione in cui l'utente vuole posizionare un nuovo disco e gestisce il turno dell'avversario di conseguenza;
-- `saveMatch()` salva lo stato della partita attuale;
-- `loadMatch()` carica il salvataggio di una partita;
-- `saveFileNames()` restituisce una sequenza contenente il nome dei *file* di salvataggio esistenti;
-- `deleteSaveFile()` cancella il *file* di salvataggio richiesto.
-
-### Interazione tra Controller, Logic e Board
-
-Per eseguire una mossa valida dell'utente o dell'avversario:
-
-```mermaid
-sequenceDiagram
-  Controller ->> Logic: placeUserDisk(position) or placeOpponentDisk()
-  Logic ->> Board: isPlacementValid(position)
-  Board ->> Logic: true
-  Logic ->> Board: placeDisk(position, color)
-  Board ->> Logic: Board
-  Logic ->> Controller: Logic
-  Controller ->> Logic: getMatchState()
-  Logic ->> Board: getBoardState()
-  Board ->> Logic: boardState
-  Logic ->> Controller: matchState
-```
-
-In caso `isPlacementValid()` restituisse `false` il flusso tornerebbe a `Controller`.
+## View
