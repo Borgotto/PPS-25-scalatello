@@ -2,11 +2,11 @@
 
 All'interno del progetto mi sono occupata di implementare:
 
-- le pedine di gioco: `Disk`;
-- la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: `Board`, `BoardCreationExtensions`, `BoardComputations`, `ComputationsPosExtensions` e `ComputationsPosExtensionsRectangle`;
-- alcuni *extension methods* di `Int` per aggevolare i calcoli da effettuare sulla `Board`: `IntExtensions`;
-- il `Controller` dell'applicazione;
-- i metodi nella classe `Position` per operare più facilmente con le posizioni delle pedine.
+- le pedine di gioco: [`Disk`](#disk);
+- la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: [`Board`](#board) (e il suo [`companion object`](#board-companion-object)), [`BoardImpl`](#boardimpl) [`BoardCreationExtensions`](#boardcreationextensions), [`BoardComputations`](#boardcomputations), [`ComputationsPosExtensions`](#computationsposextensions) e [`ComputationsPosExtensionsRectangle`](#computationsposextensionsrectangle);
+- alcuni *extension methods* di `Int` per aggevolare i calcoli da effettuare sulla `Board`: [`IntExtensions`](#intextensions);
+- il controller dell'applicazione, [`Controller`](#controller) (e il suo [`companion object`](#controller-companion-object)) e [`ControllerImpl`](#controllerimpl);
+- i [metodi nella classe `Position`](#metodi-in-position) per operare più facilmente con le posizioni delle pedine.
 
 ## Disk
 
