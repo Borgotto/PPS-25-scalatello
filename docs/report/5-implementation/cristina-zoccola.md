@@ -247,6 +247,6 @@ def _getPosOnSameDiagonal(source: Position, destination: Position,
     case (f, s) => _getPosOnSameDiagonal(f, s, direction, acc + f)
 ```
 
-Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di alcuni (l'uso di `-` equivale a quello di `/`).
+Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di alcuni dei metodi implementati.
 
 I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
