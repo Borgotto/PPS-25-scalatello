@@ -354,6 +354,8 @@ Nel contesto dell'architettura progettata, il ruolo di `Publisher` è ricoperto 
 
 Quando si inizia una nuova partita, la View si registra come `Subscriber` presso il Controller attraverso il metodo `subscribe()`. Ad ogni turno, il Controller legge lo stato del Model, il quale lo espone mediante la proprietà `state` della `Logic`. Il Controller propaga quindi lo stato aggiornato ai `Subscriber` registrati attraverso il metodo `notifySubscribers()`, il quale chiama il metodo `update` di ogni `Subscriber`. Al termine della partita, la View si disiscrive dal Controller attraverso il metodo `unsubscribe()`.
 
+Allo stato attuale, l'unico `Subscriber` previsto è la View ai fini del rendering dello stato della partita, ma si potrebbero chiaramente aggiungere altri `Subscriber` per ulteriori funzionalità (ad esempio, un logger che registri tutti gli stati della partita su file, oppure un'entità di gestione dell'audio che riproduca effetti sonori ad ogni cambio di stato).
+
 ```mermaid
 classDiagram
   class Publisher {
