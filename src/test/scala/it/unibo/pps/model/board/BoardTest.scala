@@ -35,7 +35,6 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
   "Using the conversion from String to Map" should "create the correct Map of disks" in:
     forEvery(disksMapCreationTestTable):
       (stringToTest, expectedMap) =>
-        println(stringToTest.toPosDiskMap)
         stringToTest.toPosDiskMap should be(expectedMap)
 
   private val initialBoardsTestTable = Table(
