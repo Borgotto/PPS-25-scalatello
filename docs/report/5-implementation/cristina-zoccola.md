@@ -124,7 +124,7 @@ val initialDisks: Map[Position, Disk] =
 
 Questa classe è il delegato della classe `BoardImpl`.
 
-Per implementare i metodi delegati da `BoardImpl` sono state utilizzate diverse funzionalità di Scala:
+Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funzionalità di Scala:
 
 - `given/using` nei metodi che hanno bisogno di un contesto diverso in base a che momento dell'esecuzione vengono invocati;
 
@@ -173,9 +173,9 @@ Alcune parti del *refactor* effettuato su questa classe, sono state fatte in col
 
 All'interno di questo `trait` i metodi: `onSameDiagonal(Position, Position)`, `inBetweenPos(Position, Position)` e `inNeighbourhood(Position)` hanno già un'implementazione, in quanto sufficientemente generici e riutilizzabili, rimane comunque la possibilità di effettuare un `override` in caso di scacchiere con regole o forme particolari.
 
-Il metodo `inBounds(Shape)` che riguarda i confini della scacchiera: visto che questo dipende strettamente dalla forma della stessa ad ogni implementazione del `trait` le regole da seguire cambieranno.
+Il metodo `inBounds(Shape)` che riguarda i confini della scacchiera: visto che questo dipende strettamente dalla forma della stessa, ad ogni implementazione del `trait` le regole da seguire cambieranno.
 
-Per implementare i metodi sono state usate le seguenti funzionalità di Scala:
+Per implementare i metodi ho usato le seguenti funzionalità di Scala:
 
 - `pattern matching`;
 - creazione di un **accumulatore** tramite `tail recursion` e `pattern matching`.
@@ -251,6 +251,6 @@ All'interno del `companion object` del `trait` `Controller`, è presente la *fac
 
 Ho implementato tutti i metodi presenti all'interno della `case class` `Position`.
 
-Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso della maggior parte (l'uso di `-` equivale a quello di `/`).
+Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso della maggior parte di essi (l'uso di `-` equivale a quello di `/`).
 
-I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i *test* più semplici e leggibili.
+I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
