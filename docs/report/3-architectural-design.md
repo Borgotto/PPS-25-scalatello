@@ -86,9 +86,7 @@ classDiagram
     class Board {
       + state: BoardState
     }
-    class Disk {
-      + state: DiskState
-    }
+    class Disk
     class Color {
       <<enumeration>>
     }
