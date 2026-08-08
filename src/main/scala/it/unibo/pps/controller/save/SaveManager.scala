@@ -53,8 +53,8 @@ object SaveManager:
      * Deletes the passed save file.
      *
      * @param filePath file to delete (provided as a contextual parameter)
-     * @return `Try[Unit]` representing success or a translated [[DeleteError]]
-     * @note If the file cannot be loaded, deletion is refused and [[DeleteError]] is returned.
+     * @return `Try[Unit]` representing success or a translated [[SaveError.DeleteError]]
+     * @note If the file cannot be loaded, deletion is refused and [[SaveError.DeleteError]] is returned.
      */
     def deleteSaveFile(using filePath: Path): Try[Unit] =
       load match
