@@ -341,36 +341,49 @@ sequenceDiagram
 
 ## Propagazione degli aggiornamenti di stato di una partita
 
-Gestione dell'aggiornamento della View a seguito di cambiamenti nel Model, secondo il pattern Observer
+Come accennato nel capitolo precedente, uno degli obiettivi del design di dettaglio era trovare una soluzione che permettesse di notificare gli aggiornamenti di stato della partita alla View senza introdurre una dipendenza diretta dal Controller alla View, considerato che vi era già l'esigenza di una dipendenza dalla View al Controller e far coesistere entrambe le dipendenze avrebbe introdotto una dipendenza ciclica tra View e Controller.
+
+Tale soluzione è stata individuata nel pattern Observer, applicato come segue.
+
+Nell'atto di notifica di un aggiornamento, si distinguono due categorie di entità:
+
+- l'entità che emette gli aggiornamenti (`Publisher`);
+- le entità che devono essere notificate riguardo agli aggiornamenti pubblicati, le quali si registrano presso il `Publisher` (e pertanto sono dette `Subscriber`) in modo che esso possa notificarle di propria iniziativa nel momento in cui c'è un nuovo aggiornamento.
+
+Nel contesto dell'architettura progettata, il ruolo di `Publisher` è ricoperto dal Controller, il quale riceve gli aggiornamenti di stato della partita dal Model, mentre la View ha il ruolo di `Subscriber`.
+
+Quando si inizia una nuova partita, la View si registra come `Subscriber` presso il Controller attraverso il metodo `subscribe()`. Ad ogni turno, il Controller legge lo stato del Model, il quale lo espone mediante la proprietà `state` della `Logic`. Il Controller propaga quindi lo stato aggiornato ai `Subscriber` registrati attraverso il metodo `notifySubscribers()`, il quale chiama il metodo `update` di ogni `Subscriber`. Al termine della partita, la View si disiscrive dal Controller attraverso il metodo `unsubscribe()`.
 
 ```mermaid
 classDiagram
-    class Model {
-        <<interface>>
-        + state: MatchState
-    }
-    class Publisher {
-        <<interface>>
-        + subscribe(subscriber: Subscriber)
-        + unsubscribe(subscriber: Subscriber)
-        # notifySubscribers(state: MatchState)
-    }
-    class Controller {
-        <<interface>>
-    }
-    class Subscriber {
-        <<interface>>
-        + update(state: MatchState)
-    }
-    class View {
-        <<interface>>
-    }
+  class Publisher {
+    <<interface>>
+    + subscribe(subscriber: Subscriber)
+    + unsubscribe(subscriber: Subscriber)
+    # notifySubscribers(state: State)
+  }
+  class Subscriber {
+    <<interface>>
+    + update(state: State)
+  }
+  class Controller {
+    <<interface>>
+  }
+  class View {
+    <<interface>>
+  }
+  class Logic {
+    <<interface>>
+    + state: MatchState
+  }
 
-    Controller --> Model
-    Publisher --> Subscriber: notifies
-    Publisher <|.. Controller
-    Subscriber <|.. View
-    View --> Controller
+  Subscriber <|.. View
+  Publisher <|.. Controller
+
+  Publisher --> Subscriber: notifies
+
+  View --> Controller: subscribes / unsubscribes to
+  Controller --> Logic
 ```
 
 ## View
