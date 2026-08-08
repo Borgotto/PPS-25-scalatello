@@ -2,6 +2,7 @@ package it.unibo.pps.model.board
 
 import it.unibo.pps.domain.Color
 import it.unibo.pps.model.board.Disk
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, should}
 

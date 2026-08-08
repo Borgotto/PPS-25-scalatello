@@ -60,7 +60,7 @@ private[board] class BoardComputations(using board: Board)(using computations: C
   def getAvailablePlacements(diskColor: Color): Set[Position] =
     @tailrec
     def _getNextEmptyPosition(diskPos: Position, direction: Position): Option[Position] =
-      val neighbourPos:Position = diskPos - direction
+      val neighbourPos: Position = diskPos - direction
       neighbourPos match
         case p
           if (!p.inBounds(board.shape)) ||

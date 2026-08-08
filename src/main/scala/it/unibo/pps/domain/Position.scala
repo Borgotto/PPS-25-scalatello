@@ -1,5 +1,9 @@
 package it.unibo.pps.domain
 
+import it.unibo.pps.utils.IntExtensions.inBetween
+
+import scala.annotation.tailrec
+
 import upickle.default.ReadWriter
 
 /** Represents a two-dimensional position.
@@ -39,6 +43,50 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   /** @return the position below this. */
   def down: Position = Position(row + 1, column)
 
+  /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
+   *
+   *  @param firstPos  the starting position to be considered on the diagonal.
+   *  @param secondPos the last position to be considered on the diagonal.
+   *  @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
+   */
+  def onSameDiagonal(firstPos: Position, secondPos: Position): Boolean =
+    @tailrec
+    def _getPosOnSameDiagonal(source: Position, destination: Position,
+                              direction: Position, acc: Set[Position] = Set()): Set[Position] =
+      val nextPos: Position = source - direction
+      (nextPos, destination) match
+        case (f, s) if f.equals(s) => acc
+        case (f, s) => _getPosOnSameDiagonal(f, s, direction, acc + f)
+
+    val distance: Position = firstPos - secondPos
+    val direction: Position = distance / Position(distance.row.abs, distance.column.abs)
+    _getPosOnSameDiagonal(firstPos, secondPos, direction).contains(this) &&
+      distance.row.abs.equals(distance.column.abs)
+
+  /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally or diagonally.
+   *
+   *  @param firstPos  the starting position to consider.
+   *  @param secondPos the last position to consider.
+   *  @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
+   */
+  def inBetweenPos(firstPos: Position, secondPos: Position): Boolean =
+    (firstPos, secondPos) match
+      case (f, s) if f.row.equals(s.row) => this.column.inBetween(f.column, s.column) && this.row.equals(f.row)
+      case (f, s) if f.column.equals(s.column) => this.row.inBetween(f.row, s.row) && this.column.equals(f.column)
+      case (f, s) => this.onSameDiagonal(f, s)
+
+  /** This is used to determine if this position is in the neighbourhood of `pos`.
+   *
+   *  Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
+   *
+   *  @param pos the position of which to consider the neighbourhood of.
+   *  @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
+   */
+  def inNeighbourhood(pos: Position): Boolean =
+    val maxDistance: Int = 1
+    val distance: Position = this - pos
+    distance.row.abs <= maxDistance && distance.column.abs <= maxDistance
+  
   override def toString: String = s"($row,$column)"
 
 /** This object contains three implicit conversions:
