@@ -394,6 +394,17 @@ classDiagram
 
 ## View
 
+L'unica implementazione della View attualmente prevista è quella basata su command-line interface (`CLIView`).
+
+Ai fini di una migliore ripartizione delle responsabilità, sono state adottate le seguenti scelte.
+
+- Per ogni macro-funzionalità della View (ad esempio il menu iniziale, lo svolgimento di una partita, la creazione di un salvataggio e la gestione dei salvataggi effettuati), è definita un'implementazione di `CLIScreen` (tali implementazioni sono omesse dal diagramma che segue per brevità).
+- Le operazioni di richiesta di input all'utente sono delegate ad una classe `InputComponent`, che implementa metodi riutilizzabili all'interno di tutta la View per ciascun pattern di richiesta presente nell'applicazione (ad esempio, un metodo per le richieste che chiedono all'utente di scegliere tra un elenco di opzioni proposte, oppure un metodo per le richieste che chiedono all'utente di confermare o rifiutare un'operazione).
+- Per consentire all'utente, come da requisiti, di uscire dall'applicazione in qualsiasi momento, di salvare una partita o di abbandonare una partita senza salvare, sono state definite delle shortcut da tastiera. L'attivazione, la disattivazione e il rilevamento della digitazione delle shortcut sono delegati ad una classe `ShortcutManager`.
+- Per le stringhe di testo presenti nella View, ai fini della possibilità di supportare altre lingue oltre all'inglese e di centralizzare la definizione delle stringhe, è stato definito il seguente meccanismo. Invece di mettere le stringhe di testo direttamente nel codice, ad ogni stringa è associata una chiave testuale (per mezzo di appositi file di localizzazione che contengono tutte le associazioni chiave-valore per ogni lingua), e tale chiave viene passata come parametro ad un provider che ne ritorna la traduzione corretta in base alla lingua impostata per l'applicazione. Il provider a cui è delegato questo processo di localizzazione è la classe `I18n`.
+
+Inoltre, per le funzioni di I/O è stato adottato un tipo di ritorno monadico (per mezzo della monade `IO`). Tale scelta è stata presa in quanto rende il codice più puramente funzionale (poiché sposta i side-effect dati dalle operazioni di I/O all'esterno di ciascuna funzione).
+
 ```mermaid
 classDiagram
   class View {
