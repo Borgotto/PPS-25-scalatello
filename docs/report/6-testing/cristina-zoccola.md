@@ -4,7 +4,7 @@ Mi sono occupata di testare il codice da me descritto nella mia sezione di [impl
 
 L'ho fatto creando:
 
-- le seguenti classi di test: [`BoardTest`](#boardtest), [`DiskTest`](#disktest), [`ComputationsPosExtensionsTest`](#computationsposextensionstest), [`IntExtensionsTest`](#intextensionstest), [`PositionTest`](#positiontest) e [`ControllerTest`](#controllertest);
+- le seguenti classi di test: [`BoardTest`](#boardtest), `DiskTest`, [`ComputationsPosExtensionsTest`](#computationsposextensionstest), `IntExtensionsTest`, `PositionTest` e [`ControllerTest`](#controllertest);
 - una classe di supporto: [`BoardTestParams`](#boardtestparams).
 
 Per poter scrivere test con una sintassi molto simile al linguaggio naturale ho scelto di:
@@ -38,7 +38,10 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
 
 Questa classe contiene i test relativi alle classi: `BoardImpl`, `BoardComputations` e `BoardCreationExtensions`.
 
-Per rimuovere le ripetizioni di codice ho usato, sia i test parametrici, sia una classe di supporto: `BoardTestParams`.
+Per rimuovere le ripetizioni di codice ho usato: 
+
+- test parametrici
+- una classe di supporto: `BoardTestParams`.
 
 ### BoardTestParams
 
@@ -73,10 +76,6 @@ Questo rende i test contenuti nella classe `BoardTest` facilmente estendibili a 
   - istanziando la classe `BoardTestParams` con la nuova forma della scacchiera;
   - aggiungendo i parametri nelle tabelle dei test già esistenti.
 
-## DiskTest
-
-In questa classe sono presenti i test che riguardano i metodi nella classe: `Disk`.
-
 ## ComputationsPosExtensionsTest
 
 In questa classe sono contenuti i test che riguardano la classe: `ComputationsPosExtensionsRectangle`. 
@@ -98,14 +97,6 @@ Questa classe di test è facilmente estendibile alle possibili future implementa
         shape match
           case _ => pos.inBounds(shape) should be(expectedResult)
   ```
-
-## IntExtensionsTest
-
-In questa classe sono contenuti i test dei comportamenti che devono avere i metodi contenuti all'interno dell'oggetto `IntExtensions`.
-
-## PositionTest
-
-In questa classe sono presenti i test dei metodi contenuti nella `case class` `Position`.
 
 ## ControllerTest
 
