@@ -1,9 +1,6 @@
 package it.unibo.pps.model.board.computations
 
 import it.unibo.pps.domain.{Position, Shape}
-import it.unibo.pps.utils.IntExtensions.inBetween
-
-import scala.annotation.tailrec
 
 /** Helper trait that contains extension methods of [[domain.Position]] to make computations on a [[model.board.Board]].
  *

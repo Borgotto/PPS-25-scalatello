@@ -20,7 +20,6 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   /** This divides two position instances.
    *
    *  This ignores the division with 0, if a number is divided by 0 the result is 0.
-   *
    *  @param pos the position to divide this position with.
    *  @return the result of the division.
    */
@@ -44,7 +43,6 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   def down: Position = (row + 1, column)
 
   /** Used to know if this position is on the same diagonal of `firstPos` and `secondPos` and also between them.
-   *
    *  @param firstPos  the starting position to be considered on the diagonal.
    *  @param secondPos the last position to be considered on the diagonal.
    *  @return `true` if the position is on the same diagonal and between `firstPos` and `secondPos`, `false` otherwise.
@@ -64,7 +62,6 @@ case class Position(row: Int, column: Int) derives ReadWriter:
       distance.row.abs.equals(distance.column.abs)
 
   /** This is used to know if this position is between `firstPos` and `secondPos` vertically, horizontally or diagonally.
-   *
    *  @param firstPos  the starting position to consider.
    *  @param secondPos the last position to consider.
    *  @return `true` if this position is between `firstPos` and `secondPos`, `false` otherwise.
@@ -78,7 +75,6 @@ case class Position(row: Int, column: Int) derives ReadWriter:
   /** This is used to determine if this position is in the neighbourhood of `pos`.
    *
    *  Being in the neighbourhood of a position means that the distance between them is inside the range [-1, 1].
-   *
    *  @param pos the position of which to consider the neighbourhood of.
    *  @return `true` if this position is in the neighbourhood of `pos`, `false` otherwise.
    */

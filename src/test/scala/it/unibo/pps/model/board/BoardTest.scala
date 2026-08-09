@@ -154,7 +154,7 @@ class BoardTest extends AnyFlatSpec with TableDrivenPropertyChecks:
     (squareParams.initialBoardState, squareParams.initialBoard),
     (rectangleParams.initialBoardState, rectangleParams.initialBoard)
   )
-  "A Board, given a BoardState" should "be created with those informations" in:
+  "A Board, given a BoardState" should "be created with those information" in:
     forEvery(creationBoardFromStateTestTable):
       (state, expectedBoard) =>
         Board(state) should be(expectedBoard)
