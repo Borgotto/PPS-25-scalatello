@@ -53,6 +53,7 @@ Tutte le entità e le modalità di interazione tra di esse descritte nella prese
 classDiagram
   namespace ViewPackage {
     class View {
+      <<interface>>
       + show()
       + update(state: MatchState)
     }
@@ -60,6 +61,7 @@ classDiagram
   }
   namespace ControllerPackage {
     class Controller {
+      <<interface>>
       + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
       + saveMatch(fileName: String)
@@ -68,14 +70,16 @@ classDiagram
       + deleteSaveFile(fileName: String)
     }
     class SaveManager {
-      + save(data: MatchState)
-      + load(): MatchState
+      <<interface>>
+      + save(data: MatchState, filePath: String)
+      + load(filePath: String): MatchState
       + saveFileNames: List~String~
-      + deleteSaveFile()
+      + deleteSaveFile(filePath: String)
     }
   }
   namespace ModelPackage {
     class Logic {
+      <<interface>>
       + state: MatchState
       + placeUserDisk(position: Position): Logic
       + placeOpponentDisk(): Logic
@@ -83,9 +87,7 @@ classDiagram
     class PlacementStrategy
     class Opponent
     class User
-    class Board {
-      + state: BoardState
-    }
+    class Board
     class Disk
     class Color {
       <<enumeration>>
@@ -94,16 +96,16 @@ classDiagram
   }
 
   Logic --> PlacementStrategy: applies
-  Logic --> Opponent
-  Logic --> User
-  Logic --> Board
+  Logic *-- Opponent
+  Logic *-- User
+  Logic *-- Board
 
   Opponent --> PlacementStrategy : behaves according to
   Opponent --|> Player
   User --|> Player
   Player --> Color: is assigned
   PlacementStrategy --> Board: applied on
-  Board --> Disk
+  Board *-- Disk
   Disk --> Color: has
 
   View --> Controller
