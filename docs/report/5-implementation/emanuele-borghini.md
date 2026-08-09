@@ -17,7 +17,7 @@
 
 ## Player
 
-Il *trait* `Player` definisce l'interfaccia comune a tutti i giocatori del gioco, indipendentemente dal fatto che siano controllati dall'utente o dal programma.
+Il `trait Player` definisce l'interfaccia comune a tutti i giocatori del gioco, indipendentemente dal fatto che siano controllati dall'utente o dal programma.
 
 L'unico attributo che definisce un giocatore è il colore delle pedine che possiede, rappresentato dalla classe `Color`.\
 Questa interfaccia verrà usata dalla **logica** di gioco per gestire le mosse, il turno e il punteggio dei giocatori.
@@ -61,7 +61,7 @@ enum Opponent extends Player:
 
 ## PlacementStrategy
 
-La strategia di posizionamento è un'interfaccia che definisce il comportamento di un avversario in base a un dato contesto.
+La strategia di posizionamento è un `trait` che definisce il comportamento di un avversario in base a un dato contesto.
 
 ```scala
 trait PlacementStrategy[-C, O]:
@@ -70,7 +70,7 @@ trait PlacementStrategy[-C, O]:
 
 Il metodo `computePlacement` è una funzione `C => O`, che verrà eseguita dalla **logica** di gioco per calcolare la prossima mossa dell'avversario.
 
-Il tipo generico `C` è dichiarato **controvariante** con lo scopo di permettere il passaggio di un tipo `C` più generico a una strategia più che ne richiede uno più specifico, favorendo così il riuso in diversi contesti.
+Il tipo generico `C` è dichiarato **controvariante** con lo scopo di permettere il passaggio di un tipo `C` più generico a una strategia che ne richiede uno più specifico, favorendo così il riuso in diversi contesti.
 
 Inoltre grazie all'uso dei **contextual parameters**, è possibile definire nello *scope* delle classi chiamanti un contesto specifico attraverso un `given` e non doversi preoccupare di passarlo ogni volta che si invoca la strategia.
 
@@ -85,7 +85,7 @@ val position = player.strategy.computePlacement
 
 ### OpponentPlacementStrategy
 
-L'interfaccia che definisce le strategie di posizionamento degli avversari, estende l'interfaccia generica `PlacementStrategy` con la scacchiera (`Board`) come contesto e la posizione (`Position`) come output.
+Il `trait` che definisce le strategie di posizionamento degli avversari, estende l'interfaccia generica `PlacementStrategy` con la scacchiera (`Board`) come contesto e la posizione (`Position`) come output.
 
 ```scala
 sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position]
@@ -144,7 +144,7 @@ Inoltre impostando i valori di default a `Int.MinValue + 1` e `Int.MaxValue`, si
 
 A supporto di questo algoritmo è stata definita la classe `StrategyHelper`, che usa gli ***extension methods*** di Scala 3 per aggiungere dei metodi alle classi `Board` e `Position`.
 
-Le operazioni utilizzate esclusivamente dall'algoritmo non appartengono al dominio generale di Board e Position, ma rimangono localizzate nel modulo delle strategie, permettendo di mantenere l'algoritmo di ricerca pulito e leggibile senza impattare le classi originali.
+Le operazioni utilizzate esclusivamente dall'algoritmo non appartengono al dominio generale di `Board` e `Position`, ma rimangono localizzate nel modulo delle strategie, permettendo di mantenere l'algoritmo di ricerca pulito e leggibile senza impattare le classi originali.
 
 ```scala
   private object StrategyHelper:
@@ -159,7 +159,7 @@ Le operazioni utilizzate esclusivamente dall'algoritmo non appartengono al domin
 
 ## SaveManager
 
-L'interfaccia `SaveManager` serve a definire un gestore di salvataggio generico, che può salvare e caricare dati di qualsiasi tipo `C` in un percorso specificato dall'istanza che lo implementa.
+Il `trait SaveManager` serve a definire un gestore di salvataggio generico, che può salvare e caricare dati di qualsiasi tipo `C` in un percorso specificato dall'istanza che lo implementa.
 
 L'interfaccia implementa il *pattern **adapter*** attraverso il *contextual parameter* `Serializer[C]`, separando la gestione dei file dalla conversione del dominio nel formato utilizzato per la persistenza, delegando ad esso le operazioni di codifica e decodifica.
 
@@ -173,7 +173,7 @@ trait SaveManager[C]
   def deleteSaveFile(using filePath: Path): Try[Unit] = ...
 ```
 
-L'implementazione concreta per salvare e caricare i dati di gioco è definita nella classe `MatchStateSaveManager`, che implementa l'interfaccia `SaveManager` con il tipo `MatchState`:
+L'implementazione concreta per salvare e caricare i dati di gioco è definita nella classe `MatchStateSaveManager`, che implementa il `trait SaveManager` con il tipo `MatchState`:
 
 ```scala
 class MatchStateSaveManager(override val savePath: Path)
@@ -183,7 +183,7 @@ class MatchStateSaveManager(override val savePath: Path)
 
 ### Serializer
 
-La classe `Serializer` è un'interfaccia che fornisce funzioni di serializzazione `encode` e deserializzazione `decode` per un tipo generico `Class`.
+Il `trait Serializer` è un'interfaccia che espone funzioni di serializzazione `encode` e deserializzazione `decode` per un tipo generico `Class`.
 
 ```scala
 trait Serializer[Class](
@@ -236,7 +236,7 @@ private object SaveError:
 
 ## Conversioni implicite
 
-Per ridurre il boilerplate delle operazioni sulla classe `Position`, sono state definite **conversioni implicite** di diverso tipo:
+Per ridurre il *boilerplate* delle operazioni sulla classe `Position`, sono state definite **conversioni implicite** di diverso tipo:
 
 - Da `Tuple2[Int, Int]` a `Position`;
 
@@ -280,8 +280,8 @@ Position(1, 2) -> B
 Position(2, 1) -> B
 Position(2, 2) -> W
 // oppure con extension method
-"1, 1".toPosition -> W
-"1, 2".toPosition -> B
+"(1, 1)".toPosition -> W
+"(1, 2)".toPosition -> B
 (2, 1).toPosition -> B
 (2, 2).toPosition -> W
 ```
@@ -293,10 +293,10 @@ Position(2, 2) -> W
 (2, 1) -> B
 (2, 2) -> W
 // oppure
-"1, 1" -> W
-"1, 2" -> B
-"2, 1" -> B
-"2, 2" -> W
+"(1, 1)" -> W
+"(1, 2)" -> B
+"(2, 1)" -> B
+"(2, 2)" -> W
 ```
 
 ## Ottimizzazione delle prestazioni
@@ -310,7 +310,7 @@ Sono stati quindi introdotti i seguenti miglioramenti al codice al fine di migli
 
 - nel package `board`
   - Riscritto il metodo `BoardComputations.getOppositeColorNeighbors()` per ridurre il costo computazionale da $O(n^2)$ a $O(n)$, dove $n$ è il numero di celle della scacchiera.
-  - Riscritto il metodo `BoardComputations.placeDisk.captureDisks()` per rimuovere l'iterazione non necessaria di tutti i dischi, ma solo quelli che sono stati catturati.
+  - Riscritto il metodo `BoardComputations.placeDisk._captureDisks()` per rimuovere l'iterazione non necessaria di tutti i dischi, ma solo quelli che sono stati catturati.
   - Riscritto il metodo `Board.equals()` rimuovendo allocazioni non necessarie di oggetti `DiskState`
   - Aggiunto un parametro booleano `validatePosition` al metodo `Board.placeDisk()` per disabilitare la validazione della posizione quando non necessaria.
   - Impostato il valore `Board.state` a `lazy val` per evitare di ricalcolare lo stato quando non necessario.
@@ -318,6 +318,9 @@ Sono stati quindi introdotti i seguenti miglioramenti al codice al fine di migli
 - nel package `strategy`
   - Ottimizzato l'algoritmo di ricerca `StrategyComputations.negamax()` con *alpha-beta pruning* come descritto nella [sezione precedente](#strategycomputations).
   - Parallelizzazione dell'algoritmo tramite l'uso di `par` della libreria `scala-parallel-collections`
+
+    La valutazione delle diverse possibili mosse è indipendente: ogni ramo dell'albero di ricerca viene valutato a partire da una copia immutabile della `Board`.\
+    È quindi possibile parallelizzare la valutazione delle mosse senza introdurre sincronizzazione tra i diversi calcoli.
 
     ```scala
     object StrategyComputations:
