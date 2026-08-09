@@ -65,14 +65,14 @@ classDiagram
       + startMatch(shape: Shape, color: Color, opponent: OpponentType)
       + handleSelection(position: Position)
       + saveMatch(fileName: String)
-      + loadMatch(fileName: String): MatchState
+      + loadMatch(fileName: String) MatchState
       + saveFileNames: List~String~
       + deleteSaveFile(fileName: String)
     }
     class SaveManager {
       <<interface>>
       + save(data: MatchState, filePath: String)
-      + load(filePath: String): MatchState
+      + load(filePath: String) MatchState
       + saveFileNames: List~String~
       + deleteSaveFile(filePath: String)
     }
@@ -81,8 +81,8 @@ classDiagram
     class Logic {
       <<interface>>
       + state: MatchState
-      + placeUserDisk(position: Position): Logic
-      + placeOpponentDisk(): Logic
+      + placeUserDisk(position: Position) Logic
+      + placeOpponentDisk() Logic
     }
     class PlacementStrategy
     class Opponent

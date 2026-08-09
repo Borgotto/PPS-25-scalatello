@@ -10,11 +10,11 @@ Per prima cosa, in questa fase sono state maggiormente dettagliate le interazion
 classDiagram
   class Logic {
     + state: MatchState
-    + placeUserDisk(position: Position): Logic
-    + placeOpponentDisk(): Logic
+    + placeUserDisk(position: Position) Logic
+    + placeOpponentDisk() Logic
   }
   class PlacementStrategy {
-    + computePlacement(board: Board): Position
+    + computePlacement(board: Board) Position
   }
   class Opponent {
     + strategy: PlacementStrategy
@@ -22,13 +22,13 @@ classDiagram
   class User
   class Board {
     + state: BoardState
-    + isPlacementValid(diskColor: Color, diskPosition: Position): bool
-    + placeDisk(diskColor: Color, diskPosition: Position): Board
-    + getAvailablePlacements(diskColor: Color): Set~Position~
+    + isPlacementValid(diskColor: Color, diskPosition: Position) bool
+    + placeDisk(diskColor: Color, diskPosition: Position) Board
+    + getAvailablePlacements(diskColor: Color) Set~Position~
   }
   class Disk {
     + color: Color
-    + flip(): Disk
+    + flip() Disk
   }
   class Color {
     <<enumeration>>
@@ -403,17 +403,28 @@ classDiagram
   }
   class CLIView
   class I18n {
-    + t(key: String): String
+    + t(key: String) String
+  }
+  class InputComponent {
+    + askForOption~T~(...) IO~T~
+    + askForInteger(...) IO~int~
+    + askForConfirmation(...) IO~bool~
+    + askForFilename(...) IO~String~
+  }
+  class ShortcutManager {
+    + enableAppExitShortcut()
+    + enableMatchShortcuts()
+    + disableMatchShortcuts()
   }
   class CLIScreen {
     <<interface>>
-    + render(): IO~Unit~
+    + render() IO~Unit~
   }
 
   View <|-- CLIView
 
   CLIView --> I18n
   CLIView *-- InputComponent
+  CLIView *-- "1..*" CLIScreen
   CLIView --> ShortcutManager
-  CLIView *-- CLIScreen
 ```
