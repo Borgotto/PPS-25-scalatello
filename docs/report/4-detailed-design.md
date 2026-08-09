@@ -39,17 +39,17 @@ classDiagram
     + color: Color
   }
 
-  Logic --> PlacementStrategy: applies
-  Logic --> Opponent
-  Logic --> User
-  Logic --> Board
+  Logic ..> PlacementStrategy: applies
+  Logic *-- Opponent
+  Logic *-- User
+  Logic *-- Board
 
   Opponent --> PlacementStrategy
   Opponent --|> Player
   User --|> Player
   Player --> Color: is assigned
-  PlacementStrategy --> Board
-  Board --> Disk
+  PlacementStrategy ..> Board
+  Board *-- Disk
   Disk --> Color: has
 ```
 
@@ -69,6 +69,7 @@ Nel diagramma sottostante è inoltre dettagliata la struttura di `MatchState` (c
 ```mermaid
 classDiagram
     class MatchState {
+      <<record>>
       + status: MatchStatus
       + user: User
       + opponent: Opponent
@@ -83,6 +84,7 @@ classDiagram
       Tie
     }
     class BoardState {
+      <<record>>
       + shape: Shape
       + disks: Set~DiskState~
       + userAvailablePlacements: Set~Position~
@@ -96,6 +98,7 @@ classDiagram
       + width: int
     }
     class DiskState {
+      <<record>>
       + color: Color
       + position: Position
     }
@@ -105,6 +108,7 @@ classDiagram
       White
     }
     class Position {
+      <<record>>
       + row: int
       + column: int
     }
@@ -114,9 +118,9 @@ classDiagram
       Opponent
     }
 
-    MatchState --> BoardState
+    MatchState *-- BoardState
     MatchState --> MatchStatus
-    BoardState --> DiskState
+    BoardState *-- DiskState
     Shape <|-- Square
     Shape <|-- Rectangle
     BoardState --> Shape
@@ -389,3 +393,27 @@ classDiagram
 ```
 
 ## View
+
+```mermaid
+classDiagram
+  class View {
+    <<interface>>
+    + show()
+    + update(state: MatchState)
+  }
+  class CLIView
+  class I18n {
+    + t(key: String): String
+  }
+  class CLIScreen {
+    <<interface>>
+    + render(): IO~Unit~
+  }
+
+  View <|-- CLIView
+
+  CLIView --> I18n
+  CLIView *-- InputComponent
+  CLIView --> ShortcutManager
+  CLIView *-- CLIScreen
+```

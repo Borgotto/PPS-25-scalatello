@@ -89,13 +89,11 @@ classDiagram
     class User
     class Board
     class Disk
-    class Color {
-      <<enumeration>>
-    }
+    class Color
     class Player
   }
 
-  Logic --> PlacementStrategy: applies
+  Logic ..> PlacementStrategy: applies
   Logic *-- Opponent
   Logic *-- User
   Logic *-- Board
@@ -104,7 +102,7 @@ classDiagram
   Opponent --|> Player
   User --|> Player
   Player --> Color: is assigned
-  PlacementStrategy --> Board: applied on
+  PlacementStrategy ..> Board: applied on
   Board *-- Disk
   Disk --> Color: has
 
