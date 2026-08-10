@@ -43,5 +43,15 @@ Inoltre, è stato definito un altro extension method per ottenere una lista di s
 
 Link al codice:
 
-- [Extension method per il rendering della Board](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/BoardRendering.scala#L10-l42)
+- [Extension method per il rendering della Board](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/BoardRendering.scala#L10-L42)
 - [Extension method per la localizzazione di una sequenza di stringhe](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/i18n/I18n.scala#L24-L30)
+
+### Funzioni monadiche e for-comprehension
+
+Come accennato nel design di dettaglio della View, le funzioni di I/O su terminale adottano uno stile monadico: non eseguono direttamente l'operazione per poi ritornarne il risultato, bensì incapsulano l'operazione da eseguire all'interno di una monade (`IO`).
+
+In concomitanza con questo approccio, è stato utilizzato il costrutto di for-comprehension, che fornisce una sintassi più pulita per la concatenazione di funzioni monadiche.
+
+I costrutti appena citati sono stati utilizzati in maniera estesa nell'implementazione della View; [qui](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/InputComponent.scala#L57-L74) è possibile visualizzarne un esempio di utilizzo.
+
+**Nota:** si segnala che il codice che implementa la type class [Monad](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/utils/Monad.scala) e la monade [IO](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/IO.scala) è stato preso dal materiale del corso realizzato dal prof. Mirko Viroli.
