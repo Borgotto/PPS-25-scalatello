@@ -80,9 +80,9 @@ Questo rende i test contenuti nella classe `BoardTest` facilmente estendibili a 
 
 In questa classe sono contenuti i test che riguardano la classe: `ComputationsPosExtensionsRectangle`. 
 
-Questa classe di test è facilmente estendibile alle possibili future implementazioni del `trait` `ComputationsPosExtensions`:
+Questa classe di test è facilmente estendibile alle possibili future implementazioni del `trait` `ComputationsPosExtensions` (senza dover scrivere nuovi test uguali per ogni nuova implementazione):
 
-- importando il metodo del nuovo `object` creato;
+- importando il metodo del nuovo `object` creato (utilizzando un alias per evitare ambiguità);
 - aggiungendo i nuovi parametri nella tabella del test;
 - aggiungendo un `case` nel `match case` presente nel test.
 
