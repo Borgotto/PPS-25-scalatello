@@ -13,8 +13,11 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
 import org.scalatest.ParallelTestExecution
 
-/** Test suite for opponent placement strategy. */
-class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenPropertyChecks with ParallelTestExecution:
+/** Test suite for PlacementStrategy. */
+class PlacementStrategyTest
+  extends AnyFlatSpec 
+    with TableDrivenPropertyChecks
+    with ParallelTestExecution:
 
   "ErraticOpponentPlacementStrategy" should "return a valid placement" in:
     given board: Board = """
@@ -82,7 +85,6 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
         val position: Position = opponent.strategy.computePlacement
         availablePlacements should contain (position)
 
-      // todo(borghini): find a hardware independent way to test performance
       it should s"finish within ${expectedTime}ms for ${availablePlacements.size} available moves at depth ${depth}" in:
         val numberOfRuns = 3
         val totalTime = (1 to numberOfRuns).map( _ =>
@@ -91,8 +93,8 @@ class OpponentPlacementStrategyTest extends AnyFlatSpec with TableDrivenProperty
           val timeTaken = System.currentTimeMillis() - startTime
           timeTaken
         )
-        val averageTime = totalTime.sum.toDouble / numberOfRuns
-        assert(averageTime < expectedTime, s"SmartOpponentPlacementStrategy took too long on average: ${averageTime} ms")
+        val averageTime = totalTime.sum / numberOfRuns
+        averageTime should be < expectedTime
 
       def playWholeMatch(player: Opponent)(using difficulty: OpponentType): Logic =
         val logic = Logic(b.state.shape, player.color, difficulty)

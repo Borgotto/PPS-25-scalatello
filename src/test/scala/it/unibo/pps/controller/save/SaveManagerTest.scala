@@ -7,7 +7,7 @@ import it.unibo.pps.model.player.User
 import it.unibo.pps.state.*
 import it.unibo.pps.utils.Serializer.{Serializer, Serializers}
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe, shouldEqual}
+import org.scalatest.matchers.should.Matchers.{be, noException, shouldBe, shouldEqual, should, contain}
 import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor3}
 import os.{Path, read, temp, write}
 
@@ -82,12 +82,27 @@ class SaveManagerTest extends AnyFlatSpec with TableDrivenPropertyChecks:
         it should "load data correctly" in:
           write.over(tmpFile, encoded(data))
           saveManager.load(using tmpFile) shouldBe Success(data)
+          
+        it should "delete the saved file correctly" in:
+          saveManager.save(data)(using tmpFile)
+          saveManager.deleteSaveFile(using tmpFile) shouldBe Success(())
+          os.exists(tmpFile) shouldBe false
+          
+        it should "list the saved files correctly" in:
+          saveManager.save(data)(using tmpFile)
+          saveManager.saveFileNames should contain (tmpFile.last)
 
         it should "not throw an exception when saving data" in:
           noException should be thrownBy saveManager.save(data)(using tmpFile)
 
         it should "not throw an exception when loading data" in:
           noException should be thrownBy saveManager.load(using tmpFile)
+          
+        it should "not throw an exception when deleting the saved file" in:
+          noException should be thrownBy saveManager.deleteSaveFile(using tmpFile)
+          
+        it should "not throw an exception when listing the saved files" in:
+          noException should be thrownBy saveManager.saveFileNames
 
         it should "return identical data after round-trip save and load" in:
           saveManager.save(data)(using tmpFile)
