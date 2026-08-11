@@ -14,18 +14,6 @@
 
 ## Metodologia di testing
 
-### Test Driven Development
-
-Lo sviluppo delle componenti è stato effettuato seguendo la metodologia
-Test Driven Development.\
-Per ogni funzionalità è stato inizialmente definito il comportamento atteso attraverso uno o più test, per poi procedere con l'implementazione.
-
-Il processo seguito è stato quello del ciclo:
-
-1. **Red**: viene scritto un test relativo a una funzionalità non ancora implementata, che inizialmente fallisce;
-2. **Green**: viene implementata la quantità minima di codice necessaria per far passare il test;
-3. **Refactor**: il codice viene riorganizzato e migliorato mantenendo invariato il comportamento verificato dai test.
-
 ### Uso di Mockito
 
 Durante la prima fase di sviluppo, le mie componenti da implementare avevano bisogno di diverse dipendenze, tra cui:
