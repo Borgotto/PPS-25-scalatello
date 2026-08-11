@@ -439,3 +439,65 @@ classDiagram
   CLIView *-- "1..*" CLIScreen
   CLIView --> ShortcutManager
 ```
+
+## Organizzazione del codice
+
+Il diagramma sottostante raffigura la gerarchia di package prevista per l'organizzazione del codice, il cui contenuto è descritto nel seguito.
+
+- `model` contiene il codice relativo al Model e include i seguenti subpackage:
+  - `board` per il codice relativo alla Board, che include a sua volta un subpackage `computations` per il codice relativo ai calcoli legati alle operazioni della Board;
+  - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale.
+- `controller` contiene il codice relativo al Controller, incluso un subpackage `save` che contiene il codice relativo alla gestione dei salvataggi.
+- `view` contiene il codice relativo alla View e include i seguenti subpackage:
+  - `i18n` per il codice relativo alle funzioni di localizzazione;
+  - `cli` per il codice relativo all'implementazione della View su command-line interface (l'unica implementazione attualmente prevista), che include i seguenti subpackage:
+    - `io` per il codice relativo alle operazioni di I/O;
+    - `screens` per il codice relativo all'implementazione delle diverse parti dell'intefaccia.
+- `state` contiene le strutture dati dedicate alla memorizzazione dello stato di una partita.
+- `domain` contiene strutture dati che rappresentano concetti di dominio utilizzati da tutta l'applicazione (ad esempio, i concetti di colore, di forma della Board e di posizione sulla Board).
+- `observer` contiene le interfacce utilizzate per attuare il pattern Observer.
+- `utils` contiene altre utilities per cui non è stata individuata una locazione più specifica.
+
+```mermaid
+flowchart BT
+  root
+  model
+  controller
+  view
+  domain
+  state
+  observer
+  utils
+
+  board
+  player
+  strategy
+  computations
+
+  save
+
+  cli
+  i18n
+  io
+  screens
+
+  model --> root
+  controller --> root
+  view --> root
+  state --> root
+  domain --> root
+  observer --> root
+  utils --> root
+
+  board --> model
+  player --> model
+  computations --> board
+  strategy --> player
+
+  save --> controller
+
+  i18n --> view
+  cli --> view
+  io --> cli
+  screens --> cli
+```
