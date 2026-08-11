@@ -50,7 +50,7 @@ trait Board:
 
 /** Factory for [[Board]] instances. */
 object Board:
-  /** Given a shape, creates a board with the initial disks configuration.
+  /** Given a shape, creates a board with the initial disks' configuration.
    *  @param shape the [[domain.Shape]] of the board that will be created.
    */
   def apply(shape: Shape): Board =
@@ -88,7 +88,6 @@ object Board:
 /** Implements a generic board.
  * 
  *  Delegates the computations of its methods to an instance of the class [[BoardComputations]].
- *
  *  @param shape the [[domain.Shape]] of this board.
  *  @param disks the [[Disk]]s on this board.
  *  @param computations the context of [[ComputationsPosExtensions]], it contains the different computations

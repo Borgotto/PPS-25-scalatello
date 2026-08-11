@@ -8,8 +8,7 @@ import scala.annotation.tailrec
 /** The delegate class of [[BoardImpl]].
  *
  *  This helper class computes all the methods of its delegator.
- *
- *  @param board           the [[model.board.Board]] context, to make this class operate on the correct instance of board.
+ *  @param board the [[model.board.Board]] context, to make this class operate on the correct instance of board.
  *  @param computations the [[ComputationsPosExtensions]] context,
  *                         to make this class use the appropriate methods on different Boards.
  */
