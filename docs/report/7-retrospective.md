@@ -18,16 +18,16 @@ Alcune possibilità di evoluzione del progetto potrebbero essere le seguenti:
 
 - l'aggiunta di nuove forme per la Board;
 - l'aggiunta di nuove modalità di gioco (come la [modalità "a perdere"](https://it.wikipedia.org/wiki/Othello_%28gioco%29#Anti-reversi_o_Othello_a_perdere));
-- rendere la logica indipendente dal giocatore;
+- rendere il compimento delle mosse astratto dal tipo di giocatore;
 - l'implementazione di una un'interfaccia grafica.
 
-### Logica indipendente dal giocatore
+### Compimento delle mosse astratto dal tipo di giocatore
 
-Durante la realizzazione del progetto, è stata individuato il possibile intervento migliorativo descritto nel seguito. Esso non è poi stato effettuato in considerazione dei tempi stimati per la sua attuazione e delle tempistiche del progetto; lo riportiamo però come possibile sviluppo futuro.
+Durante la realizzazione del progetto, è stata individuato il possibile intervento migliorativo descritto nel seguito. Esso non è poi stato effettuato in considerazione delle tempistiche del progetto; lo riportiamo però come possibile sviluppo futuro.
 
 L'attributo `placementStrategy` potrebbe essere spostato nell'interfaccia `Player` e l'utente umano (`User`) potrebbe essere dotato di una `UserPlacementStrategy`, che consisterebbe nella funzione identità della posizione scelta dall'utente.
 
-Questa astrazione permetterebbe di avere una logica che gestisca i posizionamenti di ciascun giocatore mediante un unico metodo e in maniera astratta rispetto alla tipologia del giocatore.
+Questa astrazione permetterebbe di avere una logica che gestisca i posizionamenti di ciascun giocatore mediante un unico metodo e in maniera astratta rispetto alla tipologia del giocatore (umano o virtuale).
 
 La strategia sarebbe definita in questo modo:
 
@@ -41,7 +41,7 @@ class UserPlacementStrategy extends PlacementStrategy[Position, Position]:
 trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position]
 ```
 
-L'uso dei **contextual parameters** permetterebbe poi di usare le strategie senza dover conoscere il tipo concreto, nel seguente modo:
+L'uso dei parametri contestuali permetterebbe poi di usare le strategie senza dover conoscere il tipo concreto, nel seguente modo (all'interno del Controller):
 
 ```scala
 // Give context to the strategies
@@ -49,6 +49,7 @@ given Board = board
 given Position = playerChoice
 // Whether the player is a `User` or an `Opponent`, we can compute the placement
 val position = player.strategy.computePlacement
+logic = Some(logic.get.placeDisk(position))
 ```
 
 ### Interfaccia grafica
