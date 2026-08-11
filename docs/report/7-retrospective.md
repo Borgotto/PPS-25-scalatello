@@ -19,7 +19,7 @@ Alcune possibilità di evoluzione del progetto potrebbero essere le seguenti:
 - l'aggiunta di nuove forme per la Board;
 - l'aggiunta di nuove modalità di gioco (come la [modalità "a perdere"](https://it.wikipedia.org/wiki/Othello_%28gioco%29#Anti-reversi_o_Othello_a_perdere));
 - rendere il compimento delle mosse astratto dal tipo di giocatore;
-- l'implementazione di una un'interfaccia grafica.
+- l'implementazione di un'interfaccia grafica.
 
 ### Compimento delle mosse astratto dal tipo di giocatore
 
