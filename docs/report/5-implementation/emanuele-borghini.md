@@ -92,15 +92,6 @@ Il tipo generico `C` è dichiarato **controvariante** con lo scopo di permettere
 
 Inoltre grazie all'uso dei **contextual parameters**, è possibile definire nello *scope* delle classi chiamanti un contesto specifico attraverso un `given` e non doversi preoccupare di passarlo ogni volta che si invoca la strategia.
 
-<!-- todo: spostare questa parte in Retrospettiva
-Queste due caratteristiche permettono l'uso di strategie senza dover conoscere il tipo concreto in questo modo:
-
-```scala
-given Board = board
-val position = player.strategy.computePlacement
-```
--->
-
 #### OpponentPlacementStrategy
 
 ---
