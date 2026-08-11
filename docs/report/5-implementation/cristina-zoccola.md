@@ -1,18 +1,22 @@
 # Implementazione - Cristina Zoccola
 
+## Lavoro svolto
+
 All'interno del progetto mi sono occupata di implementare:
 
 - le pedine di gioco: [`Disk`](#disk);
 - la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: [`Board`](#board) (e il suo [`companion object`](#board-companion-object)), [`BoardImpl`](#boardimpl) [`BoardCreationExtensions`](#boardcreationextensions), [`BoardComputations`](#boardcomputations), [`ComputationsPosExtensions`](#computationsposextensions) e [`ComputationsPosExtensionsRectangle`](#computationsposextensionsrectangle);
 - alcuni *extension methods* di `Int` per aggevolare i calcoli da effettuare sulla `Board`: [`IntExtensions`](#intextensions);
 - il controller dell'applicazione, [`Controller`](#controller) (e il suo [`companion object`](#controller-companion-object)) e [`ControllerImpl`](#controllerimpl);
-- i [metodi nella classe `Position`](#metodi-in-position) per operare più facilmente con le posizioni delle pedine.
+- i [metodi nella classe `Position`](#metodi-in-position) per operare più facilmente con le posizioni delle pedine sulla scacchiera.
 
-## Disk
+## Aspetti implementativi rilevanti
+
+### Disk
 
 **Disk** è una `case class` che modella le pedine di gioco, come descritto nella sua sezione di [design di dettaglio](../4-detailed-design.md).
 
-## Board
+### Board
 
 ```mermaid
 classDiagram
@@ -23,10 +27,7 @@ classDiagram
   class BoardComputations
   class ComputationsPosExtensions {
     <<interface>>
-    + onSameDiagonal(firstPos: Position, secondPos: Position): Boolean
-    + inBetweenPos(firstPos: Position, secondPos: Position): Boolean
-    + inNeighbourhood(position: Position): Boolean
-    + inBounds(shape: Shape): Boolean
+    + inBounds(shape: Shape) Boolean
   }
   class ComputationsPosExtensionsRectangle
   Board --|> BoardImpl
@@ -42,14 +43,12 @@ classDiagram
 
 Questo `trait` è implementato dalla classe: `BoardImpl`.
 
-### BoardImpl
+#### **BoardImpl**
 
-**BoardImpl** è una `class` con visibilità `package private`, questo è stato fatto per rendere le *factory* contenute nel `companion object` di `Board` l'unico modo per istanziare la classe.
-
-Questa classe implementa il `trait` descritto sopra:
+**BoardImpl** è una `class` che implementa il `trait` descritto sopra:
 
 - la forma e i dischi sono i parametri della stessa;
-- implementando i metodi restanti al suo interno.
+- i metodi restanti sono implementati al suo interno.
 
 Le computazioni, richieste per implementare i diversi metodi, sono tutte delegate (**delegation pattern**, descritto nel [design di dettaglio](../4-detailed-design.md)) alla classe `BoardComputations`.
 
@@ -57,7 +56,7 @@ Essa utilizza un contesto di tipo `ComputationsPosExtensions`, tramite un `given
 
 All'interno della classe viene anche definito un `given` della stessa, da dare come contesto alla classe `BoardComputations` per permetterle di operare sull'istanza della `Board` corrente.
 
-### Board companion object
+#### **Board companion object**
 
 Il `companion object` del `trait` `Board`, contiene le **factory** (**factory pattern**) per istanziare la classe `BoardImpl`.
 
@@ -65,7 +64,7 @@ Contiene *factory* a partire da:
 
 - una forma, usata per istanziare una `BoardImpl` con la configurazione iniziale delle pedine;
 - lo stato di una `Board`, per ottenere una `BoardImpl` con quello stato, utile a ricreare la `Board` dopo il caricamento di un salvataggio;
-- la forma e le pedine, per creare una `BoardImpl` che abbia quella forma e quelle pedine.
+- la forma e le pedine, per creare una `BoardImpl` che abbia quella forma e quelle pedine su di essa.
 
 Per togliere verbosità, la prima *factory* citata, utilizza un metodo per ottenere una mappa di pedine a partire da una stringa, il metodo citato è contenuto nell'oggetto: `BoardCreationExtensions`.
 
@@ -78,11 +77,11 @@ def apply(shape: Shape, disks: Map[Position, Disk]): Board =
   BoardImpl(shape, disks)
 ```
 
-Ho fatto questa scelta per rendere il codice estendibile aggiungendo codice nuovo invece che modificando quello esistente: una volta aggiunta una nuova forma (`Shape`) tutto quello che resta da fare è:
-- creare una nuova classe che implementi `ComputationsPosExtensions` modificando e definendo il necessario;
+Ho fatto questa scelta per rendere il codice estendibile semplicamente aggiungendo codice nuovo e non modificando quello esistente: una volta aggiunta una nuova forma (`Shape`) tutto quello che resta da fare è:
+- creare un nuovo `object` che implementi `ComputationsPosExtensions`;
 - aggiungere un `case` al `match case` mostrato sopra.
 
-### BoardCreationExtensions
+#### **BoardCreationExtensions**
 
 **BoardCreationExtension** è un *singleton* `object`.
 
@@ -118,7 +117,7 @@ val initialDisks: Map[Position, Disk] =
       """.toPosDiskMap
 ```
 
-### BoardComputations
+#### **BoardComputations**
 
 **BoardComputations** è una `class` che utilizza due contesti tramite `given/using`: uno di tipo `Board` e l'altro di tipo `ComputationsPosExtensions`, entrambi approfonditi nei paragrafi precedenti.
 
@@ -136,6 +135,8 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
   ```
 
 - `for comprehension` con `guard`;
+  
+  esempio nel metodo: `getAvailablePlacements(Color)`:
 
   ```scala
   for
@@ -150,6 +151,8 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
 - `pattern matching`;
 - `tail recursion` con `pattern matching`.
 
+  esempio:
+
   ```scala
   @tailrec
   def _getNextEmptyPosition(diskPos: Position, direction: Position): 
@@ -159,7 +162,8 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
         case p
           if (!p.inBounds(board.shape)) ||
             (board.disks.contains(p) && 
-            board.disks(p).color.equals(diskColor)) => Option.empty
+            board.disks(p).color.equals(diskColor)) =>
+            Option.empty
         case p if board.disks.contains(p) => 
           _getNextEmptyPosition(p, direction)
         case p => Some(p)
@@ -167,38 +171,40 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
 
 Alcune parti del *refactor* effettuato su questa classe, sono state fatte in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md).
 
-### ComputationsPosExtensions
+#### **ComputationsPosExtensions**
 
 **ComputationsPosExtensions** è un `trait` che contiene un `extension method` di `Position`, questo metodo definisce i confini della scacchiera.
 
-### ComputationsPosExtensionsRectangle
+#### **ComputationsPosExtensionsRectangle**
 
 **ComputationsPosExtensionsRectangle** è un `object` che implementa il `trait` `ComputationsPosExtensions`.
 
 In questo `object` viene implementato il metodo definito nel `trait`: con i confini da rispettare in caso di scacchiera quadrata o rettangolare.
 
-## IntExtensions
+### IntExtensions
 
 **IntExtensions** è un *singleton* `object` di *utility*, che contiene `extension methods` di `Int`, utili per operare con le coordinate delle posizioni.
 
-## Controller
+### Controller
 
 **Controller** è un `trait` che descrive il *controller* dell'applicativo, si occupa di gestire la partita (turni e aggiornamenti) ma anche dei salvataggi.
 
-Esso è implementato come descritto nella sua sezione contenuta nel [design di dettaglio](../4-detailed-design.md):
+- gestisce la notifica degli aggiornamenti estendendo il `trait` `Publisher`;
+- gestisce i salvataggi interfacciandosi con il `SaveManager`.
 
-- gestisce la notifica degli aggiornamenti estendendo il `trait` `Publisher`, i metodi definiti lì, implementati all'interno di `ControllerImpl` (`subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])` e `notifySubscribers(MatchState)`), sono stati implemetati in collaborazione con: [Elena Boschetti](./elena-boschetti.md);
-- gestisce i salvataggi interfacciandosi con il `SaveManager`, i metodi creati per interfacciarsi con esso (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md).
+Esso è implementato come descritto nella sua sezione contenuta nel [design di dettaglio](../4-detailed-design.md):
 
 Questo `trait` è implementato dalla classe `ControllerImpl`.
 
-### ControllerImpl
+#### **ControllerImpl**
 
-**ControllerImpl** è una `class` con visibilità `package private` per lo stesso motivo descritto nella sezione [BoardImpl](#boardimpl).
+**ControllerImpl** è una `class` in cui mi sono quindi occupata del gestire l'inizio della partita e i turni dei giocatori, implementando i seguenti metodi: `startMatch(Shape, Color, OpponentType)`, `handleSelection(Position)` e `handleOpponentTurn()`.
 
-In questa classe mi sono quindi occupata del gestire l'inizio della partita e i turni dei giocatori, implementando i seguenti metodi: `startMatch(Shape, Color, OpponentType)`, `handleSelection(Position)` e `handleOpponentTurn()`.
+Per quanto riguarda gli altri metodi presenti al suo interno:
 
-Il metodo `isMatchOver` è stato implementato in collaborazione con: [Elena Boschetti](./elena-boschetti.md).
+- i seguenti metodi: `subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])` e `notifySubscribers(MatchState)` sono stati implemetati in collaborazione con: [Elena Boschetti](./elena-boschetti.md);
+- I metodi creati per interfacciarsi con il `SaveManager` (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md);
+- il metodo `isMatchOver` è stato implementato in collaborazione con: [Elena Boschetti](./elena-boschetti.md).
 
 In questa classe ho utilizzato le seguenti funzionalità di Scala:
 
@@ -224,11 +230,11 @@ Il *refactor* del metodo appena citato è stato fatto in collaborazione con: [El
 
 Dopo ogni cambiamento del `MatchState`, il controller notifica del cambiamento tutti i *subscribers* tramite la funzione `notifySubscribers(MatchState)`.
 
-### Controller companion object
+#### **Controller companion object**
 
-All'interno del `companion object` del `trait` `Controller`, è presente la *factory* (**factory pattern**) per istanziare la classe `ControllerImpl`.
+All'interno del `companion object` del `trait` `Controller`, è presente una *factory* (**factory pattern**) per istanziare la classe `ControllerImpl`.
 
-## Metodi in Position
+### Metodi in Position
 
 Ho implementato tutti i metodi presenti all'interno della `case class` `Position`.
 
@@ -249,4 +255,4 @@ def _getPosOnSameDiagonal(source: Position, destination: Position,
 
 Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di alcuni dei metodi implementati.
 
-I metodi che permettono di ottenere la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
+I metodi che permettono di "muoversi" lungo gli assi, ottenendo la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
