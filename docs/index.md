@@ -18,9 +18,9 @@ La relazione si articola nelle seguenti sezioni:
 6. [Testing](./report/6-testing/index.md)
 7. [Retrospettiva](./report/7-retrospective.md)
 
-## Sprint backlog
+## Documentazione di processo
 
-I backlog degli sprint sono documentati nella apposita sezione [backlogs](./process/index.md).
+I backlog degli sprint e i report degli sprint sono documentati nell'apposita sezione ["Documentazione di processo"](./process/index.md).
 
 ## Scaladoc
 

@@ -1,36 +1,35 @@
 # Retrospettiva
 
-Il processo di sviluppo seguito ci ha permesso di cimentarci in un progetto ben strutturato e simile a progetti lavorativi futuri.
+## Documentazione di processo
 
-Averlo seguito ci ha permesso di avere uno sviluppo con un andamento lineare, senza avere picchi di lavoro più intenso.
+La documentazione di processo, composta da backlog e report di ciascuno sprint, è disponibile alla [relativa pagina](../process/index.md).
 
-Il [design architetturale](./3-architectural-design.md) del dominio è stato deciso durante un incontro iniziale con la collaborazione di tutti i componenti.
+## Commenti finali
 
-Il lavoro invece è stato suddiviso, in modo equo, per decidere il [design di dettaglio](./4-detailed-design.md) dei diversi aspetti del dominio, per poi, di conseguenza, implementarli.
+Il processo di sviluppo adottato ha permesso di cimentarci in un progetto ben strutturato e più vicino alle dinamiche di un contesto lavorativo.
 
-Ad inizio progetto, seguendo il processo di sviluppo da noi scelto, abbiamo anche prefissato i diversi sprint in cui suddividerlo. Essi sono stati ampiamente rispettati, avendo alla fine degli stessi dei risultati concreti e verificabili anche grazie alla tecnica **TDD** da noi seguita.
+L'esperienza è stata positiva: l'organizzazione pianificata si è rivelata efficace, con una distribuzione del lavoro equa e sostenibile nel tempo a disposizione. Le scadenze di ciascuno sprint sono state sempre rispettate, ottenendo i risultati attesi al termine di essi. I [requisiti](./2-requirements.md) individuati sono stati pienamente soddisfatti, grazie sia all'efficace organizzazione del lavoro che alla collaborazione tra tutti i componenti del gruppo in caso di necessità.
 
-Anche i [requisiti](./2-requirements.md) da noi prefissati sono stati pienamente raggiunti, sia grazie all'aver rispettato gli sprint, ma anche grazie alla collaborazione tra tutti i componenti del gruppo in caso di necessità.
-
-Nel complesso ci riteniamo soddisfatti del risultato finale e del processo da noi seguito che ci ha permesso di arrivare ad esso.
+Nel complesso, ci riteniamo soddisfatti del risultato finale e del processo da noi seguito.
 
 ## Possibili sviluppi futuri
 
-- aggiungere nuove forme per la scacchiera;
-- aggiungere nuove modalità di gioco;
-- rendere la [logica indipendente dal giocatore](#logica-indipendente-dal-giocatore);
-- [aggiungere una GUI](#interfaccia-grafica).
+Alcune possibilità di evoluzione del progetto potrebbero essere le seguenti:
+
+- l'aggiunta di nuove forme per la Board;
+- l'aggiunta di nuove modalità di gioco (come la [modalità "a perdere"](https://it.wikipedia.org/wiki/Othello_%28gioco%29#Anti-reversi_o_Othello_a_perdere));
+- rendere la logica indipendente dal giocatore;
+- l'implementazione di una un'interfaccia grafica.
 
 ### Logica indipendente dal giocatore
 
-La classe `Player` e `PlacementStrategy` erano state inizialmente progettate per essere agnostiche al contesto in cui vengono utilizzate, ma la loro implementazione è stata successivamente vincolata al solo contesto del giocatore artificiale.
+Durante la realizzazione del progetto, è stata individuato il possibile intervento migliorativo descritto nel seguito. Esso non è poi stato effettuato in considerazione dei tempi stimati per la sua attuazione e delle tempistiche del progetto; lo riportiamo però come possibile sviluppo futuro.
 
-L'implementazione originale vedeva l'attributo `placementStrategy` nel `trait Player` e l'utente conteneva una `UserPlacementStrategy` mentre il giocatore artificiale conteneva una `OpponentPlacementStrategy`.\
-La strategia di posizionamento del giocatore non era altro che l'identità della posizione scelta dall'utente attraverso la *view*.
+L'attributo `placementStrategy` potrebbe essere spostato nell'interfaccia `Player` e l'utente umano (`User`) potrebbe essere dotato di una `UserPlacementStrategy`, che consisterebbe nella funzione identità della posizione scelta dall'utente.
 
-Questa astrazione avrebbe permesso di avere una logica che potesse svolgere i turni con contesti diversi (la scelta del giocatore umano e la scacchiera per l'avversario artificiale) ed eseguire la stessa funzione indipendentemente di quale tipo di giocatore fosse il turno.
+Questa astrazione permetterebbe di avere una logica che gestisca i posizionamenti di ciascun giocatore mediante un unico metodo e in maniera astratta rispetto alla tipologia del giocatore.
 
-Definita la strategia in questo modo:
+La strategia sarebbe definita in questo modo:
 
 ```scala
 trait PlacementStrategy[-C, O]:
@@ -42,7 +41,7 @@ class UserPlacementStrategy extends PlacementStrategy[Position, Position]:
 trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position]
 ```
 
-L'uso dei **contextual parameters** permette di usare le strategie senza dover conoscere il tipo concreto in questo modo:
+L'uso dei **contextual parameters** permetterebbe poi di usare le strategie senza dover conoscere il tipo concreto, nel seguente modo:
 
 ```scala
 // Give context to the strategies
@@ -52,14 +51,8 @@ given Position = playerChoice
 val position = player.strategy.computePlacement
 ```
 
-Per semplicità e per mancanza di tempo, il gruppo ha deciso di non implementare questa astrazione, ma di rimuovere l'attributo `placementStrategy` dal `trait Player` e di spostarlo nella classe `Opponent`.
-
-È possibile visionare la parte di codice relativa alle strategie nei primi commit del [*branch* `feature/placement-strategy`](https://github.com/Borgotto/PPS-25-scalatello/tree/feature/placement-strategy).
-
 ### Interfaccia grafica
 
-Visto che l'obiettivo principale del progetto era quello di sviluppare un programma funzionale e seguendo il processo TDD, oltre a questioni di tempo, il gruppo ha preferito concentrarsi sulla realizzazione di una interfaccia testuale.
+In virtù della sua maggiore essenzialità e della possibilità di avere maggiore tempo da dedicare ad altri aspetti del progetto, il gruppo ha preferito realizzare un'interfaccia testuale su terminale piuttosto che un'ìnterfaccia grafica.
 
-Un prototipo funzionante di interfaccia grafica è stato comunque realizzato, ma non terminato, il codice è presente nel [*branch* `feature/gui` della repository](https://github.com/Borgotto/PPS-25-scalatello/tree/feature/gui).
-
-L'interfaccia grafica è stata realizzata con la libreria [scala-swing](https://github.com/scala/scala-swing), un wrapper per la libreria Java Swing, che permette di realizzare interfacce grafiche in Scala.
+Un prototipo funzionante di interfaccia grafica, seppur incompleto, è stato comunque realizzato; il codice è disponibile sul [branch `feature/gui`](https://github.com/Borgotto/PPS-25-scalatello/tree/feature/gui) del repository. Il prototipo è stato realizzato usando la libreria [scala-swing](https://github.com/scala/scala-swing), un wrapper Scala della libreria Java Swing.

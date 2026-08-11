@@ -106,8 +106,7 @@ classDiagram
 
 - Per quanto concerne le mosse e la gestione dei turni, l'avversario virtuale è soggetto alle stesse regole dell'utente umano. Una mossa è valida nelle stesse condizioni in cui lo è per l'utente. Quando è il turno dell'avversario virtuale, se ha a disposizione mosse valide è obbligato a effettuarne una, mentre è obbligato a saltare il turno se non ne ha. Dopo che l'avversario virtuale compiuto una mossa valida, il turno passa all'utente, a meno che questi non abbia mosse valide a disposizione.
 - Quando è il turno dell'utente e l'utente ha mosse valide a disposizione, il sistema deve rendere evidenti all'utente le celle del terreno di gioco su cui l'utente può posizionare un proprio disco compiendo una mossa valida.
-- Quando è il turno dell'utente e l'utente non ha mosse valide a disposizione, il sistema deve notificare all’utente il fatto che il suo turno è automaticamente saltato per tale motivo.
-- Il sistema deve decretare la terminazione della partita e comunicarne l’esito all’utente appena si verifica una delle condizioni di terminazione riportate nelle [Regole del gioco](#regole-del-gioco).
+- Il sistema deve decretare la terminazione della partita e comunicarne l’esito all’utente appena si verifica una delle condizioni di terminazione riportate nelle [regole del gioco](#regole-del-gioco).
 
 ## Requisiti non funzionali
 
