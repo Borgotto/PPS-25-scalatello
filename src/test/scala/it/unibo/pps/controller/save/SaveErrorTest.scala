@@ -6,7 +6,6 @@ import it.unibo.pps.domain.{ActivePlayer, Color, MatchStatus, Shape}
 import it.unibo.pps.model.player.Opponent.ErraticOpponent
 import it.unibo.pps.model.player.User
 import it.unibo.pps.state.*
-import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{a, shouldBe}
 import os.{Path, temp, write}
@@ -15,7 +14,8 @@ import java.io.RandomAccessFile
 import scala.util.Failure
 
 /** Test suite for save errors. */
-class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
+class SaveErrorTest
+  extends AnyFlatSpec:
 
   private val tmpDir: Path = temp.dir()
   private val tmpFile: Path = tmpDir / "tmp_save_file.txt"
@@ -43,7 +43,7 @@ class SaveErrorTest extends AnyFlatSpec with BeforeAndAfterAll:
     catch
       case _ => // Ignore exception
     finally
-      assert(!os.exists(inaccessibleFile), "The inaccessible file should not be created after a failed save.")
+      os.exists(inaccessibleFile) shouldBe false
 
   "Loading" should "fail with a ReadError when trying to load from a non-existent file" in:
     saveManager.load(using inaccessibleFile) shouldBe a [Failure[ReadError]]
