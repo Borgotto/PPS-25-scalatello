@@ -103,7 +103,7 @@ classDiagram
   User --|> Player
   Player --> Color: is assigned
   PlacementStrategy ..> Board: applied on
-  Board *-- Disk
+  Board *-- "1..*" Disk
   Disk --> Color: has
 
   View --> Controller

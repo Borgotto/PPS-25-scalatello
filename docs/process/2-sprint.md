@@ -10,8 +10,8 @@ Al fine di semplificare questa prima fase di sviluppo, sono state escluse funzio
 
 Si ricorda che la suddivisione delle parti è la seguente:
 
-- implmentazione della logica di gioco: Elena Boschetti;
-- implementazione dell'avversario virtuale: Emanuele Borghini;
+- implementazione della logica di gioco: Elena Boschetti;
+- implementazione dei giocatori: Emanuele Borghini;
 - implementazione della board: Cristina Zoccola.
 
 ## Svolgimento

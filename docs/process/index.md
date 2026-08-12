@@ -2,7 +2,7 @@
 
 ## Sprint backlog
 
-Il backlog degli sprint è visibile nella sezione [Projects](https://github.com/Borgotto/PPS-25-scalatello/projects) del repository del progetto; per ciascuno sprint, sono elencati i task in esso inclusi, esplicitandone priorità, dimensione, stato e assegnatario.
+Il backlog degli sprint è visualizzabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1); per ciascuno sprint, sono elencati i task in esso inclusi, esplicitandone priorità, dimensione, stato e assegnatario.
 
 ## Sprint report
 

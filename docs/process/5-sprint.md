@@ -3,7 +3,7 @@
 ## Obiettivi
 
 - Implementazione delle altre strategie previste (oltre a quella randomica già implementata) per l'avversario virtuale (assegnata a Emanuele Borghini).
-- Ottimizzazione delle prestazioni degli algoritmi che realizzano le strategie (assegnata a Emanuele Borghini).
+- Ottimizzazione delle prestazioni degli algoritmi che realizzano le strategie dell'avversario (assegnata a Emanuele Borghini).
 - Implementazione della scelta della strategia dell'avversario nella View (assegnata a Elena Boschetti).
 - Refactoring finale e redazione Scaladoc (svolti da tutti i componenti del gruppo).
 
@@ -13,7 +13,7 @@ Mentre Emanuele Borghini si è occupato del task di implementazione delle strate
 
 Una volta conclusa l'implementazione delle strategie dell'avversario, Elena Boschetti ha provveduto all'implementazione della scelta della strategia nella View.
 
-Una volta concluso il refactoring da tutti i componenti del gruppo, ci si è dedicati alla scrittura della Scaladoc. In merito a ciò, il giorno 24/07/2026 si è svolto un breve incontro per chiarire gli standard da seguire.
+Una volta concluso il refactoring da parte di tutti i componenti del gruppo, ci si è dedicati alla scrittura della Scaladoc. In merito a ciò, il giorno 24/07/2026 si è svolto un breve incontro per chiarire gli standard da seguire.
 
 ## Esito
 

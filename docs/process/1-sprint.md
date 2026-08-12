@@ -2,11 +2,11 @@
 
 ## Obiettivi
 
-In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione:
+In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione, portando a termine le seguenti attività:
 
 - design architetturale (svolto in collaborazione);
 - design della *Board* (assegnato a Cristina Zoccola);
-- design dell'avversario virtuale (assegnato a Emanuele Borghini);
+- design dei giocatori (assegnato a Emanuele Borghini);
 - design della logica di gioco (assegnato a Elena Boschetti);
 - design del *Controller* (assegnato a Cristina Zoccola);
 - design della gestione dei salvataggi (assegnato a Emanuele Borghini);
