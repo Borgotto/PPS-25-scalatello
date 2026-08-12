@@ -5,7 +5,7 @@
 All'interno del progetto mi sono occupata di implementare:
 
 - le pedine di gioco: [`Disk`](#disk);
-- la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: [`Board`](#board) (e il suo [`companion object`](#board-companion-object)), [`BoardImpl`](#boardimpl) [`BoardCreationExtensions`](#boardcreationextensions), [`BoardComputations`](#boardcomputations), [`ComputationsPosExtensions`](#computationsposextensions) e [`ComputationsPosExtensionsRectangle`](#computationsposextensionsrectangle);
+- la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: [`Board`](#board) (e il suo [`companion object`](#board-companion-object)), [`BoardImpl`](#boardimpl), [`BoardCreationExtensions`](#boardcreationextensions), [`BoardComputations`](#boardcomputations), [`ComputationsPosExtensions`](#computationsposextensions) e [`ComputationsPosExtensionsRectangle`](#computationsposextensionsrectangle);
 - alcuni *extension methods* di `Int` per aggevolare i calcoli da effettuare sulla `Board`: [`IntExtensions`](#intextensions);
 - il controller dell'applicazione, [`Controller`](#controller) (e il suo [`companion object`](#controller-companion-object)) e [`ControllerImpl`](#controllerimpl);
 - i [metodi nella classe `Position`](#metodi-in-position) per operare più facilmente con le posizioni delle pedine sulla scacchiera.
@@ -30,8 +30,8 @@ classDiagram
     + inBounds(shape: Shape) Boolean
   }
   class ComputationsPosExtensionsRectangle
-  Board --|> BoardImpl
-  ComputationsPosExtensions --|> ComputationsPosExtensionsRectangle
+  Board <|-- BoardImpl
+  ComputationsPosExtensions <|-- ComputationsPosExtensionsRectangle
   BoardComputations --> Board: using
   BoardComputations --> ComputationsPosExtensions: using
   BoardImpl --> ComputationsPosExtensions: using
@@ -43,7 +43,7 @@ classDiagram
 
 Questo `trait` è implementato dalla classe: `BoardImpl`.
 
-#### **BoardImpl**
+#### BoardImpl
 
 **BoardImpl** è una `class` che implementa il `trait` descritto sopra:
 
@@ -56,7 +56,7 @@ Essa utilizza un contesto di tipo `ComputationsPosExtensions`, tramite un `given
 
 All'interno della classe viene anche definito un `given` della stessa, da dare come contesto alla classe `BoardComputations` per permetterle di operare sull'istanza della `Board` corrente.
 
-#### **Board companion object**
+#### Board companion object
 
 Il `companion object` del `trait` `Board`, contiene le **factory** (**factory pattern**) per istanziare la classe `BoardImpl`.
 
@@ -78,10 +78,11 @@ def apply(shape: Shape, disks: Map[Position, Disk]): Board =
 ```
 
 Ho fatto questa scelta per rendere il codice estendibile semplicamente aggiungendo codice nuovo e non modificando quello esistente: una volta aggiunta una nuova forma (`Shape`) tutto quello che resta da fare è:
+
 - creare un nuovo `object` che implementi `ComputationsPosExtensions`;
 - aggiungere un `case` al `match case` mostrato sopra.
 
-#### **BoardCreationExtensions**
+#### BoardCreationExtensions
 
 **BoardCreationExtension** è un *singleton* `object`.
 
@@ -117,7 +118,7 @@ val initialDisks: Map[Position, Disk] =
       """.toPosDiskMap
 ```
 
-#### **BoardComputations**
+#### BoardComputations
 
 **BoardComputations** è una `class` che utilizza due contesti tramite `given/using`: uno di tipo `Board` e l'altro di tipo `ComputationsPosExtensions`, entrambi approfonditi nei paragrafi precedenti.
 
@@ -171,13 +172,13 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
 
 Alcune parti del *refactor* effettuato su questa classe, sono state fatte in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md).
 
-#### **ComputationsPosExtensions**
+#### ComputationsPosExtensions
 
 **ComputationsPosExtensions** è un `trait` che contiene un `extension method` di `Position`, questo metodo definisce i confini della scacchiera.
 
-#### **ComputationsPosExtensionsRectangle**
+#### ComputationsPosExtensionsRectangle
 
-**ComputationsPosExtensionsRectangle** è un `object` che implementa il `trait` `ComputationsPosExtensions`.
+**ComputationsPosExtensionsRectangle** è un *singleton* `object` che implementa il `trait` `ComputationsPosExtensions`.
 
 In questo `object` viene implementato il metodo definito nel `trait`: con i confini da rispettare in caso di scacchiera quadrata o rettangolare.
 
@@ -187,7 +188,7 @@ In questo `object` viene implementato il metodo definito nel `trait`: con i conf
 
 ### Controller
 
-**Controller** è un `trait` che descrive il *controller* dell'applicativo, si occupa di gestire la partita (turni e aggiornamenti) ma anche dei salvataggi.
+**Controller** è un `trait` che descrive il *controller* dell'applicativo, si occupa di gestire la partita (turni e aggiornamenti) e dei salvataggi:
 
 - gestisce la notifica degli aggiornamenti estendendo il `trait` `Publisher`;
 - gestisce i salvataggi interfacciandosi con il `SaveManager`.
@@ -196,9 +197,9 @@ Esso è implementato come descritto nella sua sezione contenuta nel [design di d
 
 Questo `trait` è implementato dalla classe `ControllerImpl`.
 
-#### **ControllerImpl**
+#### ControllerImpl
 
-**ControllerImpl** è una `class` in cui mi sono quindi occupata del gestire l'inizio della partita e i turni dei giocatori, implementando i seguenti metodi: `startMatch(Shape, Color, OpponentType)`, `handleSelection(Position)` e `handleOpponentTurn()`.
+**ControllerImpl** è una `class` in cui ho implementato in autonomia la gestione dell'inizio della partita e dei turni dei giocatori, tramite i seguenti metodi: `startMatch(Shape, Color, OpponentType)`, `handleSelection(Position)` e `handleOpponentTurn()`.
 
 Per quanto riguarda gli altri metodi presenti al suo interno:
 
@@ -230,7 +231,7 @@ Il *refactor* del metodo appena citato è stato fatto in collaborazione con: [El
 
 Dopo ogni cambiamento del `MatchState`, il controller notifica del cambiamento tutti i *subscribers* tramite la funzione `notifySubscribers(MatchState)`.
 
-#### **Controller companion object**
+#### Controller companion object
 
 All'interno del `companion object` del `trait` `Controller`, è presente una *factory* (**factory pattern**) per istanziare la classe `ControllerImpl`.
 

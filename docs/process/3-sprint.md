@@ -12,7 +12,9 @@ L'obiettivo successivo è stato lo sviluppo delle seguenti parti:
 
 Similmente allo sprint precedente, si è desiderato pervenire all'implementazione individuale di queste parti; la loro integrazione è prevista per il prossimo sprint.
 
-Il corretto comportamento di Controller e Save Manager sarà garantito da suite di test automatizzati, che faranno temporaneamente uso di Mockito per creare mock in sostituzione delle componenti non ancora integrate. Per quanto riguarda la View, il risultato desiderato sarà invece verificato mediante test manuali e, in mancanza dell'integrazione con il Controller, i mock degli stati della partita saranno definiti manualmente.
+Il corretto comportamento di Controller e Save Manager sarà garantito da suite di test automatizzati, che faranno temporaneamente uso di Mockito per creare mock in sostituzione delle componenti non ancora integrate.
+
+Per quanto riguarda la View, il risultato desiderato sarà invece verificato mediante test manuali e, in mancanza dell'integrazione con il Controller, i mock degli stati della partita saranno definiti manualmente.
 
 ## Svolgimento
 
@@ -24,4 +26,8 @@ Successivamente, ciascuno componente del gruppo si è dedicato allo sviluppo del
 
 Gli obiettivi dello sprint sono stati raggiunti.
 
-Nel prossimo sprint, si può quindi procedere all'integrazione di Model, Controller, View e Save Manager, che sarà svolta da Elena Boschetti. Nello stesso sprint, sarà inoltre implementata la parte di View relativa alla gestione dei salvataggi. Si è deciso inoltre di effettuare, dopo aver completato le due attività appena indicate, un refactoring intermedio per migliorare il codice finora prodotto.
+Nel prossimo sprint, si può quindi procedere all'integrazione di Model, Controller, View e Save Manager, che sarà svolta da Elena Boschetti.
+
+Nello stesso sprint, sarà implementata la parte di View relativa alla gestione dei salvataggi.
+
+Si è deciso inoltre di effettuare, dopo aver completato le due attività appena indicate, un refactoring intermedio per migliorare il codice finora prodotto.

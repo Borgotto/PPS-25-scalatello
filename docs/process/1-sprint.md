@@ -2,21 +2,21 @@
 
 ## Obiettivi
 
-In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione.
+In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione:
 
-- Design architetturale (svolto in collaborazione)
-- Design della Board (assegnato a Cristina Zoccola)
-- Design dell'avversario virtuale (assegnato a Emanuele Borghini)
-- Design della logica di gioco (assegnato a Elena Boschetti)
-- Design del Controller (assegnato a Cristina Zoccola)
-- Design della gestione dei salvataggi (assegnato a Emanuele Borghini)
-- Design della View (assegnato a Elena Boschetti)
+- design architetturale (svolto in collaborazione);
+- design della *Board* (assegnato a Cristina Zoccola);
+- design dell'avversario virtuale (assegnato a Emanuele Borghini);
+- design della logica di gioco (assegnato a Elena Boschetti);
+- design del *Controller* (assegnato a Cristina Zoccola);
+- design della gestione dei salvataggi (assegnato a Emanuele Borghini);
+- design della *View* (assegnato a Elena Boschetti).
 
 ## Svolgimento
 
 Il 23/06/2026, primo giorno dello sprint, è stato svolto un incontro da remoto tramite piattaforma *Discord*, per lavorare sul design architetturale. Entro il termine dell'incontro, il gruppo è pervenuto ad una prima versione del design architetturale.
 
-Dal giorno successivo, ciascun componente del gruppo ha iniziato a lavorare sul design di dettaglio della propria parte, tenendo anche traccia di dubbi e possibili modifiche relative all'interazione tra le diverse parti. Un secondo incontro, sempre da remoto, è stato svolto il giorno 25/06/2026 proprio per discutere di tali punti.
+Dal giorno successivo, ciascun componente del gruppo ha iniziato a lavorare sul design di dettaglio, tenendo anche traccia di dubbi e possibili modifiche relative all'interazione tra le diverse parti. Un secondo incontro, sempre da remoto, è stato svolto il giorno 25/06/2026 proprio per discutere di tali punti.
 
 Successivamente al secondo incontro, i componenti del gruppo hanno lavorato in autonomia fino al termine dello sprint per completare il design di dettaglio della propria parte.
 

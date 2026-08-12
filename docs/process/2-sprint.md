@@ -2,13 +2,17 @@
 
 ## Obiettivi
 
-L'obiettivo di questo sprint è che ciascun componente del gruppo pervenga ad una prima implementazione correttamente funzionante della propria parte di Model, il cui comportamento sia verificato mediante unit test automatizzati. Il soddisfacimento di questo obiettivo consentirà poi di procedere all'integrazione delle diverse parti del Model, ottenendone una prima versione, per poi procedere con lo sviluppo di Controller e View. Al fine di semplificare questa prima fase di sviluppo, sono state escluse funzionalità che esulano dalle dinamiche di gioco essenziali previste dalle regole di Othello; ad esempio, tra le strategie dell'avversario virtuale è stata prevista l'implementazione solo di quella randomica.
+L'obiettivo di questo sprint è che ciascun componente del gruppo pervenga ad una prima implementazione correttamente funzionante della propria parte di Model, il cui comportamento sia verificato mediante unit test automatizzati.
+
+Il soddisfacimento di questo obiettivo consentirà poi di procedere all'integrazione delle diverse parti del Model, ottenendone una prima versione, per poi procedere con lo sviluppo di Controller e View.
+
+Al fine di semplificare questa prima fase di sviluppo, sono state escluse funzionalità che esulano dalle dinamiche di gioco essenziali previste dalle regole di Othello. Ad esempio, tra le strategie dell'avversario virtuale è stata prevista l'implementazione solo di quella randomica.
 
 Si ricorda che la suddivisione delle parti è la seguente:
 
-- Implmentazione della logica di gioco: Elena Boschetti
-- Implementazione dell'avversario virtuale: Emanuele Borghini
-- Implementazione della board: Cristina Zoccola
+- implmentazione della logica di gioco: Elena Boschetti;
+- implementazione dell'avversario virtuale: Emanuele Borghini;
+- implementazione della board: Cristina Zoccola.
 
 ## Svolgimento
 

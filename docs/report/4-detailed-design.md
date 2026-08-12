@@ -22,9 +22,9 @@ classDiagram
   class User
   class Board {
     + state: BoardState
-    + isPlacementValid(diskColor: Color, diskPosition: Position) bool
-    + placeDisk(diskColor: Color, diskPosition: Position) Board
     + getAvailablePlacements(diskColor: Color) Set~Position~
+    + isPlacementValid(diskColor: Color, diskPosition: Position) Boolean
+    + placeDisk(diskColor: Color, diskPosition: Position) Board
   }
   class Disk {
     + color: Color
@@ -130,7 +130,7 @@ classDiagram
     MatchState --> ActivePlayer
 ```
 
-### Board
+### Board e Disk
 
 `Disk` è un componente del Model che modella le pedine (o dischi) del gioco.
 
@@ -139,7 +139,7 @@ classDiagram
   class Disk {
     <<interface>>
     + color: Color
-    + flip(): Disk
+    + flip() Disk
   }
 ```
 
@@ -148,7 +148,7 @@ Nello specifico:
 - `color` restituisce il suo colore;
 - `flip()` capovolge il disco (cambiandone il colore).
 
-Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore opposto a quello precedente, per semplificare la cosa verrà usato il **factory pattern**.
+Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore presente sull'altra faccia del disco da capovolgere.
 
 Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
 
@@ -161,28 +161,28 @@ classDiagram
 	  ~ shape: Shape
     ~ disks: Map~Position, Disk~
     + state: BoardState
-    + getAvailablePlacements(color: Color): Set~Position~
-    + isPlacementValid(position: Position, color: Color): Boolean
-    + placeDisk(position: Position, color: Color): Board
+    + getAvailablePlacements(color: Color) Set~Position~
+    + isPlacementValid(position: Position, color: Color) Boolean
+    + placeDisk(position: Position, color: Color) Board
   }
   class BoardComputations {
-    + getAvailablePlacements(color: Color): Set~Position~
-    + isPlacementValid(position: Position, color: Color): Boolean
-    + placeDisk(position: Position, color: Color): Board
+    + getAvailablePlacements(color: Color) Set~Position~
+    + isPlacementValid(position: Position, color: Color) Boolean
+    + placeDisk(position: Position, color: Color) Board
   }
   Board --> BoardComputations: delegates
 ```
 
 In particolare:
 
-- `shape` la forma della scacchiera;
-- `disks` tutti i dischi presenti sulla scacchiera;
-- `state` lo stato attuale della scacchiera;
+- `shape` è la forma della scacchiera;
+- `disks` sono tutti i dischi presenti sulla scacchiera;
+- `state` è lo stato attuale della scacchiera;
+- `getAvailablePlacements()` restituisce tutte le posizioni delle mosse valide del giocatore specificato;
 - `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
-- `getAvailablePlacements()` restituisce tutte le posizioni delle possibili mosse valide;
-- `placeDisk()` inserisce un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate;
+- `placeDisk()` posiziona un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate.
 
-Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*; per semplificare questa operazione viene utilizzato il **factory pattern**.
+Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*. Per semplificare questa operazione viene utilizzato il **factory pattern**.
 
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**:
 
@@ -201,10 +201,10 @@ classDiagram
     class User
     class Opponent <<Enumeration>> {
         + strategy: PlacementStrategy
-        + ErraticOpponent(color: Color): Opponent
-        + EasyOpponent(color: Color): Opponent
-        + MediumOpponent(color: Color): Opponent
-        + HardOpponent(color: Color): Opponent
+        + ErraticOpponent(color: Color) Opponent
+        + EasyOpponent(color: Color) Opponent
+        + MediumOpponent(color: Color) Opponent
+        + HardOpponent(color: Color) Opponent
     }
 
     Player <|-- User
@@ -213,21 +213,21 @@ classDiagram
 
 ### Strategie dell'avversario
 
-La placement strategy è una interfaccia che permette di definire il comportamento di un giocatore.
+La placement strategy è un'interfaccia che permette di definire il comportamento di un giocatore.
 
 Per l'avversario virtuale, la placement strategy consiste nel calcolare la mossa da eseguire in base a uno stile di gioco predefinito, come ad esempio massimizzare il numero di pedine catturate o minimizzare il numero di pedine catturate dall'avversario.
 
 - Pattern Strategy
 
   La "strategia di mossa" consiste nel calcolare come il giocatore sceglie la posizione in cui piazzare il disco.\
-  È una funzione che data una informazione restituisce la posizione in cui il giocatore vuole piazzare il disco.
+  È una funzione che data un'informazione restituisce la posizione in cui il giocatore vuole piazzare il disco.
 
   Questo approccio permette di separare la logica del gioco dalla logica decisionale dei giocatori, rendendo più semplice l'implementazione di diversi tipi di avversari virtuali con differenti stili di gioco.
 
 ```mermaid
 classDiagram
     class PlacementStrategy~-C, O~ <<Interface>> {
-        + computePlacement(using context: C)*: O
+        + computePlacement(using context: C)* O
     }
     class OpponentPlacementStrategy ~Board, Position~ {
     }
@@ -238,7 +238,7 @@ classDiagram
     class SmartPlacementStrategy {
         + color: Color
         + depth: Int
-        + computePlacement(using board: Board): Position
+        + computePlacement(using board: Board) Position
     }
 
     PlacementStrategy <|.. OpponentPlacementStrategy
@@ -283,8 +283,8 @@ classDiagram
 		+ startMatch(shape: Shape, color: Color, opponent: OpponentType)
 		+ handleSelection(position: Position)
 		+ saveMatch(fileName: String)
-		+ loadMatch(fileName: String): MatchState
-		+ saveFileNames(): Seq[String]
+		+ loadMatch(fileName: String) MatchState
+		+ saveFileNames() Seq[String]
 		+ deleteSaveFile(fileName: String)
 	}
 ```
@@ -302,7 +302,7 @@ In dettaglio:
 
 Il save manager è un componente del controller che si occupa di gestire il salvataggio e il caricamento delle partite.
 
-Solo una istanza del save manager è presente all'interno del controller.\
+Solo un'istanza del save manager è presente all'interno del controller.\
 Questa istanza può salvare più partite, ognuna in un file separato all'interno di una cartella passata come parametro al momento della creazione del save manager.
 
 - Pattern Adapter
@@ -315,7 +315,7 @@ classDiagram
   class SaveManager <<Interface>> {
     + save(data)(filePath)
     + load(filePath)
-    + saveFileNames(): Seq[String]
+    + saveFileNames() Seq[String]
     + deleteSaveFile(filePath)
   }
 ```
@@ -442,20 +442,20 @@ classDiagram
 
 ## Organizzazione del codice
 
-Il diagramma sottostante raffigura la gerarchia di package prevista per l'organizzazione del codice, il cui contenuto è descritto nel seguito.
+Il diagramma sottostante raffigura la gerarchia di package prevista per l'organizzazione del codice, il cui contenuto è descritto nel seguito:
 
 - `model` contiene il codice relativo al Model e include i seguenti subpackage:
   - `board` per il codice relativo alla Board, che include a sua volta un subpackage `computations` per il codice relativo ai calcoli legati alle operazioni della Board;
-  - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale.
-- `controller` contiene il codice relativo al Controller, incluso un subpackage `save` che contiene il codice relativo alla gestione dei salvataggi.
+  - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale;
+- `controller` contiene il codice relativo al Controller, incluso un subpackage `save` che contiene il codice relativo alla gestione dei salvataggi;
 - `view` contiene il codice relativo alla View e include i seguenti subpackage:
   - `i18n` per il codice relativo alla localizzazione;
   - `cli` per il codice relativo all'implementazione della View su command-line interface (l'unica implementazione attualmente prevista), che include i seguenti subpackage:
     - `io` per il codice relativo alle operazioni di I/O;
     - `screens` per il codice relativo all'implementazione delle diverse parti dell'intefaccia.
-- `state` contiene le strutture dati dedicate alla memorizzazione dello stato di una partita.
-- `domain` contiene strutture dati che rappresentano concetti di dominio utilizzati da tutta l'applicazione (ad esempio, i concetti di colore, di forma della Board e di posizione sulla Board).
-- `observer` contiene le interfacce utilizzate per attuare il pattern Observer.
+- `state` contiene le strutture dati dedicate alla memorizzazione dello stato di una partita;
+- `domain` contiene strutture dati che rappresentano concetti di dominio utilizzati da tutta l'applicazione (ad esempio, i concetti di colore, di forma della Board e di posizione sulla Board);
+- `observer` contiene le interfacce utilizzate per attuare il pattern Observer;
 - `utils` contiene altre utilities per cui non è stata individuata una locazione più specifica.
 
 ```mermaid

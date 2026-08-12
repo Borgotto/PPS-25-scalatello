@@ -8,21 +8,21 @@ Ciascun membro del gruppo, oltre al ruolo di sviluppatore, ha svolto uno specifi
 
 ### Committente
 
-Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti.
+Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti:
 
-- Comunicazione dei requisiti di progetto.
-- Verifica del risultato prodotto al termine di ogni iterazione del processo di sviluppo, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per le iterazioni successive.
-- Valutazione e accettazione del risultato finale del progetto.
+- comunicazione dei requisiti di progetto;
+- verifica del risultato prodotto al termine di ogni iterazione del processo di sviluppo, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per le iterazioni successive;
+- valutazione e accettazione del risultato finale del progetto.
 
 Tale ruolo è stato assegnato a Cristina Zoccola, poiché è stata la componente del gruppo che ha avanzato l'idea fondante del progetto e che ha più esperienza con il dominio in oggetto.
 
 ### Product Owner
 
-Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti.
+Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti:
 
-- Redazione del _backlog_, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività.
-- Comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato.
-- Coordinamento del lavoro tra i componenti del team di sviluppo.
+- redazione del *backlog*, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività;
+- comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato;
+- coordinamento del lavoro tra i componenti del team di sviluppo.
 
 Tale ruolo è stato assegnato a Elena Boschetti.
 
@@ -34,14 +34,14 @@ Tale ruolo è stato assegnato a Emanuele Borghini.
 
 ## Organizzazione del lavoro
 
-Le attività di progetto sono state suddivise in iterazioni (_sprint_), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
+Le attività di progetto sono state suddivise in iterazioni (*sprint*), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
 
-Il primo sprint è stato dedicato alle seguenti attività.
+Il primo sprint è stato dedicato alle seguenti attività:
 
-- Definizione del processo di sviluppo, descritto nel presente capitolo.
-- Formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md).
-- Scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo.
-- Redazione del backlog, consultabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1).
+- definizione del processo di sviluppo, descritto nel presente capitolo;
+- formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md);
+- scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo;
+- redazione del backlog, consultabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1);
 
 I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della presente relazione.
 
