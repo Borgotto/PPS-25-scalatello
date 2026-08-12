@@ -13,10 +13,10 @@ Mentre Emanuele Borghini si è occupato del task di implementazione delle strate
 
 Una volta che tutti i componenti del gruppo hanno concluso il refactoring sul proprio codice, ci si è dedicati alla scrittura della Scaladoc. In merito a ciò, il giorno 24/07/2026 si è svolto un breve incontro per chiarire gli standard da seguire.
 
-## Risultati dello sprint
+## Esito
 
 Tutti gli obiettivi dello sprint sono stati raggiunti. Si dichiara quindi concluso lo sviluppo, a meno di eventuali interventi di lieve entità.
 
-Durante il periodo 27/07/2026 - 01/08/2026, il lavoro sul progetto sarà sospeso per via di impegni personali dei componenti del gruppo.
+Durante la settimana 27/07/2026 - 02/08/2026, il lavoro sul progetto sarà sospeso per via di impegni personali dei componenti del gruppo.
 
-Il periodo 02/08/2026 - 16/08/2026 corrisponderà all'ultimo sprint, dedicato alla stesura della relazione e, infine, al rilascio dell'applicazione e alla pubblicazione della relazione.
+Il periodo 03/08/2026 - 16/08/2026 corrisponderà all'ultimo sprint, dedicato alla stesura della relazione e, infine, al rilascio dell'applicazione e alla pubblicazione della relazione.
