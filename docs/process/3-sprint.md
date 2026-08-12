@@ -1,28 +1,27 @@
-# Sprint 3
-
-In questo sprint il gruppo deve unire le parti sviluppate in autonomia dai membri del gruppo per ottenere una versione funzionante del gioco.
-
-Successivamente verranno implementate altre funzioni secondo le specifiche dei requisiti, come la possibilità di salvare e caricare le partite, la view del gioco e il controller tra view e model.
+# Sprint 3 (06/07/2026 - 12/07/2026)
 
 ## Obiettivi
 
-- **P0**
-  - Integrazione parti *Model*
-- **P1**
-  - Implementazione *Controller*
-  - Implementazione *View*
-  - Implementazione *SaveManager*
+Il primo obiettivo dello sprint è stata l'integrazione delle parti del Model realizzate nello sprint precedente.
 
-## Incontri
+L'obiettivo successivo è stato lo sviluppo delle seguenti parti:
 
-Il primo incontro è stato programmato per il giorno 06/07/2026, da remoto, per chiarire le modalità di integrazione delle diverse parti di *Model* sviluppate nello sprint precedente.
+- Controller (assegnato a Cristina Zoccola);
+- Save Manager (assegnato a Emanuele Borghini);
+- View, limitatamente al menu iniziale e al rendering dello stato della partita (assegnata a Elena Boschetti).
 
-Tra il primo incontro e il secondo, si cercherà di completare la task di priorità **P0**.
+Similmente allo sprint precedente, si è desiderato pervenire all'implementazione individuale di queste parti; la loro integrazione è prevista per il prossimo sprint.
 
-Un nuovo incontro è stato fissato per il giorno 08/07/2026, per iniziare a lavorare sulle task di priorità **P1**.
+Il corretto comportamento di Controller e Save Manager sarà garantito da suite di test automatizzati, che faranno temporaneamente uso di Mockito per creare mock in sostituzione delle componenti non ancora integrate. Per quanto riguarda la View, il risultato desiderato sarà invece verificato mediante test manuali e, in mancanza dell'integrazione con il Controller, i mock degli stati della partita saranno definiti manualmente.
 
-## Risultati dello sprint
+## Svolgimento
 
-L'unica task **P0** è stata completata nei primi due giorni di sprint.
+L'integrazione delle parti del Model è stata completata il giorno 07/06/2026.
 
-Il resto delle task **P1** è stato completato entro la fine dello sprint, in data 11/07/2026.
+Successivamente, ciascuno componente del gruppo si è dedicato allo sviluppo della propria parte sopra indicata.
+
+## Esito
+
+Gli obiettivi dello sprint sono stati raggiunti.
+
+Nel prossimo sprint, si può quindi procedere all'integrazione di Model, Controller, View e Save Manager, che sarà svolta da Elena Boschetti. Nello stesso sprint, sarà inoltre implementata la parte di View relativa alla gestione dei salvataggi. Si è deciso inoltre di effettuare, dopo aver completato le due attività appena indicate, un refactoring intermedio per migliorare il codice finora prodotto.

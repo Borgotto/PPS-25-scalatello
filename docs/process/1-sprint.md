@@ -4,13 +4,13 @@
 
 In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione.
 
-- Design architetturale
-- Design della Board
-- Design dell'avversario virtuale
-- Design della logica di gioco
-- Design del Controller
-- Design della gestione dei salvataggi
-- Design della View
+- Design architetturale (svolto in collaborazione)
+- Design della Board (assegnato a Cristina Zoccola)
+- Design dell'avversario virtuale (assegnato a Emanuele Borghini)
+- Design della logica di gioco (assegnato a Elena Boschetti)
+- Design del Controller (assegnato a Cristina Zoccola)
+- Design della gestione dei salvataggi (assegnato a Emanuele Borghini)
+- Design della View (assegnato a Elena Boschetti)
 
 ## Svolgimento
 
