@@ -1,32 +1,26 @@
-# Sprint 4
-
-Questo sprint ha come obiettivo principale l'integrazione delle funzionalità di salvataggio e caricamento delle partite tra i diversi componenti del programma.
-
-Successivamente, dato che tutte le funzionalità obbligatorie sono state implementate, il gruppo si concentrerà sulla rifinitura del codice, sistemando eventuali bug e migliorando la qualità.
+# Sprint 4 (13/07/2026 - 19/07/2026)
 
 ## Obiettivi
 
-- **P0**
-  - Integrazione tra *View*, *Controller*, *Model* e *SaveManager*
-- **P1**
-  - Implementazione salvataggio e caricamento delle partite dalla *View*
-- **P2**
-  - Refactoring
+- Integrazione tra View, Controller, Model e Save Manager (assegnata a Elena Boschetti)
+- Implementazione della gestione dei salvataggi nella View (assegnata a Elena Boschetti)
+- Refactoring (svolto da tutti i componenti del gruppo)
 
-## Incontri
+## Svolgimento
 
-- **Incontro 1**: 13/07/2026 - Integrazione tra *View*, *Controller*, *Model* e *SaveManager*
+L'integrazione di View, Controller, Model e Save Manager è stata conclusa il 14/07/2026. Si è inoltre tenuto un breve incontro il 13/07/2026 per chiarire alcuni dettagli implementativi riguardanti la gestione dei salvataggi.
 
-  In questo incontro si è deciso di modificare la struttura del *SaveManager* per permettere il salvataggio di più partite anziché di una sola, come era stato implementato nello sprint precedente.
+Parallelamente all'implementazione della gestione dei salvataggi nella View da parte di Elena Boschetti, i componenti Emanuele Borghini e Cristina Zoccola hanno iniziato il refactoring del proprio codice, lavorando ovviamente su branch separate. Anche Elena Boschetti ha svolto il refactoring del proprio codice una volta concluso il task sulla View.
 
-- **Incontro 2**: 15/07/2026 - Bug-fixing
+Nel corso dello sprint, sono stati anche risolti alcuni bug individuati.
 
-  In questo incontro i membri del gruppo hanno lavorato insieme per risolvere i bug presenti nel codice, alcuni presenti nella *View* e altri nel *SaveManager*.
+## Esito
 
-- **Incontro 3**: 17/07/2026 - Refactoring
+Tutti gli obiettivi dello sprint sono stati raggiunti.
 
-  Ha dato il via al refactoring del codice, segnalando le parti che necessitano di essere migliorate e riorganizzate
+Nel prossimo sprint saranno concluse le attività di sviluppo.
 
-## Risultati dello sprint
-
-Tutti gli obiettivi dello sprint sono stati completati entro la fine dello sprint, in data 19/07/2026.
+- Emanuele Borghini implementerà le altre strategie previste per l'avversario, provvedendo anche ad eventuali interventi di ottimizzazione delle prestazioni degli algoritmi qualora opportuni.
+- Elena Boschetti implementerà la scelta della strategia dell'avversario nel menu di setup della partita.
+- Tutti i componenti del gruppo effettueranno il refactoring finale del proprio codice.
+- Infine, tutti i componenti del gruppo scriveranno la Scaladoc relativa al proprio codice.
