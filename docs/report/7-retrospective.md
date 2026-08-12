@@ -8,7 +8,7 @@ La documentazione di processo, composta da backlog e report di ciascuno sprint, 
 
 Il processo di sviluppo adottato ha permesso di cimentarci in un progetto ben strutturato e più vicino alle dinamiche di un contesto lavorativo.
 
-L'esperienza è stata positiva: l'organizzazione pianificata si è rivelata efficace, con una distribuzione del lavoro equa e sostenibile nel tempo a disposizione. Le scadenze di ciascuno sprint sono state sempre rispettate, ottenendo i risultati attesi al termine di essi. I [requisiti](./2-requirements.md) individuati sono stati pienamente soddisfatti, grazie sia all'efficace organizzazione del lavoro che alla collaborazione tra tutti i componenti del gruppo in caso di necessità.
+L'esperienza è stata positiva: l'organizzazione pianificata si è rivelata efficace, con una distribuzione del lavoro equa e sostenibile nel tempo a disposizione. Le scadenze di ciascuno sprint sono state sempre rispettate, ottenendo i risultati attesi al termine di essi. I requisiti individuati sono stati pienamente soddisfatti, grazie sia all'efficace organizzazione del lavoro che alla collaborazione tra tutti i componenti del gruppo in caso di necessità.
 
 Nel complesso, ci riteniamo soddisfatti del risultato finale e del processo da noi seguito.
 
@@ -53,6 +53,6 @@ val placement: Position = player.strategy.computePlacement
 
 ### Interfaccia grafica
 
-In virtù della sua maggiore essenzialità e della possibilità di avere maggiore tempo da dedicare ad altri aspetti del progetto, il gruppo ha preferito realizzare un'interfaccia testuale su terminale piuttosto che un'interfaccia grafica.
+In virtù della sua maggiore essenzialità e della possibilità di avere maggiore tempo da dedicare ad altri aspetti del progetto, il gruppo ha preferito realizzare un'interfaccia da riga di comando piuttosto che un'interfaccia grafica.
 
 Un prototipo funzionante di interfaccia grafica, seppur incompleto, è stato comunque realizzato; il codice è disponibile sul [branch `feature/gui`](https://github.com/Borgotto/PPS-25-scalatello/tree/feature/gui) del repository. Il prototipo è stato realizzato usando la libreria [scala-swing](https://github.com/scala/scala-swing), un wrapper Scala della libreria Java Swing.

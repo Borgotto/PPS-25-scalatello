@@ -13,7 +13,7 @@ Molti dei test hanno richiesto l'inizializzazione di `Logic` con una `Board` con
   - `W`: indica che la cella è occupata da un disco bianco.
   - `.`: indica che la cella è vuota.
 
-Per fare un esempio, la configurazione iniziale della `Board` è così rappresentata:
+Per fare un esempio, la configurazione iniziale di una `Board` 4x4 è così rappresentata:
 
 ```text
 ....
