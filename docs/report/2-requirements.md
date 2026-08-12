@@ -94,10 +94,10 @@ classDiagram
     - Ciascun lato deve essere di dimensione pari. Tale scelta è adottata per questioni di simmetria: a inizio partita è prevista una configurazione di dischi 2x2 al centro del terreno di gioco, che risulterebbe decentrata qualora un lato del terreno di gioco fosse di dimensione dispari.
     - Per questioni di praticità, si stabilisce che un lato debba avere una dimensione compresa tra 4 e 16 celle.
   - La strategia dell'avversario (la quale determina la difficoltà della partita). Le opzioni possibili sono le seguenti:
-    - _Erratic_: l'avversario sceglie una mossa casuale tra quelle disponibili.
-    - _Easy_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso.
-    - _Medium_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media compelssità, che determina un livello di abilità intermedio.
-    - _Hard_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
+    - *Erratic*: l'avversario sceglie una mossa casuale tra quelle disponibili.
+    - *Easy*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso.
+    - *Medium*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media compelssità, che determina un livello di abilità intermedio.
+    - *Hard*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
 - Ad ogni turno, se l’utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con "mossa" si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide a disposizione.
 - Se, quando è il suo turno, l’utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
 - Durante una partita, l’utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito.
