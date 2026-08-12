@@ -1,8 +1,8 @@
 # Sprint 0 (20/06/2026 - 22/06/2026)
 
-Lo sprint 0 è stato un breve sprint dedicato al _bootstrap_ del progetto.
-
 ## Obiettivi
+
+Lo sprint 0 è stato un breve sprint dedicato al _bootstrap_ del progetto.
 
 - Definizione del processo di sviluppo da seguire
 - Definizione dei ruoli dei membri del gruppo

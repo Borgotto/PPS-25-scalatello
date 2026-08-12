@@ -1,8 +1,8 @@
 # Sprint 1 (23/06/2026 - 28/06/2026)
 
-In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione.
-
 ## Obiettivi
+
+In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione.
 
 - Design architetturale
 - Design della Board
