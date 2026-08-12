@@ -346,7 +346,7 @@ Le prestazioni del gioco non rientravano in un range di aspettative accettabile 
 Sono stati quindi introdotti i seguenti miglioramenti al codice al fine di migliorare le prestazioni:
 
 - [nel package `board`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/model/board)
-  - Riscritto il metodo `BoardComputations.getOppositeColorNeighbors()` per ridurre il costo computazionale da $O(n^2)$ a $O(n)$, dove $n$ è il numero di celle della scacchiera.
+  - Riscritto il metodo `BoardComputations.getCapturableNeighboursPair()` per ridurre il costo computazionale da $O(n^2)$ a $O(n)$, dove $n$ è il numero di celle della scacchiera.
   - Riscritto il metodo `BoardComputations.placeDisk._captureDisks()` per rimuovere l'iterazione non necessaria di tutti i dischi, ma solo quelli che sono stati catturati.
   - Riscritto il metodo `Board.equals()` rimuovendo allocazioni non necessarie di oggetti `DiskState`
   - Aggiunto un parametro booleano `validatePosition` al metodo `Board.placeDisk()` per disabilitare la validazione della posizione quando non necessaria.
