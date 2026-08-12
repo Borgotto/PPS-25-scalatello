@@ -41,7 +41,7 @@ Il primo sprint è stato dedicato alle seguenti attività.
 - Definizione del processo di sviluppo, descritto nel presente capitolo.
 - Formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md).
 - Scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo.
-- Redazione del product backlog, consultabile al seguente [link ai Projects della repository](https://github.com/Borgotto/PPS-25-scalatello/projects).
+- Redazione del backlog, consultabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1).
 
 I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della presente relazione.
 
@@ -57,7 +57,7 @@ A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
 
 - Come sistema di controllo di versione, è stato utilizzato **Git**.
 - Per l'hosting remoto del repository, è stata utilizzata la piattaforma **GitHub**.
-- Per la redazione del product backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, in virtù della sua integrazione in GitHub.
+- Per la redazione del backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, in virtù della sua integrazione in GitHub.
 - Come build system, è stato utilizzato **SBT**, essendo lo standard de-facto per progetti Scala.
 - Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**, essendo lo standard de-facto per progetti Scala. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di _test doubles_, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione.
 - Per la CI, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository, in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.

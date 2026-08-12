@@ -1,33 +1,27 @@
-# Sprint 1
+# Sprint 1 (23/06/2026 - 28/06/2026)
 
-In questo primo sprint il gruppo punta a completare la progettazione del sistema, in particolare la documentazione di design.
+In questo primo sprint, il gruppo si è posto come obiettivo lo svolgimento del design architetturale e di dettaglio dell'applicazione.
 
 ## Obiettivi
 
-- **P0**
-  - Design architetturale
-- **P1**
-  - Design *Board* e *Disk*
-  - Design *Avversario*
-  - Design *Logic*
-- **P2**
-  - Design *Controller*
-  - Design *SaveManager*
-- **P3**
-  - Design *View*
+- Design architetturale
+- Design della Board
+- Design dell'avversario virtuale
+- Design della logica di gioco
+- Design del Controller
+- Design della gestione dei salvataggi
+- Design della View
 
-## Incontri
+## Svolgimento
 
-Un primo incontro programmato per il giorno 23/06/2026 è stato organizzato da remoto tramite piattaforma *Discord*.
+Il 23/06/2026, primo giorno dello sprint, è stato svolto un incontro da remoto tramite piattaforma *Discord*, per lavorare sul design architetturale. Entro il termine dell'incontro, il gruppo è pervenuto ad una prima versione del design architetturale.
 
-Un secondo incontro, sempre da remoto, è stato programmato per il giorno 25/06/2026.
+Dal giorno successivo, ciascun componente del gruppo ha iniziato a lavorare sul design di dettaglio della propria parte, tenendo anche traccia di dubbi e possibili modifiche relative all'interazione tra le diverse parti. Un secondo incontro, sempre da remoto, è stato svolto il giorno 25/06/2026 proprio per discutere di tali punti.
 
-## Risultati dello sprint
+Successivamente al secondo incontro, i componenti del gruppo hanno lavorato in autonomia fino al termine dello sprint per completare il design di dettaglio della propria parte.
 
-Nell'incontro iniziale (23/06/2026) sono stati assegnati gli obiettivi dello sprint a ciascun membro del gruppo nel backlog redatto durante lo sprint 0.
+## Esito
 
-Nel corso dei due giorni successivi, i membri del gruppo hanno lavorato in autonomia per completare i punti assegnati.
+Il gruppo è riuscito a pervenire al risultato atteso, ossia una prima versione del design architetturale e di dettaglio. La documentazione prodotta, consistente in diagrammi (principalmente UML) che saranno presi come riferimento durante lo sviluppo, è stata messa in versione.
 
-Nel secondo incontro (25/06/2026) sono state discusse le modifiche apportate ai design, con conseguenti modifiche.
-
-Un nuovo incontro è stato fissato per il giorno 29/06/2026 per accordare le impostazioni dell'ambiente di sviluppo in preparazione del prossimo sprint.
+Nel prossimo sprint si può dunque procedere con l'implementazione. Un nuovo incontro è stato fissato per il giorno 29/06/2026, primo giorno dello sprint, per accordare le impostazioni dell'ambiente di sviluppo.
