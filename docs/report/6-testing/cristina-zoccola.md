@@ -9,7 +9,7 @@ L'ho fatto creando:
 
 Per poter scrivere test con una sintassi molto simile al linguaggio naturale ho scelto di:
 
-- implementare il `trait` di ***ScalaTest***: `AnyFlatSpec`;
+- implementare il `trait` di **ScalaTest**: `AnyFlatSpec`;
 - usare i `should` `Matchers` al posto delle `assert`.
 
 Per evitare ripetizioni di codice, ho creato dei test parametrici: l'ho fatto implementando il `trait` di **ScalaTest** `TableDrivenPropertyChecks`: questo `trait` permette di creare delle tabelle contenenti i parametri su cui chiamare uno o più test.
@@ -40,7 +40,7 @@ Questa classe contiene i test relativi alle classi: `BoardImpl`, `BoardComputati
 
 Per rimuovere le ripetizioni di codice ho usato: 
 
-- test parametrici
+- test parametrici;
 - una classe di supporto: `BoardTestParams`.
 
 ### BoardTestParams
@@ -102,8 +102,8 @@ Questa classe di test è facilmente estendibile alle possibili future implementa
 
 In questa classe sono contenuti i test dei metodi, che riguardano la gestione dei turni di una partita, presenti nella classe `ControllerImpl`.
 
-Per implementare questi test ho utilizzato **Mockito** e in particolare la sua funzionalità *Spy*: essa mi ha permesso di creare dei test senza rompere l'incapsculamento. \
-L'ho utilizzata per contare la quantità di volte in cui viene chiamato il metodo `notifySubscribers(MatchState)` in diverse situazioni:
+Per implementare questi test ho utilizzato **Mockito** e in particolare la sua funzionalità *Spy*: essa mi ha permesso di creare dei test senza rompere l'incapsulamento. \
+L'ho utilizzata per contare la quantità di volte in cui deve essere chiamato il metodo `notifySubscribers(MatchState)` in diverse situazioni:
 
 ```scala
 class ControllerTest extends AnyFlatSpec:
