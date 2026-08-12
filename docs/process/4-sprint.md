@@ -8,7 +8,7 @@
 
 ## Svolgimento
 
-L'integrazione di View, Controller, Model e Save Manager è stata conclusa il 14/07/2026. Si è inoltre tenuto un breve incontro il 13/07/2026 per chiarire alcuni dettagli implementativi riguardanti la gestione dei salvataggi.
+L'integrazione di View, Controller, Model e Save Manager è stata conclusa il 14/07/2026. Si è inoltre tenuto un breve incontro il 13/07/2026 per chiarire alcuni dettagli riguardanti la gestione dei salvataggi.
 
 Parallelamente all'implementazione della gestione dei salvataggi nella View da parte di Elena Boschetti, i componenti Emanuele Borghini e Cristina Zoccola hanno iniziato il refactoring del proprio codice, lavorando ovviamente su branch separate. Anche Elena Boschetti ha svolto il refactoring del proprio codice una volta concluso il task sulla View.
 
