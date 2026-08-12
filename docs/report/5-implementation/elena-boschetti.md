@@ -5,7 +5,7 @@
 Nella fase implementativa del progetto, ho realizzato le seguenti parti:
 
 - la [logica di gioco](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/model/Logic.scala);
-- le strutture dati dedicate alla memorizzazione dello stato di una partita ([package `state`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/state)) e alla rappresentazione di concetti di dominio usati da tutta l'applicazione ([package `domain`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/domain), ad esclusione della classe Position);
+- le strutture dati dedicate alla memorizzazione dello stato di una partita ([package `state`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/state)) e alla rappresentazione di concetti di dominio usati da tutta l'applicazione ([package `domain`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/domain), ad esclusione della classe `Position`);
 - tutta la View ([package `view`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/view)), inclusa l'attuazione del pattern Observer per la notifica alla View degli aggiornamenti di stato di una partita, realizzando le interfacce `Publisher` e `Subscriber` ([package `observer`](https://github.com/Borgotto/PPS-25-scalatello/tree/main/src/main/scala/it/unibo/pps/observer)) e la loro implementazione da parte di View e [Controller](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/controller/Controller.scala#L67-L74).
 
 ## Aspetti implementativi rilevanti
@@ -22,7 +22,7 @@ Per ciascuno di questi scenari, è stato definito un factory method, per mezzo d
 
 Si evidenza inoltre che il factory method per il terzo scenario sopra elencato, essendo solo per scopi di testing, è stato dichiarato package-private, in modo da prevenirne l'uso improprio nel codice di produzione e, al tempo stesso, consentirne l'uso nel package corrispondente nel codice di test.
 
-[Link alla definzione dei factory methods](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/model/Logic.scala#L125-L167)
+[Link alla definizione dei factory method](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/model/Logic.scala#L125-L167)
 
 ### Parametri contestuali nella View
 
