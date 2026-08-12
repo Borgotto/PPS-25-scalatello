@@ -49,7 +49,7 @@ classDiagram
   User --|> Player
   Player --> Color: is assigned
   PlacementStrategy ..> Board
-  Board *-- Disk
+  Board *-- "1..*" Disk
   Disk --> Color: has
 ```
 
@@ -59,12 +59,12 @@ Oltre all'applicazione della strategia dell'avversario per conoscere la sua pros
 
 - ottenerne lo stato (necessario affinché la `Logic` possa restituire lo stato completo della partita);
 - sapere se il posizionamento di un disco di un certo colore in una specifica posizione è valido;
-- posizionare un disco (operazione che implica anche il rovesciamento dei dischi catturati, effettiuato dalla `Board`);
+- posizionare un disco (operazione che implica anche il rovesciamento dei dischi catturati, effettuato dalla `Board`);
 - conoscere i posizionamenti validi che un giocatore può effettuare dato lo stato corrente della `Board` (sia per stabilire se un giocatore non ha mosse valide disponibili, sia affinché possano essere fornite all'utente le mosse valide che può effettuare).
 
 Da notare che il metodo `placeDisk()` della `Board`, che ne modifica lo stato, restituisce una nuova istanza di `Board`, coerentemente con il principio di immutabilità adottato anche per la `Logic`; analogo principio è stato adottato per il metodo `flip()` dei `Disk` (che ne effettua il rovesciamento).
 
-Nel diagramma sottostante è inoltre dettagliata la struttura di `MatchState` (che descrive uno stato della una partita) e delle sue sottoparti.
+Nel diagramma sottostante è inoltre dettagliata la struttura di `MatchState` (che descrive uno stato della partita) e delle sue sottoparti.
 
 ```mermaid
 classDiagram
@@ -345,7 +345,7 @@ sequenceDiagram
 
 ## Propagazione degli aggiornamenti di stato di una partita
 
-Come accennato nel capitolo precedente, uno degli obiettivi del design di dettaglio era trovare una soluzione che permettesse di notificare gli aggiornamenti di stato della partita alla View senza introdurre una dipendenza diretta dal Controller alla View, considerato che vi era già l'esigenza di una dipendenza dalla View al Controller e far coesistere entrambe le dipendenze avrebbe introdotto una dipendenza ciclica tra View e Controller.
+Come accennato nel capitolo precedente, uno degli obiettivi del design di dettaglio è stato trovare una soluzione che permettesse di notificare gli aggiornamenti di stato della partita alla View senza introdurre una dipendenza diretta dal Controller alla View, considerato che vi era già l'esigenza di una dipendenza dalla View al Controller e far coesistere entrambe le dipendenze avrebbe introdotto una dipendenza ciclica tra View e Controller.
 
 Tale soluzione è stata individuata nel pattern Observer, applicato come segue.
 
@@ -358,7 +358,7 @@ Nel contesto dell'architettura progettata, il ruolo di `Publisher` è ricoperto 
 
 Quando si inizia una nuova partita, la View si registra come `Subscriber` presso il Controller attraverso il metodo `subscribe()`. Ad ogni turno, il Controller legge lo stato del Model, il quale lo espone mediante la proprietà `state` della `Logic`. Il Controller propaga quindi lo stato aggiornato ai `Subscriber` registrati attraverso il metodo `notifySubscribers()`, il quale chiama il metodo `update` di ogni `Subscriber`. Al termine della partita, la View si disiscrive dal Controller attraverso il metodo `unsubscribe()`.
 
-Allo stato attuale, l'unico `Subscriber` previsto è la View ai fini del rendering dello stato della partita, ma si potrebbero chiaramente aggiungere altri `Subscriber` per ulteriori funzionalità (ad esempio, un logger che registri tutti gli stati della partita su file, oppure un'entità di gestione dell'audio che riproduca effetti sonori ad ogni cambio di stato).
+Allo stato attuale, l'unico `Subscriber` previsto è la View ai fini del rendering dello stato della partita, ma si potrebbero aggiungere altri `Subscriber` per ulteriori funzionalità (ad esempio, un logger che registri tutti gli stati della partita su file, oppure un'entità di gestione dell'audio che riproduca effetti sonori ad ogni cambio di stato).
 
 ```mermaid
 classDiagram
@@ -432,7 +432,7 @@ classDiagram
     + render() IO~Unit~
   }
 
-  View <|-- CLIView
+  View <|.. CLIView
 
   CLIView --> I18n
   CLIView *-- InputComponent
@@ -449,7 +449,7 @@ Il diagramma sottostante raffigura la gerarchia di package prevista per l'organi
   - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale.
 - `controller` contiene il codice relativo al Controller, incluso un subpackage `save` che contiene il codice relativo alla gestione dei salvataggi.
 - `view` contiene il codice relativo alla View e include i seguenti subpackage:
-  - `i18n` per il codice relativo alle funzioni di localizzazione;
+  - `i18n` per il codice relativo alla localizzazione;
   - `cli` per il codice relativo all'implementazione della View su command-line interface (l'unica implementazione attualmente prevista), che include i seguenti subpackage:
     - `io` per il codice relativo alle operazioni di I/O;
     - `screens` per il codice relativo all'implementazione delle diverse parti dell'intefaccia.

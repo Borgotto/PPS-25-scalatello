@@ -32,7 +32,7 @@ Si precisa, inoltre, che non è possibile spostare in un'altra cella un disco ch
 
 Una partita termina quando si presenta almeno una delle due seguenti condizioni:
 
-- tutte le caselle di gioco sono occupate da un disco;
+- tutte le caselle del terreno di gioco sono occupate da un disco;
 - nessuno dei due giocatori ha mosse valide da effettuare.
 
 Il vincitore è il giocatore che, al termine della partita, ha il maggior numero di dischi del proprio colore sul terreno di gioco.
@@ -43,7 +43,7 @@ Dalle regole del gioco, si distinguono innanzitutto le seguenti entità:
 
 - il terreno di gioco (`Board`);
 - i dischi (`Disk`) posizionati sul terreno di gioco dai giocatori;
-- il concetto di colore (`Color`), sia come colore corrente di un disco posizionato sul colore di gioco, sia come colore assegnato ad un avversario;
+- il concetto di colore (`Color`), sia come colore corrente di un disco posizionato sul colore di gioco, sia come colore assegnato ad un giocatore;
 - il concetto di giocatore (`Player`).
 
 Dato inoltre il requisito secondo cui l'utente deve poter giocare in modalità single player contro un avversario virtuale, si distinguono come giocatori l'utente umano (`User`) e l'avversario virtuale (`Opponent`). Sia l'utente umano che l'avversario virtuale sono accomunati dal fatto di avere un colore assegnato. Inoltre, poiché l'avversario virtuale deve essere in grado di giocare in maniera autonoma, si deduce che l'avversario debba essere dotato di una strategia da seguire per decidere quale mossa effettuare (`PlacementStrategy`), la quale dovrà considerare lo stato corrente del terreno di gioco.
@@ -53,9 +53,6 @@ Infine, si deduce anche la necessità di avere un'entità che rappresenti la log
 Il seguente diagramma UML riassume le entità e le relazioni tra queste che sono state individuate.
 
 ```mermaid
----
-title: Diagramma UML di dominio.
----
 classDiagram
   class Logic
   class PlacementStrategy
@@ -67,16 +64,16 @@ classDiagram
   class Player
 
   Logic --> PlacementStrategy: applies
-  Logic --> Opponent
-  Logic --> User
-  Logic --> Board
+  Logic *-- Opponent
+  Logic *-- User
+  Logic *-- Board
 
   Opponent --> PlacementStrategy : behaves according to
   Opponent --|> Player
   User --|> Player
   Player --> Color: is assigned
   PlacementStrategy --> Board: applied on
-  Board --> Disk
+  Board *-- "1..*" Disk
   Disk --> Color: has
 ```
 
@@ -91,11 +88,11 @@ classDiagram
     - Ciascun lato deve essere di dimensione pari. Tale scelta è adottata per questioni di simmetria: a inizio partita è prevista una configurazione di dischi 2x2 al centro del terreno di gioco, che risulterebbe decentrata qualora un lato del terreno di gioco fosse di dimensione dispari.
     - Per questioni di praticità, si stabilisce che un lato debba avere una dimensione compresa tra 4 e 16 celle.
   - La strategia dell'avversario (la quale determina la difficoltà della partita). Le opzioni possibili sono le seguenti:
-    - Erratic: l'avversario sceglie una mossa casuale tra quelle disponibili.
-    - Easy: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso.
-    - Medium: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media compelssità, che determina un livello di abilità intermedio.
-    - Hard: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
-- Ad ogni turno, se l’utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con “mossa” si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [Regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi non abbia mosse valide a disposizione.
+    - _Erratic_: l'avversario sceglie una mossa casuale tra quelle disponibili.
+    - _Easy_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso.
+    - _Medium_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media compelssità, che determina un livello di abilità intermedio.
+    - _Hard_: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
+- Ad ogni turno, se l’utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con “mossa” si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide a disposizione.
 - Se, quando è il suo turno, l’utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
 - Durante una partita, l’utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito. L’utente deve poter effettuare salvataggi di partite diverse e conservarli in contemporanea.
 - L'utente deve poter eliminare un salvataggio effettuato.
@@ -104,13 +101,13 @@ classDiagram
 
 ### Di sistema
 
-- Per quanto concerne le mosse e la gestione dei turni, l'avversario virtuale è soggetto alle stesse regole dell'utente umano. Una mossa è valida nelle stesse condizioni in cui lo è per l'utente. Quando è il turno dell'avversario virtuale, se ha a disposizione mosse valide è obbligato a effettuarne una, mentre è obbligato a saltare il turno se non ne ha. Dopo che l'avversario virtuale compiuto una mossa valida, il turno passa all'utente, a meno che questi non abbia mosse valide a disposizione.
-- Quando è il turno dell'utente e l'utente ha mosse valide a disposizione, il sistema deve rendere evidenti all'utente le celle del terreno di gioco su cui l'utente può posizionare un proprio disco compiendo una mossa valida.
+- Per quanto concerne le mosse e la gestione dei turni, l'avversario virtuale è soggetto alle stesse regole dell'utente umano. Una mossa è valida nelle stesse condizioni in cui lo è per l'utente. Quando è il turno dell'avversario virtuale, se ha a disposizione mosse valide è obbligato a effettuarne una, mentre è obbligato a saltare il turno se non ne ha. Dopo che l'avversario virtuale compiuto una mossa valida, il turno passa all'utente, a meno che questi sia privo di mosse valide a disposizione.
+- Quando è il turno dell'utente e questi ha mosse valide a disposizione, il sistema deve rendere evidenti all'utente le celle del terreno di gioco su cui può posizionare un proprio disco compiendo una mossa valida.
 - Il sistema deve decretare la terminazione della partita e comunicarne l’esito all’utente appena si verifica una delle condizioni di terminazione riportate nelle [regole del gioco](#regole-del-gioco).
 
 ## Requisiti non funzionali
 
-- L'utente deve poter utilizzare l'applicazione tramite CLI (Command Line Interface).
+- L'utente deve poter utilizzare l'applicazione tramite CLI (command-line interface).
 - Le mosse dell'avversario virtuale devono avvenire entro un intervallo di tempo accettabile a livello di esperienza utente, tassativamente non superiore ai 2 secondi e preferibilmente inferiore a 1 secondo.
 
 ## Requisiti di implementazione

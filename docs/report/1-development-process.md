@@ -20,7 +20,7 @@ Tale ruolo è stato assegnato a Cristina Zoccola, poiché è stata la componente
 
 Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti.
 
-- Redazione del _product backlog_, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività.
+- Redazione del _backlog_, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività.
 - Comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato.
 - Coordinamento del lavoro tra i componenti del team di sviluppo.
 
@@ -34,7 +34,7 @@ Tale ruolo è stato assegnato a Emanuele Borghini.
 
 ## Organizzazione del lavoro
 
-Le attività di progetto sono state suddivise in iterazioni (_dette sprint_), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
+Le attività di progetto sono state suddivise in iterazioni (_sprint_), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
 
 Il primo sprint è stato dedicato alle seguenti attività.
 
@@ -60,4 +60,4 @@ A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
 - Per la redazione del backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, in virtù della sua integrazione in GitHub.
 - Come build system, è stato utilizzato **SBT**, essendo lo standard de-facto per progetti Scala.
 - Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**, essendo lo standard de-facto per progetti Scala. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di _test doubles_, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione.
-- Per la CI, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository, in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
+- Per la CI (Continuous Integration) e la generazione della Scaladoc, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository (esclusi quelli verso i branch dedicati alla relazione), in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
