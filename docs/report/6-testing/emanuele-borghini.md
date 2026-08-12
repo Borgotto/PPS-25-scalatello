@@ -24,7 +24,7 @@ Durante la prima fase di sviluppo, le mie componenti da implementare avevano bis
 
 Durante lo sviluppo delle diverse componenti, alcune dipendenze non erano ancora state implementate.\
 Sono stati quindi definiti dei ***mock*** delle dipendenze, configurandoli solamente con le operazioni necessarie al test.\
-Questo permesso ai membri del gruppo di sviluppare e testare le proprie componenti indipendentemente dallo stato di implementazione delle altre, parallelizzando lo sviluppo.
+Questo ha permesso ai membri del gruppo di sviluppare e testare le proprie componenti indipendentemente dallo stato di implementazione delle altre, parallelizzando lo sviluppo.
 
 ### Test parametrici tramite TableDrivenPropertyChecks
 
@@ -39,7 +39,7 @@ Gli input vengono organizzati all'interno di una `Table`, un insieme di test ven
 
 Per poter scrivere test con una sintassi molto simile al linguaggio naturale vengono usate queste funzioni di **ScalaTest**:
 
-- il `trait AnyFlatSpec`
+- il `trait AnyFlatSpec`;
 - i `should` `Matchers` al posto di `assert`.
 
 ## PlayerTest
@@ -110,7 +110,7 @@ Ogni riga contiene:
 
 - Una istanza di un `SaveManager` con una directory temporanea;
 - Un `Serializer` a cui il `SaveManager` si appoggia per salvare e caricare i file;
-- Una istanza di un dato da salvare
+- Una istanza di un dato da salvare.
 
 Nel test condiviso vengono eseguiti i seguenti controlli per ciascuna riga della tabella:
 
@@ -122,7 +122,7 @@ Nel test condiviso vengono eseguiti i seguenti controlli per ciascuna riga della
   - il contenuto del file deve corrispondere alla deserializzazione del dato;
   - il caricamento non deve lanciare eccezioni;
   - i dati devono combaciare con quelli salvati;
-  - due caricamenti successivi dello stesso file devono restituire lo stesso risultato.
+  - due caricamenti dello stesso file devono restituire lo stesso risultato.
 - **Cancellazione**:
   - il file deve essere cancellato correttamente;
   - la cancellazione non deve lanciare eccezioni.
