@@ -87,7 +87,7 @@ classDiagram
 
 ### Utente
 
-- L’utente deve poter avviare una nuova partita, in cui giocherà contro un avversario virtuale implementato dal sistema che gioca in maniera autonoma.
+- L'utente deve poter avviare una nuova partita, in cui giocherà contro un avversario virtuale implementato dal sistema che gioca in maniera autonoma.
 - All'avvio di una partita, l'utente deve poter personalizzare le seguenti proprietà.
   - Il colore assegnato a sé (nero o bianco).
   - La forma del terreno di gioco (quadrata o rettangolare) e le sue dimensioni dei suoi lati. La misura di un lato è espressa in funzione del numero di celle lungo la sua direzione ed è soggetta ai seguenti vincoli.
@@ -98,10 +98,10 @@ classDiagram
     - *Easy*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso.
     - *Medium*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media compelssità, che determina un livello di abilità intermedio.
     - *Hard*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
-- Ad ogni turno, se l’utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con "mossa" si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide a disposizione.
-- Se, quando è il suo turno, l’utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
-- Durante una partita, l’utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito.
-- L’utente deve poter effettuare salvataggi di partite diverse e conservarli in contemporanea.
+- Ad ogni turno, se l'utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con "mossa" si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide a disposizione.
+- Se, quando è il suo turno, l'utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
+- Durante una partita, l'utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito.
+- L'utente deve poter effettuare salvataggi di partite diverse e conservarli in contemporanea.
 - L'utente deve poter eliminare un salvataggio effettuato.
 - L'utente deve poter abbandonare una partita senza salvare.
 - L'utente deve poter uscire dall'applicazione in qualsiasi momento.
@@ -110,7 +110,7 @@ classDiagram
 
 - Per quanto concerne le mosse e la gestione dei turni, l'avversario virtuale è soggetto alle stesse regole dell'utente umano. Una mossa è valida nelle stesse condizioni in cui lo è per l'utente. Quando è il turno dell'avversario virtuale, se ha a disposizione mosse valide è obbligato a effettuarne una, mentre è obbligato a saltare il turno se non ne ha. Dopo che l'avversario virtuale ha compiuto una mossa valida, il turno passa all'utente, a meno che questi sia privo di mosse valide a disposizione.
 - Quando è il turno dell'utente e questi ha mosse valide a disposizione, il sistema deve rendere evidenti all'utente le celle del terreno di gioco su cui può posizionare un proprio disco compiendo una mossa valida.
-- Il sistema deve decretare la terminazione della partita e comunicarne l’esito all’utente appena si verifica una delle condizioni di terminazione riportate nelle [regole del gioco](#regole-del-gioco).
+- Il sistema deve decretare la terminazione della partita e comunicarne l'esito all'utente appena si verifica una delle condizioni di terminazione riportate nelle [regole del gioco](#regole-del-gioco).
 
 ## Requisiti non funzionali
 
