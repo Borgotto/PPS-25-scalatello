@@ -8,7 +8,7 @@ All'interno del progetto mi sono occupata di implementare:
 - la scacchiera di gioco, comprese le computazioni necessarie allo svolgimento di una partita su di essa: [`Board`](#board) (e il suo [`companion object`](#board-companion-object)), [`BoardImpl`](#boardimpl), [`BoardCreationExtensions`](#boardcreationextensions), [`BoardComputations`](#boardcomputations), [`ComputationsPosExtensions`](#computationsposextensions) e [`ComputationsPosExtensionsRectangle`](#computationsposextensionsrectangle);
 - alcuni *extension methods* di `Int` per aggevolare i calcoli da effettuare sulla `Board`: [`IntExtensions`](#intextensions);
 - il controller dell'applicazione, [`Controller`](#controller) (e il suo [`companion object`](#controller-companion-object)) e [`ControllerImpl`](#controllerimpl);
-- i [metodi nella classe `Position`](#metodi-in-position) per operare più facilmente con le posizioni delle pedine sulla scacchiera.
+- i [metodi nella classe `Position`](#metodi-in-position).
 
 ## Aspetti implementativi rilevanti
 
@@ -58,7 +58,7 @@ All'interno della classe viene anche definito un `given` della stessa, da dare c
 
 #### Board companion object
 
-Il `companion object` del `trait` `Board`, contiene le **factory** (**factory pattern**) per istanziare la classe `BoardImpl`.
+Il `companion object` del `trait` `Board`, contiene le *factory* (**factory pattern**) per istanziare la classe `BoardImpl`.
 
 Contiene *factory* a partire da:
 
@@ -102,7 +102,7 @@ extension (s: String)
     ).toMap
 ```
 
-Questo metodo utilizza lo specifico *pattern* definito come espressione regolare, per creare una mappa di pedine a partire da una stringa.
+Questo metodo utilizza lo specifico *pattern* definito come espressione regolare, per creare una mappa di pedine a partire da una stringa. Esso è stato implementato in collaborazione con [Emanuele Borghini](./emanuele-borghini.md).
 
 Fa anche uso della `implicit conversion` di `Position` da tupla a posizione (implementata da: [Emanuele Borghini](./emanuele-borghini.md)).
 
@@ -203,9 +203,9 @@ Questo `trait` è implementato dalla classe `ControllerImpl`.
 
 Per quanto riguarda gli altri metodi presenti al suo interno:
 
-- i seguenti metodi: `subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])` e `notifySubscribers(MatchState)` sono stati implemetati in collaborazione con: [Elena Boschetti](./elena-boschetti.md);
-- I metodi creati per interfacciarsi con il `SaveManager` (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md);
-- il metodo `isMatchOver` è stato implementato in collaborazione con: [Elena Boschetti](./elena-boschetti.md).
+- i seguenti metodi: `subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])` e `notifySubscribers(MatchState)` sono stati implemetati in collaborazione con [Elena Boschetti](./elena-boschetti.md);
+- I metodi creati per interfacciarsi con il `SaveManager` (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md);
+- il metodo `isMatchOver` è stato implementato in collaborazione con [Elena Boschetti](./elena-boschetti.md).
 
 In questa classe ho utilizzato le seguenti funzionalità di Scala:
 
@@ -227,7 +227,7 @@ In questa classe ho utilizzato le seguenti funzionalità di Scala:
       case _ => ()
   ```
 
-Il *refactor* del metodo appena citato è stato fatto in collaborazione con: [Elena Boschetti](./elena-boschetti.md). 
+Il *refactor* del metodo appena citato è stato fatto in collaborazione con [Elena Boschetti](./elena-boschetti.md). 
 
 Dopo ogni cambiamento del `MatchState`, il controller notifica del cambiamento tutti i *subscribers* tramite la funzione `notifySubscribers(MatchState)`.
 

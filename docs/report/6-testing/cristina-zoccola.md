@@ -49,7 +49,7 @@ Per rimuovere le ripetizioni di codice ho usato:
 
 Questa classe contiene tutti i parametri necessari per i test dedicati alle funzionalità della scacchiera.
 
-I parametri sono istanziati in base alla forma passata ad essa.
+I parametri sono istanziati in base alla forma della scacchiera.
 
 ```scala
 class BoardTestParams(val shape: Shape):
@@ -102,9 +102,9 @@ Questa classe di test è facilmente estendibile alle possibili future implementa
 
 ## ControllerTest
 
-In questa classe sono contenuti i test dei metodi, che riguardano la gestione dei turni di una partita, presenti nella classe `ControllerImpl`.
+In questa classe sono contenuti i test dei metodi che riguardano la gestione dei turni di una partita, presenti nella classe `ControllerImpl`.
 
-Per implementare questi test ho utilizzato **Mockito** e in particolare la sua funzionalità *Spy*: essa mi ha permesso di creare dei test senza rompere l'incapsulamento. \
+Per implementare questi test ho utilizzato **Mockito** e in particolare la sua funzionalità *Spy*: essa mi ha permesso di creare dei test senza rompere l'incapsulamento.\
 L'ho utilizzata per contare la quantità di volte in cui deve essere chiamato il metodo `notifySubscribers(MatchState)` in diverse situazioni:
 
 ```scala

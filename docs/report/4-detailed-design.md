@@ -182,7 +182,7 @@ In particolare:
 - `isPlacementValid()` controlla se la mossa selezionata è valida in base alle regole del gioco;
 - `placeDisk()` posiziona un nuovo disco sulla scacchiera, capovolgendo poi i dischi catturati da quest'ultimo, restituendo così una nuova scacchiera con le informazioni aggiornate.
 
-Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*. Per semplificare questa operazione viene utilizzato il **factory pattern**.
+Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
 
 Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**:
 
@@ -321,7 +321,7 @@ classDiagram
 ```
 
 Data la natura delle operazioni di I/O, le chiamate al save manager possono fallire.\
-Per questo motivo i metodi `save()`, `load()` e `deleteSaveFile()` in caso di fallimento, l'oggetto restituito conterrà un'eccezione che descrive il motivo.
+Per questo motivo i metodi `save()`, `load()` e `deleteSaveFile()` in caso di fallimento, restituiranno un oggetto contenente un'eccezione che ne descrive il motivo.
 
 #### Scenario: salvataggio di una partita
 
@@ -345,7 +345,7 @@ sequenceDiagram
 
 ## Propagazione degli aggiornamenti di stato di una partita
 
-Come accennato nel capitolo precedente, uno degli obiettivi del design di dettaglio è stato trovare una soluzione che permettesse di notificare gli aggiornamenti di stato della partita alla View senza introdurre una dipendenza diretta dal Controller alla View, considerato che vi era già l'esigenza di una dipendenza dalla View al Controller e far coesistere entrambe le dipendenze avrebbe introdotto una dipendenza ciclica tra View e Controller.
+Come accennato nel capitolo precedente, uno degli obiettivi del design di dettaglio è stato trovare una soluzione che permettesse di notificare gli aggiornamenti di stato della partita alla View senza introdurre una dipendenza diretta dal Controller alla View.
 
 Tale soluzione è stata individuata nel pattern Observer, applicato come segue.
 
@@ -446,7 +446,7 @@ Il diagramma sottostante raffigura la gerarchia di package prevista per l'organi
 
 - `model` contiene il codice relativo al Model e include i seguenti subpackage:
   - `board` per il codice relativo alla Board, che include a sua volta un subpackage `computations` per il codice relativo ai calcoli legati alle operazioni della Board;
-  - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale;
+  - `player` per il codice relativo all'implementazione dei giocatori, che include a sua volta un subpackage `strategy` per il codice relativo alle strategie dell'avversario virtuale.
 - `controller` contiene il codice relativo al Controller, incluso un subpackage `save` che contiene il codice relativo alla gestione dei salvataggi;
 - `view` contiene il codice relativo alla View e include i seguenti subpackage:
   - `i18n` per il codice relativo alla localizzazione;

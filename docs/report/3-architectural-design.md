@@ -6,15 +6,15 @@ Per l'architettura dell'applicazione, si è scelto di adottare il pattern Model-
 
 - il Model incapsula l'intera logica di gioco;
 - la View incapsula tutto ciò che concerne l'interfaccia utente;
-- il Controller comunica con la View e, nell'arco di vita di una partita, con il Model per realizzare le funzionalità previste, e si occupa anche di interagire con componenti esterne all'applicazione qualora necessario (ad esempio, con il sistema operativo per la gestione dei file di salvataggio).
+- il Controller comunica con View e Model per gestire le interazioni previste. Si occupa anche di interagire con componenti esterne all'applicazione qualora necessario (ad esempio, con il sistema operativo per la gestione dei file di salvataggio).
 
-La scelta architetturale adottata comporta inoltre i seguenti vantaggi.
+La scelta architetturale adottata comporta i seguenti vantaggi:
 
-- Poiché tutto ciò che concerne l'interfaccia utente è isolato nel modulo View, una stessa implementazione di Controller e Model può essere utilizzata da diverse implementazioni di View: ad esempio, l'interfaccia utente da riga di comando potrebbe essere sostituita da un'interfaccia grafica senza dover apportare alcuna modifica al Controller (né tantomeno al Model).
-- In maniera analoga, la logica di gioco incapsulata nel Model è riutilizzabile senza alcuna modifica qualora si volessero fare modifiche anche estese a tutto ciò che esula dalle regole del gioco (ad esempio, modifiche all'interfaccia utente o, in generale, alle funzionalità a contorno della partita).
-- È possibile sviluppare e testare (attraverso unit test automatizzati) la logica di gioco in maniera totalmente disgiunta dal resto dell'applicazione. Ciò ha permesso, come primo obiettivo di sviluppo, di pervenire ad una prima implementazione della logica di gioco, il cui corretto comportamento fosse appurato dagli unit test. Ciò ha anche facilitato gli sviluppi successivi: qualora si riscontrasse un bug durante una partita e gli unit test provassero che il comportamento del Model fosse corretto, il bug doveva quindi essere ricondotto ad un errore nel Controller o nella View, riducendo il campo per quanto riguarda la causa del problema.
-- Quanto citato nel punto precedente vale analogamente anche per il Controller.
-- La separazione adottata permette di lavorare in parallelo sui tre moduli: ad esempio, durante lo sviluppo ha permesso ai tre membri del gruppo di lavorare in parallelo su interfaccia utente, interazione tra Model e Controller e gestione dei salvataggi.
+- poiché tutto ciò che concerne l'interfaccia utente è isolato nel modulo View, una stessa implementazione di Controller e Model può essere utilizzata da diverse implementazioni di View: ad esempio, l'interfaccia utente da riga di comando potrebbe essere sostituita da un'interfaccia grafica senza dover apportare alcuna modifica al Controller (né tantomeno al Model);
+- in maniera analoga, la logica di gioco incapsulata nel Model è riutilizzabile senza alcuna modifica qualora si volessero fare modifiche anche estese a tutto ciò che esula dalle regole del gioco (ad esempio, modifiche all'interfaccia utente o, in generale, alle funzionalità a contorno della partita);
+- è possibile sviluppare e testare (attraverso unit test automatizzati) la logica di gioco in maniera totalmente disgiunta dal resto dell'applicazione. Ciò ha permesso, come primo obiettivo di sviluppo, di pervenire ad una prima implementazione della logica di gioco, il cui corretto comportamento fosse appurato dagli unit test. Ciò ha anche facilitato gli sviluppi successivi: qualora si riscontrasse un bug durante una partita e gli unit test provassero che il comportamento del Model fosse corretto, il bug doveva quindi essere ricondotto ad un errore nel Controller o nella View, riducendo il campo per quanto riguarda la causa del problema;
+- quanto citato nel punto precedente vale analogamente anche per il Controller;
+- la separazione adottata permette di lavorare in parallelo sui tre moduli: ad esempio, durante lo sviluppo ha permesso ai tre membri del gruppo di lavorare in parallelo su interfaccia utente, interazione tra Model e Controller e gestione dei salvataggi;
 
 ## Architettura complessiva
 

@@ -23,7 +23,7 @@ Si è ritenuto idoneo adottare tale approccio principalmente per due motivi:
 
 Per la scrittura dei test automatizzati, è stato utilizzato il framework **ScalaTest**.
 
-Inoltre, è stato utilizzato il framework **Mockito** per la definizione e l'utilizzo di test doubles. Nello specifico, è stato principalmente utilizzato per la creazione di *mock* delle componenti non ancora integrate: al fine di poter testare componenti che richiedevano l'interazione con altri componenti ancora assenti o in fase di sviluppo, sono stati creati dei mock in sostituzione di tali dipendenze. I mock sono stati poi sostituiti con le componenti reali una volta terminato il loro sviluppo.
+Inoltre, è stato usato il framework **Mockito** per la definizione di *test doubles*. Nello specifico, per la creazione di *mock* delle componenti non ancora implementate. I mock sono stati poi sostituiti con le componenti reali una volta terminato il loro sviluppo.
 
 ## Dettagli inerenti al testing
 

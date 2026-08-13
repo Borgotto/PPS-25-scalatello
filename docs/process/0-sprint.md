@@ -12,7 +12,7 @@ Lo sprint 0 è stato un breve sprint dedicato al *bootstrap* del progetto, nello
 
 ## Svolgimento
 
-Lo svolgimento dello sprint è stato diviso in due incontri tenutasi di persona nei giorni 20/06/2026 e 22/06/2026.
+Lo svolgimento dello sprint è stato diviso in due incontri, tenuti di persona, nei giorni 20/06/2026 e 22/06/2026.
 
 ## Esito
 
@@ -32,7 +32,7 @@ Gli obiettivi dello sprint sono stati raggiunti.
   - ScalaTest e Mockito per il testing;
   - GitHub Actions per la CI.
 - È stato redatto il backlog delle attività previste.
-- È stata definita una prima pianificazione degli sprint: è stato stabilito che il prossimo sprint sarà dedicato al design (architetturale e di dettaglio) ed stata stilata una possibile ripartizione delle altre attività tra gli sprint successivi.
+- È stata definita una prima pianificazione degli sprint: è stato stabilito che il prossimo sprint sarà dedicato al design (architetturale e di dettaglio) ed è stata stilata una possibile ripartizione delle altre attività tra gli sprint successivi.
 - Sono state individuate le macro-parti dell'applicazione di cui si occuperà ogni componente del gruppo (in quanto a design di dettaglio, implementazione e testing):
   - Emanuele Borghini: giocatori e gestione dei salvataggi;
   - Elena Boschetti: logica di gioco e View;

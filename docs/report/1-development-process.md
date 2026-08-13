@@ -53,11 +53,12 @@ Gli incontri si sono svolti prevalentemente in via telematica.
 
 ## Strumenti
 
-A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
+A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti:
 
-- Come sistema di controllo di versione, è stato utilizzato **Git**.
-- Per l'hosting remoto del repository, è stata utilizzata la piattaforma **GitHub**.
-- Per la redazione del backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, in virtù della sua integrazione in GitHub.
-- Come build system, è stato utilizzato **SBT**, essendo lo standard de-facto per progetti Scala.
-- Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**, essendo lo standard de-facto per progetti Scala. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di *test doubles*, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione.
-- Per la CI (Continuous Integration) e la generazione della Scaladoc, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository (esclusi quelli verso i branch dedicati alla relazione), in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
+- **Git**: come sistema di controllo di versione;
+- **GitHub**: per l'hosting remoto del repository;
+- **GitHub Projects**: per la redazione del backlog e l'organizzazione degli sprint, in virtù della sua integrazione in GitHub;
+- **SBT**: come build system, essendo lo standard per progetti Scala;
+- il framework **ScalaTest**: per il testing automatizzato, essendo lo standard per progetti Scala;
+- il framework **Mockito** per la creazione di *test doubles*, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione;
+- le **GitHub Actions**: per la CI (Continuous Integration) e la generazione della Scaladoc, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository (esclusi quelli verso i branch dedicati alla relazione), in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.

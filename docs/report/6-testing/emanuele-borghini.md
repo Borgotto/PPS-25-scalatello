@@ -122,7 +122,7 @@ Nel test condiviso vengono eseguiti i seguenti controlli per ciascuna riga della
   - il contenuto del file deve corrispondere alla deserializzazione del dato;
   - il caricamento non deve lanciare eccezioni;
   - i dati devono combaciare con quelli salvati;
-  - due caricamenti dello stesso file devono restituire lo stesso risultato.
+  - due caricamenti successivi dello stesso file devono restituire lo stesso risultato.
 - **Cancellazione**:
   - il file deve essere cancellato correttamente;
   - la cancellazione non deve lanciare eccezioni.

@@ -23,7 +23,7 @@ Alcune possibilità di evoluzione del progetto potrebbero essere le seguenti:
 
 ### Compimento delle mosse indipendente dal tipo di giocatore
 
-Durante la realizzazione del progetto, è stato individuato il possibile intervento migliorativo descritto nel seguito. Esso non è poi stato effettuato in considerazione delle tempistiche del progetto; lo riportiamo però come possibile sviluppo futuro.
+Durante la realizzazione del progetto, è stato individuato il possibile intervento migliorativo descritto nel seguito. Esso non è poi stato effettuato in considerazione delle tempistiche del progetto, lo riportiamo però come possibile sviluppo futuro.
 
 L'attributo `placementStrategy` potrebbe essere spostato nell'interfaccia `Player` e l'utente umano (`User`) potrebbe essere dotato di una `UserPlacementStrategy`, che consisterebbe nella funzione identità della posizione scelta dall'utente.
 

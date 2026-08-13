@@ -102,7 +102,7 @@ Il `trait` che definisce le strategie di posizionamento degli avversari, estende
 sealed trait OpponentPlacementStrategy extends PlacementStrategy[Board, Position]
 ```
 
-Due strategie di posizionamento sono state implementate, `RandomPlacementStrategy` e `SmartPlacementStrategy`, che rappresentano rispettivamente un avversario che posiziona le pedine in maniera casuale e un avversario che cerca di posizionare le pedine in maniera ottimale.
+Sono state implementate due strategie di posizionamento, `RandomPlacementStrategy` e `SmartPlacementStrategy`, che rappresentano rispettivamente un avversario che posiziona le pedine in maniera casuale e un avversario che cerca di posizionare le pedine in maniera ottimale.
 
 ```scala
 case class ErraticPlacementStrategy(color: Color) extends OpponentPlacementStrategy:
@@ -122,12 +122,10 @@ Grazie a delle euristiche di valutazione delle mosse (punteggio, peso della posi
 
 Questo algoritmo è usato per definire le difficoltà degli avversari in base alla profondità di ricerca, maggiore è la profondità, più difficile sarà l'avversario.
 
+Per una spiegazione più dettagliata dell'algoritmo, fare riferimento a [wikipedia](https://en.wikipedia.org/wiki/Negamax_Negamax_algorithm).
+
 ```scala
   object StrategyComputations:
-    /*
-    * Per una spiegazione più dettagliata dell'algoritmo, fare riferimento a:
-    * https://en.wikipedia.org/wiki/Negamax_Negamax_algorithm
-    */
     def negamax(board: Board, depth: Int, color: Color)
                       (using alpha: Int = Int.MinValue + 1, beta: Int = Int.MaxValue): Int =
       val availablePlacements = board.getAvailablePlacements(color)
