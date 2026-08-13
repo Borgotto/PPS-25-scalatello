@@ -184,7 +184,7 @@ In particolare:
 
 Eseguendo `placeDisk()` viene creata una nuova `Board` invece che aggiornare quelle attuale, questo viene fatto per mantenere l'immutabilità della `Board` e quindi garantire l'eliminazione di *side-effect*.
 
-Nell'implementazione della Board viene utilizzato il design pattern: **delegation pattern**:
+Nell'implementazione della Board viene utilizzato il design pattern **delegation pattern**:
 
 - la `Board` delega i calcoli associati alle sue operazioni alla classe `BoardComputations`;
 - nello specifico il pattern viene applicato sia delegando le operazioni a `BoardComputations`, sia passando a quest'ultima un riferimento alla `Board` per permetterle di operare sull'istanza corrente della stessa.

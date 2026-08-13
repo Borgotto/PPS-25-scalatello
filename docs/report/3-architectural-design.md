@@ -14,7 +14,7 @@ La scelta architetturale adottata comporta i seguenti vantaggi:
 - in maniera analoga, la logica di gioco incapsulata nel Model è riutilizzabile senza alcuna modifica qualora si volessero fare modifiche anche estese a tutto ciò che esula dalle regole del gioco (ad esempio, modifiche all'interfaccia utente o, in generale, alle funzionalità a contorno della partita);
 - è possibile sviluppare e testare (attraverso unit test automatizzati) la logica di gioco in maniera totalmente disgiunta dal resto dell'applicazione. Ciò ha permesso, come primo obiettivo di sviluppo, di pervenire ad una prima implementazione della logica di gioco, il cui corretto comportamento fosse appurato dagli unit test. Ciò ha anche facilitato gli sviluppi successivi: qualora si riscontrasse un bug durante una partita e gli unit test provassero che il comportamento del Model fosse corretto, il bug doveva quindi essere ricondotto ad un errore nel Controller o nella View, riducendo il campo per quanto riguarda la causa del problema;
 - quanto citato nel punto precedente vale analogamente anche per il Controller;
-- la separazione adottata permette di lavorare in parallelo sui tre moduli: ad esempio, durante lo sviluppo ha permesso ai tre membri del gruppo di lavorare in parallelo su interfaccia utente, interazione tra Model e Controller e gestione dei salvataggi;
+- la separazione adottata permette di lavorare in parallelo sui tre moduli: ad esempio, durante lo sviluppo ha permesso ai tre membri del gruppo di lavorare in parallelo su interfaccia utente, interazione tra Model e Controller e gestione dei salvataggi.
 
 ## Architettura complessiva
 

@@ -56,6 +56,8 @@ Essa utilizza un contesto di tipo `ComputationsPosExtensions`, tramite un `given
 
 All'interno della classe viene anche definito un `given` della stessa, da dare come contesto alla classe `BoardComputations` per permetterle di operare sull'istanza della `Board` corrente.
 
+L'unico modo per istanziare la classe è tramite i *factory method* contenuti nel `companion object` di `Board` attraverso i metodi `apply()`.
+
 #### Board companion object
 
 Il `companion object` del `trait` `Board`, contiene le *factory* (**factory pattern**) per istanziare la classe `BoardImpl`.
@@ -137,7 +139,7 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
 
 - `for comprehension` con `guard`;
   
-  esempio nel metodo: `getAvailablePlacements(Color)`:
+  esempio nel metodo `getAvailablePlacements(Color)`:
 
   ```scala
   for
@@ -230,6 +232,8 @@ In questa classe ho utilizzato le seguenti funzionalità di Scala:
 Il *refactor* del metodo appena citato è stato fatto in collaborazione con [Elena Boschetti](./elena-boschetti.md). 
 
 Dopo ogni cambiamento del `MatchState`, il controller notifica del cambiamento tutti i *subscribers* tramite la funzione `notifySubscribers(MatchState)`.
+
+L'unico modo per istanziare la classe è tramite i *factory method* contenuti nel `companion object` di `Controller` attraverso il metodo `apply()`.
 
 #### Controller companion object
 
