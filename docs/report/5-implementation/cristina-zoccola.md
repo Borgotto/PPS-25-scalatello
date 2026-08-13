@@ -261,3 +261,5 @@ def _getPosOnSameDiagonal(source: Position, destination: Position,
 Nei pezzi di codice mostrati nelle sezioni precedenti, è possibile vedere l'uso di alcuni dei metodi implementati.
 
 I metodi che permettono di "muoversi" lungo gli assi, ottenendo la posizione nella direzione richiesta, oltre ad essere usati nel codice di produzione, sono anche usati per rendere i test più semplici e leggibili.
+
+[Indice](./index.md)

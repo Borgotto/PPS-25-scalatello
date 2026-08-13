@@ -56,3 +56,5 @@ val placement: Position = player.strategy.computePlacement
 In virtù della sua maggiore essenzialità e della possibilità di avere maggiore tempo da dedicare ad altri aspetti del progetto, il gruppo ha preferito realizzare un'interfaccia da riga di comando piuttosto che un'interfaccia grafica.
 
 Un prototipo funzionante di interfaccia grafica, seppur incompleto, è stato comunque realizzato; il codice è disponibile sul [branch `feature/gui`](https://github.com/Borgotto/PPS-25-scalatello/tree/feature/gui) del repository. Il prototipo è stato realizzato usando la libreria [scala-swing](https://github.com/scala/scala-swing), un wrapper Scala della libreria Java Swing.
+
+[Indice](../index.md) | [Capitolo precedente](./6-testing/index.md)

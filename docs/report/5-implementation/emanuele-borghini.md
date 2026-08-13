@@ -374,3 +374,5 @@ Sono stati quindi introdotti i seguenti miglioramenti al codice al fine di migli
         val bestMove: Position = evaluatedMoves.seq.minBy((_, score, index) => (score, index))._1
         bestMove
       ```
+
+[Indice](./index.md)

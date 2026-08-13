@@ -113,3 +113,5 @@ classDiagram
 
   View <|.. CLIView
 ```
+
+[Indice](../index.md) | [Capitolo precedente](./2-requirements.md) | [Capitolo successivo](./4-detailed-design.md)

@@ -31,3 +31,5 @@ Nel prossimo sprint, si può quindi procedere all'integrazione di Model, Control
 Nello stesso sprint, sarà implementata la parte di View relativa alla gestione dei salvataggi.
 
 Si è deciso inoltre di effettuare, dopo aver completato le due attività appena indicate, un refactoring intermedio per migliorare il codice finora prodotto.
+
+[Indice](./index.md) | [Sprint precedente](./2-sprint.md) | [Sprint successivo](./4-sprint.md)

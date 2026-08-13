@@ -37,3 +37,5 @@ Gli obiettivi dello sprint sono stati raggiunti.
   - Emanuele Borghini: giocatori e gestione dei salvataggi;
   - Elena Boschetti: logica di gioco e View;
   - Cristina Zoccola: Board e Controller.
+
+[Indice](./index.md) | [Sprint successivo](./1-sprint.md)

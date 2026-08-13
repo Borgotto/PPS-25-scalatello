@@ -120,3 +120,5 @@ classDiagram
 ## Requisiti di implementazione
 
 - L'applicazione deve essere interamente realizzata in linguaggio Scala.
+
+[Indice](../index.md) | [Capitolo precedente](./1-development-process.md) | [Capitolo successivo](./3-architectural-design.md)

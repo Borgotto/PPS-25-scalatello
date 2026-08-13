@@ -25,3 +25,5 @@ Successivamente all'incontro, ciascun componente del gruppo ha lavorato sullo sv
 L'obiettivo dello sprint è stato raggiunto: ogni componente ha implementato la propria parte di Model, realizzando le funzionalità essenziali individuate e la corrispondente suite di test.
 
 Nel prossimo sprint, si può quindi procedere all'integrazione delle parti del Model e allo sviluppo di Controller (incluso il Save Manager) e View. L'integrazione delle parti del Model è assegnata a Elena Boschetti, che la svolgerà all'inizio dello sprint.
+
+[Indice](./index.md) | [Sprint precedente](./1-sprint.md) | [Sprint successivo](./3-sprint.md)

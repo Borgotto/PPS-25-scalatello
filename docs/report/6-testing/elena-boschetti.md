@@ -23,3 +23,5 @@ Per fare un esempio, la configurazione iniziale di una `Board` 4x4 è così rapp
 ```
 
 La rappresentazione testuale è trasformata in un'istanza di `Board` per mezzo dell'extension method `toBoard` definito nel codice di test ([link al metodo](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/test/scala/it/unibo/pps/testutils/TestExtensions.scala)).
+
+[Indice](./index.md)

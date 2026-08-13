@@ -62,3 +62,5 @@ A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti:
 - il framework **ScalaTest**: per il testing automatizzato, essendo lo standard per progetti Scala;
 - il framework **Mockito** per la creazione di *test doubles*, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione;
 - le **GitHub Actions**: per la CI (Continuous Integration) e la generazione della Scaladoc, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository (esclusi quelli verso i branch dedicati alla relazione), in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
+
+[Indice](../index.md) | [Capitolo successivo](./2-requirements.md)

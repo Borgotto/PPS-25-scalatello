@@ -133,3 +133,5 @@ class ControllerTest extends AnyFlatSpec:
     verify(mockedController, 
       times(3)).notifySubscribers(any(classOf[MatchState]))
 ```
+
+[Indice](./index.md)

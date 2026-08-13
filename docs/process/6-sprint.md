@@ -18,3 +18,5 @@ Tutti i componenti del gruppo hanno infine revisionato la relazione per apportar
 ## Esito
 
 La stesura della relazione è stata completata. Si dichiara quindi concluso il progetto e si procede al rilascio dell'applicazione e alla pubblicazione della relazione.
+
+[Indice](./index.md) | [Sprint precedente](./5-sprint.md)

@@ -148,3 +148,5 @@ I test controllano i seguenti casi:
 - **Cancellazione**:
   - deve fallire con un `DeleteError` se il file non esiste o non può essere cancellato;
   - non può cancellare un file se non è un file di salvataggio valido.
+
+[Indice](./index.md)

@@ -22,3 +22,5 @@ Tutti gli obiettivi dello sprint sono stati raggiunti. Si dichiara quindi conclu
 Durante la settimana 27/07/2026 - 02/08/2026, il lavoro sul progetto sarà sospeso per via di impegni personali dei componenti del gruppo.
 
 Il periodo 03/08/2026 - 16/08/2026 corrisponderà all'ultimo sprint, dedicato alla stesura della relazione e, infine, al rilascio dell'applicazione e alla pubblicazione della relazione.
+
+[Indice](./index.md) | [Sprint precedente](./4-sprint.md) | [Sprint successivo](./6-sprint.md)

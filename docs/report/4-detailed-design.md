@@ -501,3 +501,5 @@ flowchart BT
   io --> cli
   screens --> cli
 ```
+
+[Indice](../index.md) | [Capitolo precedente](./3-architectural-design.md) | [Capitolo successivo](./5-implementation/index.md)

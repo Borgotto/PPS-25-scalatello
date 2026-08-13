@@ -32,3 +32,5 @@ Ogni componente del gruppo riporta di seguito la parte di testing relativa alla 
 - [Emanuele Borghini](emanuele-borghini.md)
 - [Elena Boschetti](elena-boschetti.md)
 - [Cristina Zoccola](cristina-zoccola.md)
+
+[Indice](../../index.md) | [Capitolo precedente](../5-implementation/index.md) | [Capitolo successivo](../7-retrospective.md)

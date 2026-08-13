@@ -25,3 +25,5 @@ Successivamente al secondo incontro, i componenti del gruppo hanno lavorato in a
 Il gruppo è riuscito a pervenire al risultato atteso, ossia una prima versione del design architetturale e di dettaglio. La documentazione prodotta, consistente in diagrammi (principalmente UML) che saranno presi come riferimento durante lo sviluppo, è stata messa in versione.
 
 Nel prossimo sprint si può dunque procedere con l'implementazione. Un nuovo incontro è stato fissato per il giorno 29/06/2026, primo giorno dello sprint, per accordare le impostazioni dell'ambiente di sviluppo.
+
+[Indice](./index.md) | [Sprint precedente](./0-sprint.md) | [Sprint successivo](./2-sprint.md)

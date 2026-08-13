@@ -55,3 +55,5 @@ In concomitanza con questo approccio, è stato utilizzato il costrutto di for-co
 I costrutti appena citati sono stati utilizzati in maniera estesa nell'implementazione della View; [qui](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/InputComponent.scala#L57-L74) è possibile visualizzarne un esempio di utilizzo.
 
 **Nota:** si segnala che il codice che implementa la type class [Monad](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/utils/Monad.scala) e la monade [IO](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/view/cli/io/IO.scala) è stato preso dal materiale del corso realizzato dal prof. Mirko Viroli.
+
+[Indice](./index.md)
