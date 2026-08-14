@@ -1,24 +1,22 @@
-# Sprint 6
-
-Quest'ultimo sprint è dedicato alla stesura della relazione del progetto e alla preparazione del rilascio della versione finale del gioco.
+# Sprint 6 (03/08/2026 - 16/08/2026)
 
 ## Obiettivi
 
-- **P0**
-  - Stesura relazione
-- **P1**
-  - Creazione release
+- Stesura della relazione di progetto.
+- Rilascio dell'applicazione e pubblicazione della relazione.
 
-## Incontri
+## Svolgimento
 
-- **Incontro 1**: 03/08/2026
+Il giorno 03/08/2026 si è svolto un breve incontro per coordinare la scrittura delle parti in comune della relazione.
 
-  In questo incontro si è deciso come dividere le parti della relazione tra i membri del gruppo, in modo da poter lavorare in parallelo e completare la stesura della relazione entro la fine dello sprint.
+Successivamente, ciascun componente del gruppo ha lavorato in autonomia sulle parti della relazione a sé assegnate, comunicando via chat in caso di dubbi sull'organizzazione del contenuto di ciascun capitolo.
 
-- **Incontro 2**: ??/08/2026
+La stesura della relazione si è conclusa il giorno 12/08/2026.
 
-  <!-- todo: fissare prossimo incontro -->
+Tutti i componenti del gruppo hanno infine revisionato la relazione per apportare eventuali miglioramenti e dare la propria approvazione sul risultato finale.
 
-## Risultati dello sprint
+## Esito
 
-Con questo sprint si conclude il progetto.
+La stesura della relazione è stata completata. Si dichiara quindi concluso il progetto e si procede al rilascio dell'applicazione e alla pubblicazione della relazione.
+
+[Indice](./index.md) | [Sprint precedente](./5-sprint.md)

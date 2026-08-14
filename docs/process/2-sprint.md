@@ -1,28 +1,29 @@
-# Sprint 2
-
-In questo sprint il gruppo ha come obiettivo principale la realizzazione del prototipo del sistema.
-
-Ovvero la realizzazione di una versione funzionante del gioco, con le funzionalità principali implementate.
+# Sprint 2 (29/06/2026 - 05/07/2026)
 
 ## Obiettivi
 
-- **P1**
-  - Implementazione *Board* e *Disk*
-  - Implementazione *Avversario*
-  - Implementazione *Logic*
-- **P2**
-  - Implementazione *Controller*
-  - Implementazione *View*
-  - Implementazione *SaveManager*
+L'obiettivo di questo sprint è che ciascun componente del gruppo pervenga ad una prima implementazione correttamente funzionante della propria parte di Model, il cui comportamento sia verificato mediante unit test automatizzati.
 
-## Incontri
+Il soddisfacimento di questo obiettivo consentirà poi di procedere all'integrazione delle diverse parti del Model, ottenendone una prima versione, per poi procedere con lo sviluppo di Controller e View.
 
-In questo sprint è stato effettuato solo un primo incontro, programmato per il giorno 30/06/2026, da remoto per dare il via al lavoro individuale dei membri del gruppo.
+Al fine di semplificare questa prima fase di sviluppo, sono state escluse funzionalità che esulano dalle dinamiche di gioco essenziali previste dalle regole di Othello. Ad esempio, tra le strategie dell'avversario virtuale è stata prevista l'implementazione solo di quella randomica.
 
-Un incontro finale è stato programmato per il giorno 06/07/2026, sempre da remoto, per discutere i progressi fatti e per coordinare l'unione delle parti sviluppate in autonomia.
+Si ricorda che la suddivisione delle parti è la seguente:
 
-## Risultati dello sprint
+- implementazione della logica di gioco: Elena Boschetti;
+- implementazione dei giocatori: Emanuele Borghini;
+- implementazione della board: Cristina Zoccola.
 
-Gli obiettivi con priorità P1 sono stati completati entro la data del 06/07/2026 di fine sprint, mentre gli obiettivi con priorità P2 sono stati rimandati allo sprint successivo.
+## Svolgimento
 
-Un nuovo incontro è stato fissato per il giorno 06/07/2026 per dare l'inizio al prossimo sprint, in cui il gruppo completerà le tasks rimaste.
+Il giorno 29/06/2026 è stato svolto un incontro da remoto per concordare ed effettuare il setup dell'ambiente di sviluppo.
+
+Successivamente all'incontro, ciascun componente del gruppo ha lavorato sullo sviluppo della propria parte del Model, comunicando via chat qualora emergessero dubbi o questioni di cui discutere.
+
+## Esito
+
+L'obiettivo dello sprint è stato raggiunto: ogni componente ha implementato la propria parte di Model, realizzando le funzionalità essenziali individuate e la corrispondente suite di test.
+
+Nel prossimo sprint, si può quindi procedere all'integrazione delle parti del Model e allo sviluppo di Controller (incluso il Save Manager) e View. L'integrazione delle parti del Model è assegnata a Elena Boschetti, che la svolgerà all'inizio dello sprint.
+
+[Indice](./index.md) | [Sprint precedente](./1-sprint.md) | [Sprint successivo](./3-sprint.md)

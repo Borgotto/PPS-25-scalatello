@@ -1,33 +1,26 @@
-# Sprint 5
-
-In questo sprint si è deciso di implementare le funzionalità opzionali del gioco.
-
-La feature scelta è stata quella di implementare strategie di gioco avanzate per l'avversario.
-
-Finita l'implementazione della funzionalità opzionale, seguirà un ultimo refactoring per sistemare i dettagli rimasti dallo sprint precedente.
-
-Ed infine si procederà con la redazione della documentazione del codice tramite Scaladoc.
+# Sprint 5 (20/07/2026 - 26/07/2026)
 
 ## Obiettivi
 
-- **P0**
-  - Implementazione di *SmartPlacementStrategy*
-- **P1**
-  - Implementazione della scelta della strategia dalla *View*
-  - Ottimizzazione delle prestazioni
-- **P2**
-  - Refactoring
-- **P3**
-  - Redazione Scaladoc
+- Implementazione delle altre strategie previste (oltre a quella randomica già implementata) per l'avversario virtuale (assegnata a Emanuele Borghini).
+- Ottimizzazione delle prestazioni degli algoritmi che realizzano le strategie dell'avversario (assegnata a Emanuele Borghini).
+- Implementazione della scelta della strategia dell'avversario nella View (assegnata a Elena Boschetti).
+- Refactoring finale e redazione Scaladoc (svolti da tutti i componenti del gruppo).
 
-## Incontri
+## Svolgimento
 
-Le prime fasi dello sprint sono state eseguite in autonomia, dato che le task **P0** e **P1** non richiedevano un lavoro di gruppo.
+Mentre Emanuele Borghini si è occupato del task di implementazione delle strategie, i componenti Elena Boschetti e Cristina Zoccola hanno continuato il lavoro di refactoring sul propro codice.
 
-Per il refactoring seguivano le regole precedentemente stabilite, quindi anche in questo caso non è stato necessario un incontro.
+Una volta conclusa l'implementazione delle strategie dell'avversario, Elena Boschetti ha provveduto all'implementazione della scelta della strategia nella View.
 
-Mentre per la stesura della documentazione, si è svolto un breve incontro il giorno 24/07/2026, per chiarire le regole per la redazione della documentazione e la struttura dei file.
+Una volta concluso il refactoring da parte di tutti i componenti del gruppo, ci si è dedicati alla scrittura della Scaladoc. In merito a ciò, il giorno 24/07/2026 si è svolto un breve incontro per chiarire gli standard da seguire.
 
-## Risultati dello sprint
+## Esito
 
-Tutti gli obiettivi dello sprint sono stati completati entro la fine dello sprint, in data 26/07/2026.
+Tutti gli obiettivi dello sprint sono stati raggiunti. Si dichiara quindi concluso lo sviluppo, a meno di eventuali interventi di lieve entità.
+
+Durante la settimana 27/07/2026 - 02/08/2026, il lavoro sul progetto sarà sospeso per via di impegni personali dei componenti del gruppo.
+
+Il periodo 03/08/2026 - 16/08/2026 corrisponderà all'ultimo sprint, dedicato alla stesura della relazione e, infine, al rilascio dell'applicazione e alla pubblicazione della relazione.
+
+[Indice](./index.md) | [Sprint precedente](./4-sprint.md) | [Sprint successivo](./6-sprint.md)

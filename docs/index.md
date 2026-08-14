@@ -14,13 +14,13 @@ La relazione si articola nelle seguenti sezioni:
 2. [Requisiti](./report/2-requirements.md)
 3. [Design architetturale](./report/3-architectural-design.md)
 4. [Design di dettaglio](./report/4-detailed-design.md)
-5. [Implementazione](./report/5-implementation.md)
-6. [Testing](./report/6-testing.md)
+5. [Implementazione](./report/5-implementation/index.md)
+6. [Testing](./report/6-testing/index.md)
 7. [Retrospettiva](./report/7-retrospective.md)
 
-## Sprint backlog
+## Documentazione di processo
 
-I backlog degli sprint sono documentati nella apposita sezione [backlogs](./process/index.md).
+I backlog degli sprint e i report degli sprint sono documentati nell'apposita sezione ["Documentazione di processo"](./process/index.md).
 
 ## Scaladoc
 

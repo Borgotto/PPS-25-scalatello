@@ -8,21 +8,21 @@ Ciascun membro del gruppo, oltre al ruolo di sviluppatore, ha svolto uno specifi
 
 ### Committente
 
-Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti.
+Uno dei membri del gruppo ha avuto il ruolo di committente del progetto, svolgendo i seguenti compiti:
 
-- Comunicazione dei requisiti di progetto.
-- Verifica del risultato prodotto al termine di ogni iterazione del processo di sviluppo, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per le iterazioni successive.
-- Valutazione e accettazione del risultato finale del progetto.
+- comunicazione dei requisiti di progetto;
+- verifica del risultato prodotto al termine di ogni iterazione del processo di sviluppo, nell'ottica di garantirne la qualità e la conformità alle proprie aspettative, fornendo anche feedback utili a tale scopo per le iterazioni successive;
+- valutazione e accettazione del risultato finale del progetto.
 
 Tale ruolo è stato assegnato a Cristina Zoccola, poiché è stata la componente del gruppo che ha avanzato l'idea fondante del progetto e che ha più esperienza con il dominio in oggetto.
 
 ### Product Owner
 
-Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti.
+Il Product Owner ha avuto il ruolo di coordinatore all'interno del team di sviluppo. Nello specifico, il Product Owner si è occupato dei seguenti compiti:
 
-- Redazione del _product backlog_, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività.
-- Comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato.
-- Coordinamento del lavoro tra i componenti del team di sviluppo.
+- redazione del *backlog*, ossia l'elenco di attività da svolgere nell'ambito del progetto, completo di livello di priorità, stima della durata e assegnatario per ciascuna attività;
+- comunicazione con il committente, per la raccolta dei requisiti a inizio progetto e, al termine di ogni iterazione, dei feedback sul risultato presentato;
+- coordinamento del lavoro tra i componenti del team di sviluppo.
 
 Tale ruolo è stato assegnato a Elena Boschetti.
 
@@ -34,14 +34,14 @@ Tale ruolo è stato assegnato a Emanuele Borghini.
 
 ## Organizzazione del lavoro
 
-Le attività di progetto sono state suddivise in iterazioni (_dette sprint_), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
+Le attività di progetto sono state suddivise in iterazioni (*sprint*), prevalentemente della durata di una settimana. In totale, sono stati pianificati 7 sprint.
 
-Il primo sprint è stato dedicato alle seguenti attività.
+Il primo sprint è stato dedicato alle seguenti attività:
 
-- Definizione del processo di sviluppo, descritto nel presente capitolo.
-- Formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md).
-- Scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo.
-- Redazione del product backlog, consultabile al seguente [link ai Projects della repository](https://github.com/Borgotto/PPS-25-scalatello/projects).
+- definizione del processo di sviluppo, descritto nel presente capitolo;
+- formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md);
+- scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo;
+- redazione del backlog, consultabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1).
 
 I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della presente relazione.
 
@@ -53,11 +53,14 @@ Gli incontri si sono svolti prevalentemente in via telematica.
 
 ## Strumenti
 
-A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti.
+A supporto del processo di sviluppo, sono stati adottati i seguenti strumenti:
 
-- Come sistema di controllo di versione, è stato utilizzato **Git**.
-- Per l'hosting remoto del repository, è stata utilizzata la piattaforma **GitHub**.
-- Per la redazione del product backlog e l'organizzazione degli sprint, è stato utilizzato **GitHub Projects**, in virtù della sua integrazione in GitHub.
-- Come build system, è stato utilizzato **SBT**, essendo lo standard de-facto per progetti Scala.
-- Per il testing automatizzato, è stato utilizzato il framework **ScalaTest**, essendo lo standard de-facto per progetti Scala. Inoltre, è stato utilizzato il framework **Mockito** per la creazione di _test doubles_, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione.
-- Per la CI, sono state utilizzate le **GitHub Actions**, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository, in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
+- **Git**: come sistema di controllo di versione;
+- **GitHub**: per l'hosting remoto del repository;
+- **GitHub Projects**: per la redazione del backlog e l'organizzazione degli sprint, in virtù della sua integrazione in GitHub;
+- **SBT**: come build system, essendo lo standard per progetti Scala;
+- il framework **ScalaTest**: per il testing automatizzato, essendo lo standard per progetti Scala;
+- il framework **Mockito** per la creazione di *test doubles*, al fine di poter testare le diverse componenti in maniera indipendente prima di procedere alla loro integrazione;
+- le **GitHub Actions**: per la CI (Continuous Integration) e la generazione della Scaladoc, anch'esse integrate in GitHub. La pipeline CI è stata configurata per eseguire i test automatici ad ogni push verso il repository (esclusi quelli verso i branch dedicati alla relazione), in modo tale da verificare l'integrità del sistema in maniera costante ed automatica.
+
+[Indice](../index.md) | [Capitolo successivo](./2-requirements.md)
