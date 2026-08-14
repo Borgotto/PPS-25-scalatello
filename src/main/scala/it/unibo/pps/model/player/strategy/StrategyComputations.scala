@@ -12,7 +12,7 @@ import scala.collection.parallel.CollectionConverters.*
 private object StrategyComputations:
 
   /**
-   * @see [[https://en.wikipedia.org/wiki/Negamax Negamax algorithm]] for a detailed explanation of the algorithm.
+   * @see [[https://en.wikipedia.org/wiki/Negamax]] for a detailed explanation of the algorithm.
    */
   private def negamax(board: Board, depth: Int, color: Color)
                      (using alpha: Int = Int.MinValue + 1, beta: Int = Int.MaxValue): Int =
