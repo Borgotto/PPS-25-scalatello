@@ -39,9 +39,9 @@ Le attività di progetto sono state suddivise in iterazioni (*sprint*), prevalen
 Il primo sprint è stato dedicato alle seguenti attività:
 
 - definizione del processo di sviluppo, descritto nel presente capitolo;
-- formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./3-requirements.md);
+- formalizzazione dei requisiti, il cui risultato è riportato nel capitolo ["Requisiti"](./2-requirements.md);
 - scelta degli strumenti da utilizzare a supporto della pianificazione del lavoro e a supporto delle attività di sviluppo; gli strumenti adottati sono riportati nella sezione ["Strumenti"](#strumenti) del presente capitolo;
-- redazione del backlog, consultabile alla [seguente pagina](https://github.com/Borgotto/PPS-25-scalatello/projects/1).
+- redazione del backlog, consultabile alla [seguente pagina](https://github.com/users/Borgotto/projects/1).
 
 I 5 sprint successivi sono stati dedicati alle attività di progettazione, sviluppo e redazione della documentazione del codice. L'ultimo sprint è stato infine dedicato alla stesura della presente relazione.
 

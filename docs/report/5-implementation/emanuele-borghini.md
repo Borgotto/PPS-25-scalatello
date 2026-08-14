@@ -21,7 +21,7 @@
 
 ### Player
 
-<sup>[(link al codice completo)](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/model/Logic.scala)</sup>
+<sup>[(link al codice completo)](https://github.com/Borgotto/PPS-25-scalatello/blob/main/src/main/scala/it/unibo/pps/model/player/Player.scala)</sup>
 
 ---
 
@@ -122,7 +122,7 @@ Grazie a delle euristiche di valutazione delle mosse (punteggio, peso della posi
 
 Questo algoritmo è usato per definire le difficoltà degli avversari in base alla profondità di ricerca, maggiore è la profondità, più difficile sarà l'avversario.
 
-Per una spiegazione più dettagliata dell'algoritmo, fare riferimento a [wikipedia](https://en.wikipedia.org/wiki/Negamax_Negamax_algorithm).
+Per una spiegazione più dettagliata dell'algoritmo, fare riferimento a [Wikipedia](https://en.wikipedia.org/wiki/Negamax).
 
 ```scala
   object StrategyComputations:
