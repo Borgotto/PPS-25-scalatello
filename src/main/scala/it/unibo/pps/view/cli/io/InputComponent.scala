@@ -3,8 +3,7 @@ package it.unibo.pps.view.cli.io
 import it.unibo.pps.view.cli.io.Sanitizer.sanitizeFilename
 import it.unibo.pps.view.cli.io.IO.write
 import it.unibo.pps.view.i18n.I18n
-
-import org.jline.reader.LineReader
+import org.jline.reader.{LineReader, UserInterruptException}
 
 /** Provides reusable functions for multi-step I/O operations on CLI.
  *
@@ -30,6 +29,7 @@ class InputComponent(private val reader: LineReader)(using i18n: I18n):
     catch
       case _: SaveMatchInterruptException => ReadResult.SaveMatchInterrupt
       case _: QuitMatchInterruptException => ReadResult.QuitMatchInterrupt
+      case _: UserInterruptException => throw new ExitAppInterruptException()
   )
 
   /** Implements the I/O scenario in which the user has to choose an option
