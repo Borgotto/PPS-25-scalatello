@@ -14,7 +14,7 @@ All'interno del progetto mi sono occupata di implementare:
 
 ### Disk
 
-**Disk** è una `case class` che modella le pedine di gioco, come descritto nella sua sezione di [design di dettaglio](../4-detailed-design.md).
+**Disk** è una `case class` che modella le pedine di gioco, come descritto nella sua sezione di [design di dettaglio](../4-detailed-design.md#disk).
 
 ### Board
 
@@ -39,7 +39,7 @@ classDiagram
 
 ```
 
-**Board** è un `trait` che modella la scacchiera su cui viene svolta una partita, come definito nella sua sezione di [design di dettaglio](../4-detailed-design.md#board-e-disk).
+**Board** è un `trait` che modella la scacchiera su cui viene svolta una partita, come definito nella sua sezione di [design di dettaglio](../4-detailed-design.md#board-e-boardcomputations).
 
 Questo `trait` è implementato dalla classe: `BoardImpl`.
 
@@ -50,7 +50,7 @@ Questo `trait` è implementato dalla classe: `BoardImpl`.
 - la forma e i dischi sono i parametri della stessa;
 - i metodi restanti sono implementati al suo interno.
 
-Le computazioni, richieste per implementare i diversi metodi, sono tutte delegate (**delegation pattern**, descritto nel [design di dettaglio](../4-detailed-design.md#board-e-disk)) alla classe `BoardComputations`.
+Le computazioni, richieste per implementare i diversi metodi, sono tutte delegate (**delegation pattern**, descritto nel [design di dettaglio](../4-detailed-design.md#board-e-boardcomputations)) alla classe `BoardComputations`.
 
 Essa utilizza un contesto di tipo `ComputationsPosExtensions`, tramite un `given/using`, per effettuare i calcoli sulla forma della `Board` corretta, il `given` è definito in una *factory* prima di istanziare la classe.
 
