@@ -39,7 +39,7 @@ classDiagram
 
 ```
 
-**Board** è un `trait` che modella la scacchiera su cui viene svolta una partita, come definito nella sua sezione di [design di dettaglio](../4-detailed-design.md).
+**Board** è un `trait` che modella la scacchiera su cui viene svolta una partita, come definito nella sua sezione di [design di dettaglio](../4-detailed-design.md#board-e-disk).
 
 Questo `trait` è implementato dalla classe: `BoardImpl`.
 
@@ -50,7 +50,7 @@ Questo `trait` è implementato dalla classe: `BoardImpl`.
 - la forma e i dischi sono i parametri della stessa;
 - i metodi restanti sono implementati al suo interno.
 
-Le computazioni, richieste per implementare i diversi metodi, sono tutte delegate (**delegation pattern**, descritto nel [design di dettaglio](../4-detailed-design.md)) alla classe `BoardComputations`.
+Le computazioni, richieste per implementare i diversi metodi, sono tutte delegate (**delegation pattern**, descritto nel [design di dettaglio](../4-detailed-design.md#board-e-disk)) alla classe `BoardComputations`.
 
 Essa utilizza un contesto di tipo `ComputationsPosExtensions`, tramite un `given/using`, per effettuare i calcoli sulla forma della `Board` corretta, il `given` è definito in una *factory* prima di istanziare la classe.
 
@@ -195,7 +195,7 @@ In questo `object` viene implementato il metodo definito nel `trait`: con i conf
 - gestisce la notifica degli aggiornamenti estendendo il `trait` `Publisher`;
 - gestisce i salvataggi interfacciandosi con il `SaveManager`.
 
-Esso è implementato come descritto nella sua sezione contenuta nel [design di dettaglio](../4-detailed-design.md):
+Esso è implementato come descritto nella sua sezione contenuta nel [design di dettaglio](../4-detailed-design.md#controller):
 
 Questo `trait` è implementato dalla classe `ControllerImpl`.
 
@@ -205,9 +205,8 @@ Questo `trait` è implementato dalla classe `ControllerImpl`.
 
 Per quanto riguarda gli altri metodi presenti al suo interno:
 
-- i seguenti metodi: `subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])` e `notifySubscribers(MatchState)` sono stati implemetati in collaborazione con [Elena Boschetti](./elena-boschetti.md);
-- I metodi creati per interfacciarsi con il `SaveManager` (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md);
-- il metodo `isMatchOver` è stato implementato in collaborazione con [Elena Boschetti](./elena-boschetti.md).
+- i seguenti metodi: `subscribe(Subscriber[MatchState])`, `unsubscribe(Subscriber[MatchState])`, `notifySubscribers(MatchState)` e `isMatchOver()` sono stati implemetati in collaborazione con [Elena Boschetti](./elena-boschetti.md);
+- I metodi creati per interfacciarsi con il `SaveManager` (`saveMatch(String)`, `loadMatch(String)`, `saveFileNames` e `deleteSaveFile(String)`) sono stati implementati in collaborazione con [Emanuele Borghini](./emanuele-borghini.md) e [Elena Boschetti](./elena-boschetti.md).
 
 In questa classe ho utilizzato le seguenti funzionalità di Scala:
 
@@ -233,7 +232,7 @@ Il *refactor* del metodo appena citato è stato fatto in collaborazione con [Ele
 
 Dopo ogni cambiamento del `MatchState`, il controller notifica del cambiamento tutti i *subscribers* tramite la funzione `notifySubscribers(MatchState)`.
 
-L'unico modo per istanziare la classe è tramite i *factory method* contenuti nel `companion object` di `Controller` attraverso il metodo `apply()`.
+L'unico modo per istanziare la classe è tramite il *factory method* contenuto nel `companion object` di `Controller` attraverso il metodo `apply()`.
 
 #### Controller companion object
 

@@ -26,7 +26,7 @@ A tale scopo, sono innanzitutto riportate le regole tradizionali del gioco, al q
 
 ### Regole del gioco
 
-Il gioco prevede due giocatori, ciascuno dei quali possiede un determinato numero di pedine (dette "dischi"), le quali sono di colore nero da un lato e di colore bianco dall'altro. Ad ogni giocatore è assegnato uno dei due colori. Il terreno di gioco, diviso in celle, è di forma quadrata o rettangolare.
+Il gioco prevede due giocatori, ciascuno dei quali possiede un determinato numero di pedine (dette "dischi"), le quali sono di colore nero da un lato e di colore bianco dall'altro. Ad ogni giocatore è assegnato uno dei due colori. Il terreno di gioco, diviso in celle, è di forma quadrata.
 
 Prima di iniziare a giocare, si posizionano due dischi bianchi e due neri nelle quattro caselle centrali del terreno di gioco, in modo da creare una configurazione a X con i dischi bianchi lungo una diagonale e con i dischi neri lungo l'altra diagonale.
 
@@ -89,16 +89,16 @@ classDiagram
 
 - L'utente deve poter avviare una nuova partita, in cui giocherà contro un avversario virtuale implementato dal sistema che gioca in maniera autonoma.
 - All'avvio di una partita, l'utente deve poter personalizzare le seguenti proprietà:
-  - Il colore assegnato a sé (nero o bianco);
-  - La forma del terreno di gioco (quadrata o rettangolare) e le sue dimensioni dei suoi lati. La misura di un lato è espressa in funzione del numero di celle lungo la sua direzione ed è soggetta ai seguenti vincoli:
-    - Ciascun lato deve essere di dimensione pari. Tale scelta è adottata per questioni di simmetria: a inizio partita è prevista una configurazione di dischi 2x2 al centro del terreno di gioco, che risulterebbe decentrata qualora un lato del terreno di gioco fosse di dimensione dispari;
-    - Per questioni di praticità, si stabilisce che un lato debba avere una dimensione compresa tra 4 e 16 celle.
-  - La strategia dell'avversario (la quale determina la difficoltà della partita). Le opzioni possibili sono le seguenti:
+  - il colore assegnato a sé (nero o bianco);
+  - la forma del terreno di gioco (quadrata o rettangolare) e le sue dimensioni. La misura di un lato è espressa in funzione del numero di celle lungo la sua direzione ed è soggetta ai seguenti vincoli:
+    - ciascun lato deve essere di dimensione pari. Tale scelta è adottata per questioni di simmetria: a inizio partita è prevista una configurazione di dischi 2x2 al centro del terreno di gioco, che risulterebbe decentrata qualora un lato del terreno di gioco fosse di dimensione dispari;
+    - per questioni di praticità, si stabilisce che un lato debba avere una dimensione compresa tra 4 e 16 celle.
+  - la strategia dell'avversario (la quale determina la difficoltà della partita). Le opzioni possibili sono le seguenti:
     - *Erratic*: l'avversario sceglie una mossa casuale tra quelle disponibili;
     - *Easy*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita ma poco complessa, che determina un livello di abilità basso;
     - *Medium*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita di media complessità, che determina un livello di abilità intermedio;
     - *Hard*: l'avversario stabilisce la mossa da effettuare secondo una logica predefinita e avanzata, che determina un livello di abilità alto.
-- Ad ogni turno, se l'utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con "mossa" si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide a disposizione.
+- Ad ogni turno, se l'utente ha a disposizione almeno una mossa valida, deve obbligatoriamente effettuarne una. Con "mossa" si intende il posizionamento di uno dei propri dischi non ancora utilizzati su una cella libera del terreno di gioco. Un mossa è valida se implica la cattura di almeno un disco dell'avversario secondo le modalità descritte nelle [regole del gioco](#regole-del-gioco). Dopo che l'utente ha compiuto una mossa valida, il turno passa all'avversario, a meno che questi sia privo di mosse valide.
 - Se, quando è il suo turno, l'utente non ha a disposizione mosse valide, è obbligato a saltare il turno senza compiere nessuna mossa.
 - Durante una partita, l'utente deve poter salvare lo stato corrente della partita in maniera persistente, in modo da poter sospendere la partita corrente e poterla riprendere in seguito.
 - L'utente deve poter effettuare salvataggi di partite diverse e conservarli in contemporanea.

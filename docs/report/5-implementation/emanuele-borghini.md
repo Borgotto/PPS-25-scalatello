@@ -55,7 +55,7 @@ Un avversario invece è un giocatore artificiale, che svolge mosse in autonomia 
 
 I diversi livelli di difficoltà sono rappresentati tramite un `enum`.\
 La strategia associata a ciascun livello viene determinata tramite pattern matching.\
-In questo modo la selezione della strategia è localizzare interamente nella definizione di `Opponent` e l'implementazione della logica di gioco non deve conoscere le singole strategie disponibili.
+In questo modo la selezione della strategia è localizzata interamente nella definizione di `Opponent` e l'implementazione della logica di gioco non deve conoscere le singole strategie disponibili.
 
 ```scala
 enum Opponent extends Player:

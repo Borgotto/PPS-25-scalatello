@@ -132,6 +132,8 @@ classDiagram
 
 ### Board e Disk
 
+#### Disk
+
 `Disk` è un componente del Model che modella le pedine (o dischi) del gioco.
 
 ```mermaid
@@ -150,7 +152,9 @@ Nello specifico:
 
 Quando viene eseguito un `flip()` viene creato un nuovo disco con il colore presente sull'altra faccia del disco da capovolgere.
 
-Questo permette anche di mantenere facilmente l'immutabilità dei dischi, evitando possibili *side-effect*.
+Questo permette anche di mantenere l'immutabilità dei dischi, evitando possibili *side-effect*.
+
+#### Board e BoardComputations
 
 `Board` è un componente del Model che modella la scacchiera su cui si svolge la partita.
 
@@ -442,7 +446,7 @@ classDiagram
 
 ## Organizzazione del codice
 
-Il diagramma sottostante raffigura la gerarchia di package prevista per l'organizzazione del codice, il cui contenuto è descritto nel seguito:
+Il diagramma sottostante raffigura la gerarchia di package prevista per l'organizzazione del codice, il cui contenuto è descritto di seguito:
 
 - `model` contiene il codice relativo al Model e include i seguenti subpackage:
   - `board` per il codice relativo alla Board, che include a sua volta un subpackage `computations` per il codice relativo ai calcoli legati alle operazioni della Board;

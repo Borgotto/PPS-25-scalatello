@@ -12,7 +12,7 @@ Per poter scrivere test con una sintassi molto simile al linguaggio naturale ho 
 - implementare il `trait` di **ScalaTest**: `AnyFlatSpec`;
 - usare i `should` `Matchers` al posto delle `assert`.
 
-Per evitare ripetizioni di codice, molti test da me creati sono parametrici: l'ho fatto implementando il `trait` di **ScalaTest** `TableDrivenPropertyChecks`: questo `trait` permette di creare delle tabelle contenenti i parametri su cui chiamare uno o più test.
+Per evitare ripetizioni di codice, molti test da me creati sono parametrici, l'ho fatto implementando il `trait` di **ScalaTest** `TableDrivenPropertyChecks`: questo `trait` permette di creare delle tabelle (`Table`) contenenti i parametri su cui chiamare uno o più test.
 
 Esempio nella classe `BoardTest`:
 
