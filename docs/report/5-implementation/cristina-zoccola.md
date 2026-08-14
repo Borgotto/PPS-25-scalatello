@@ -106,7 +106,7 @@ extension (s: String)
 
 Questo metodo utilizza lo specifico *pattern* definito come espressione regolare, per creare una mappa di pedine a partire da una stringa. Esso è stato implementato in collaborazione con [Emanuele Borghini](./emanuele-borghini.md).
 
-Fa anche uso della `implicit conversion` di `Position` da tupla a posizione (implementata da: [Emanuele Borghini](./emanuele-borghini.md)).
+Fa anche uso della `implicit conversion` di `Position` da tupla a posizione (implementata da [Emanuele Borghini](./emanuele-borghini.md)).
 
 Uso del metodo nella *factory*:
 
@@ -172,7 +172,7 @@ Per implementare i metodi delegati da `BoardImpl` ho utilizzato diverse funziona
         case p => Some(p)
   ```
 
-Alcune parti del *refactor* effettuato su questa classe, sono state fatte in collaborazione con: [Emanuele Borghini](./emanuele-borghini.md).
+Alcune parti del *refactor* effettuato su questa classe, sono state fatte in collaborazione con [Emanuele Borghini](./emanuele-borghini.md).
 
 #### ComputationsPosExtensions
 
