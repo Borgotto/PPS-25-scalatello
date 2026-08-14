@@ -4,7 +4,7 @@ lazy val root = project
   .in(file("."))
   .settings(
     name := "scalatello",
-    version := "0.1.0-SNAPSHOT",
+    version := "1.0.0",
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.20" % Test,
@@ -16,4 +16,5 @@ lazy val root = project
     ),
     autoAPIMappings := true,
     Compile / doc / target := baseDirectory.value / "docs" / "scaladoc",
+    assembly / assemblyJarName := "scalatello-1.0.0.jar"
   )
