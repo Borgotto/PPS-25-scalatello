@@ -16,5 +16,6 @@ lazy val root = project
     ),
     autoAPIMappings := true,
     Compile / doc / target := baseDirectory.value / "docs" / "scaladoc",
+    assembly / mainClass := Some("it.unibo.pps.main"),
     assembly / assemblyJarName := "scalatello-1.0.0.jar"
   )
